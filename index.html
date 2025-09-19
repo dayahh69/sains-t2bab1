@@ -3,600 +3,475 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kuiz Haiwan Interaktif</title>
+    <title>Simulasi pH Asid dan Alkali</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
-        body { font-family: 'Poppins', sans-serif; }
-        .slide { display: none; }
-        .slide.active { display: block; }
-        .progress-fill { transition: width 0.3s ease; }
-        .answer-btn { transition: all 0.3s ease; }
-        .answer-btn:hover { transform: translateY(-2px); }
-        .correct { background: linear-gradient(135deg, #10b981, #059669); }
-        .incorrect { background: linear-gradient(135deg, #ef4444, #dc2626); }
-        .feedback { animation: fadeIn 0.5s ease; }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+        
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.5); }
+            50% { box-shadow: 0 0 30px rgba(59, 130, 246, 0.8); }
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(-50px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .bounce-animation {
+            animation: bounce 0.6s ease-in-out;
+        }
+        
+        .glow-animation {
+            animation: glow 2s ease-in-out infinite;
+        }
+        
+        .slide-in {
+            animation: slideIn 0.5s ease-out;
+        }
+        
+        .ph-gradient {
+            background: linear-gradient(to right, 
+                #dc2626 0%, #ef4444 7%, #f97316 14%, #fb923c 21%,
+                #fbbf24 28%, #facc15 35%, #eab308 42%, #84cc16 49%,
+                #22c55e 50%, #16a34a 51%, #059669 58%,
+                #0891b2 65%, #0284c7 72%, #3b82f6 79%,
+                #6366f1 86%, #8b5cf6 93%, #a855f7 100%);
+        }
+        
+        .solution-card {
+            transition: all 0.3s ease;
+        }
+        
+        .solution-card:hover {
+            transform: translateY(-5px) scale(1.02);
+        }
+        
+        .ph-indicator {
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-blue-100 via-purple-50 to-pink-100 min-h-screen">
-    <div class="container mx-auto px-4 py-8 max-w-4xl">
-        <!-- Header -->
-        <div class="text-center mb-8">
-            <div class="flex justify-end mb-4">
-                <button id="langBtn" onclick="toggleLanguage()" class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-4 py-2 rounded-lg font-semibold hover:from-indigo-600 hover:to-purple-700 transition-all duration-300">
-                    English
+<body class="bg-gradient-to-br from-blue-100 via-purple-50 to-pink-100 min-h-screen p-4">
+    <div class="max-w-6xl mx-auto">
+        <!-- Language Toggle -->
+        <div class="flex justify-end mb-4">
+            <div class="bg-white rounded-full shadow-lg p-1 border-2 border-purple-200">
+                <button id="langToggle" class="flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-300 bg-purple-500 text-white font-semibold">
+                    <span class="text-lg">🇲🇾</span>
+                    <span id="langText">BM</span>
+                    <span class="text-sm">|</span>
+                    <span class="text-lg opacity-50">🇺🇸</span>
+                    <span class="opacity-50">EN</span>
                 </button>
             </div>
-            <h1 id="title" class="text-4xl font-bold text-gray-800 mb-2">🐾 Ciri Haiwan Vertebrata 🐾</h1>
         </div>
 
-        <!-- Progress Bar -->
-        <div class="mb-8">
-            <div class="flex justify-between items-center mb-2">
-                <span class="text-sm font-semibold text-gray-600">Progres</span>
-                <span id="counter" class="text-sm font-semibold text-gray-600">1/8</span>
-            </div>
-            <div class="w-full bg-gray-200 rounded-full h-3">
-                <div id="progressBar" class="progress-fill bg-gradient-to-r from-blue-500 to-purple-600 h-3 rounded-full" style="width: 12.5%"></div>
-            </div>
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 id="mainTitle" class="text-5xl font-bold text-purple-800 mb-3">🧪 Simulasi pH</h1>
+            <h2 id="subTitle" class="text-2xl font-semibold text-blue-700 mb-2">Asid dan Alkali</h2>
+            <p id="instruction" class="text-lg text-gray-700">Klik pada larutan untuk melihat nilai pH!</p>
         </div>
 
-        <!-- Quiz Container -->
-        <div class="bg-white rounded-2xl shadow-xl p-8 mb-6">
-            <!-- Instructions Slide -->
-            <div class="slide active" id="instructions-slide">
-                <div class="text-center">
-                    <div class="text-6xl mb-6">📚</div>
-                    <h2 id="instructionsTitle" class="text-3xl font-bold text-gray-800 mb-6">Arahan Kuiz</h2>
-                    <div class="bg-blue-50 rounded-xl p-6 mb-6 text-left">
-                        <ul id="instructionsList" class="space-y-3 text-lg text-gray-700">
-                            <li class="flex items-start">
-                                <span class="text-blue-500 mr-3">1.</span>
-                                <span>Kuiz ini mengandungi 8 soalan tentang ciri-ciri haiwan vertebrata</span>
-                            </li>
-                            <li class="flex items-start">
-                                <span class="text-blue-500 mr-3">2.</span>
-                                <span>Setiap soalan mempunyai 2 pilihan jawapan</span>
-                            </li>
-                            <li class="flex items-start">
-                                <span class="text-blue-500 mr-3">3.</span>
-                                <span>Klik pada jawapan yang anda rasa betul</span>
-                            </li>
-                            <li class="flex items-start">
-                                <span class="text-blue-500 mr-3">4.</span>
-                                <span>Jika jawapan salah, anda boleh cuba lagi</span>
-                            </li>
-                            <li class="flex items-start">
-                                <span class="text-blue-500 mr-3">5.</span>
-                                <span>Gunakan butang "Previous" dan "Next" untuk navigasi</span>
-                            </li>
-                            <li class="flex items-start">
-                                <span class="text-blue-500 mr-3">6.</span>
-                                <span>Markah anda akan dipaparkan di akhir kuiz</span>
-                            </li>
-                        </ul>
+        <!-- pH Meter Digital -->
+        <div class="bg-white rounded-3xl shadow-2xl p-8 mb-8 border-4 border-blue-200">
+            <h2 id="meterTitle" class="text-3xl font-bold text-center mb-6 text-gray-800">📊 Meter pH Digital</h2>
+            
+            <!-- Digital Display -->
+            <div class="bg-black rounded-2xl p-6 mb-6 relative overflow-hidden">
+                <div class="absolute inset-0 bg-gradient-to-r from-green-900 to-blue-900 opacity-20"></div>
+                <div class="text-center relative z-10">
+                    <div id="phDisplay" class="text-6xl font-mono font-bold text-green-400 mb-2 tracking-wider">
+                        --.-
                     </div>
-                    <button id="startQuizBtn" onclick="startQuiz()" class="bg-gradient-to-r from-green-500 to-blue-500 text-white px-8 py-3 rounded-xl font-semibold hover:from-green-600 hover:to-blue-600 transition-all duration-300 transform hover:scale-105">
-                        <span id="startBtn">Mula Kuiz</span>
-                    </button>
+                    <div class="text-xl text-green-300 font-semibold">pH</div>
                 </div>
+                <div class="absolute top-2 right-2 w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
             </div>
 
-            <!-- Question 1 -->
-            <div class="slide" id="slide-0">
-                <div class="text-center mb-8">
-                    <div class="text-8xl mb-4">🦇</div>
-                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Kelawar</h2>
-                    <p class="text-lg text-gray-600 mb-6">Apakah jenis darah kelawar?</p>
-                </div>
-                <div class="space-y-4">
-                    <button class="answer-btn w-full p-4 text-lg font-semibold rounded-xl border-2 border-gray-200 hover:border-blue-400 bg-gray-50 hover:bg-blue-50 text-gray-700" onclick="checkAnswer(0, false, this)">
-                        Berdarah sejuk
-                    </button>
-                    <button class="answer-btn w-full p-4 text-lg font-semibold rounded-xl border-2 border-gray-200 hover:border-green-400 bg-gray-50 hover:bg-green-50 text-gray-700" onclick="checkAnswer(0, true, this)">
-                        Berdarah panas
-                    </button>
-                </div>
-                <div id="feedback-0" class="feedback mt-6 text-center hidden"></div>
-            </div>
-
-            <!-- Question 2 -->
-            <div class="slide" id="slide-1">
-                <div class="text-center mb-8">
-                    <div class="text-8xl mb-4">🐸</div>
-                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Katak</h2>
-                    <p class="text-lg text-gray-600 mb-6">Apakah habitat bagi katak?</p>
-                </div>
-                <div class="space-y-4">
-                    <button class="answer-btn w-full p-4 text-lg font-semibold rounded-xl border-2 border-gray-200 hover:border-green-400 bg-gray-50 hover:bg-green-50 text-gray-700" onclick="checkAnswer(1, true, this)">
-                        Boleh hidup di darat dan air
-                    </button>
-                    <button class="answer-btn w-full p-4 text-lg font-semibold rounded-xl border-2 border-gray-200 hover:border-blue-400 bg-gray-50 hover:bg-blue-50 text-gray-700" onclick="checkAnswer(1, false, this)">
-                        Hanya hidup di darat
-                    </button>
-                </div>
-                <div id="feedback-1" class="feedback mt-6 text-center hidden"></div>
-            </div>
-
-            <!-- Question 3 -->
-            <div class="slide" id="slide-2">
-                <div class="text-center mb-8">
-                    <div class="text-8xl mb-4">🐍</div>
-                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Ular</h2>
-                    <p class="text-lg text-gray-600 mb-6">Apakah jenis liputan badan ular?</p>
-                </div>
-                <div class="space-y-4">
-                    <button class="answer-btn w-full p-4 text-lg font-semibold rounded-xl border-2 border-gray-200 hover:border-blue-400 bg-gray-50 hover:bg-blue-50 text-gray-700" onclick="checkAnswer(2, false, this)">
-                        Berlendir
-                    </button>
-                    <button class="answer-btn w-full p-4 text-lg font-semibold rounded-xl border-2 border-gray-200 hover:border-green-400 bg-gray-50 hover:bg-green-50 text-gray-700" onclick="checkAnswer(2, true, this)">
-                        Bersisik keras
-                    </button>
-                </div>
-                <div id="feedback-2" class="feedback mt-6 text-center hidden"></div>
-            </div>
-
-            <!-- Question 4 -->
-            <div class="slide" id="slide-3">
-                <div class="text-center mb-8">
-                    <div class="text-8xl mb-4">🐟</div>
-                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Ikan</h2>
-                    <p class="text-lg text-gray-600 mb-6">Apakah organ pernafasan bagi ikan?</p>
-                </div>
-                <div class="space-y-4">
-                    <button class="answer-btn w-full p-4 text-lg font-semibold rounded-xl border-2 border-gray-200 hover:border-blue-400 bg-gray-50 hover:bg-blue-50 text-gray-700" onclick="checkAnswer(3, false, this)">
-                        Paru-paru
-                    </button>
-                    <button class="answer-btn w-full p-4 text-lg font-semibold rounded-xl border-2 border-gray-200 hover:border-green-400 bg-gray-50 hover:bg-green-50 text-gray-700" onclick="checkAnswer(3, true, this)">
-                        Insang
-                    </button>
-                </div>
-                <div id="feedback-3" class="feedback mt-6 text-center hidden"></div>
-            </div>
-
-            <!-- Question 5 -->
-            <div class="slide" id="slide-4">
-                <div class="text-center mb-8">
-                    <div class="text-8xl mb-4">🐢</div>
-                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Penyu</h2>
-                    <p class="text-lg text-gray-600 mb-6">Apakah cara pembiakan bagi penyu?</p>
-                </div>
-                <div class="space-y-4">
-                    <button class="answer-btn w-full p-4 text-lg font-semibold rounded-xl border-2 border-gray-200 hover:border-green-400 bg-gray-50 hover:bg-green-50 text-gray-700" onclick="checkAnswer(4, true, this)">
-                        Bertelur
-                    </button>
-                    <button class="answer-btn w-full p-4 text-lg font-semibold rounded-xl border-2 border-gray-200 hover:border-blue-400 bg-gray-50 hover:bg-blue-50 text-gray-700" onclick="checkAnswer(4, false, this)">
-                        Melahirkan anak
-                    </button>
-                </div>
-                <div id="feedback-4" class="feedback mt-6 text-center hidden"></div>
-            </div>
-
-            <!-- Question 6 -->
-            <div class="slide" id="slide-5">
-                <div class="text-center mb-8">
-                    <div class="text-8xl mb-4">🐄</div>
-                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Lembu</h2>
-                    <p class="text-lg text-gray-600 mb-6">Apakah organ pernafasan bagi lembu?</p>
-                </div>
-                <div class="space-y-4">
-                    <button class="answer-btn w-full p-4 text-lg font-semibold rounded-xl border-2 border-gray-200 hover:border-blue-400 bg-gray-50 hover:bg-blue-50 text-gray-700" onclick="checkAnswer(5, false, this)">
-                        Insang
-                    </button>
-                    <button class="answer-btn w-full p-4 text-lg font-semibold rounded-xl border-2 border-gray-200 hover:border-green-400 bg-gray-50 hover:bg-green-50 text-gray-700" onclick="checkAnswer(5, true, this)">
-                        Paru-paru
-                    </button>
-                </div>
-                <div id="feedback-5" class="feedback mt-6 text-center hidden"></div>
-            </div>
-
-            <!-- Question 7 -->
-            <div class="slide" id="slide-6">
-                <div class="text-center mb-8">
-                    <div class="text-8xl mb-4">🦁</div>
-                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Singa</h2>
-                    <p class="text-lg text-gray-600 mb-6">Apakah jenis liputan badan singa?</p>
-                </div>
-                <div class="space-y-4">
-                    <button class="answer-btn w-full p-4 text-lg font-semibold rounded-xl border-2 border-gray-200 hover:border-green-400 bg-gray-50 hover:bg-green-50 text-gray-700" onclick="checkAnswer(6, true, this)">
-                        Mempunyai bulu, melahirkan anak
-                    </button>
-                    <button class="answer-btn w-full p-4 text-lg font-semibold rounded-xl border-2 border-gray-200 hover:border-blue-400 bg-gray-50 hover:bg-blue-50 text-gray-700" onclick="checkAnswer(6, false, this)">
-                        Bersisik dan bertelur
-                    </button>
-                </div>
-                <div id="feedback-6" class="feedback mt-6 text-center hidden"></div>
-            </div>
-
-            <!-- Question 8 -->
-            <div class="slide" id="slide-7">
-                <div class="text-center mb-8">
-                    <div class="text-8xl mb-4">🦎</div>
-                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Salamander</h2>
-                    <p class="text-lg text-gray-600 mb-6">Apakah kelas vertebrata bagi salamander?</p>
-                </div>
-                <div class="space-y-4">
-                    <button class="answer-btn w-full p-4 text-lg font-semibold rounded-xl border-2 border-gray-200 hover:border-blue-400 bg-gray-50 hover:bg-blue-50 text-gray-700" onclick="checkAnswer(7, false, this)">
-                        Mamalia
-                    </button>
-                    <button class="answer-btn w-full p-4 text-lg font-semibold rounded-xl border-2 border-gray-200 hover:border-green-400 bg-gray-50 hover:bg-green-50 text-gray-700" onclick="checkAnswer(7, true, this)">
-                        Amfibia
-                    </button>
-                </div>
-                <div id="feedback-7" class="feedback mt-6 text-center hidden"></div>
-            </div>
-
-            <!-- Results Slide -->
-            <div class="slide" id="results-slide">
-                <div class="text-center">
-                    <div class="text-6xl mb-6">🎉</div>
-                    <h2 class="text-3xl font-bold text-gray-800 mb-6">Tahniah! Kuiz Selesai!</h2>
-                    <div class="bg-gradient-to-r from-green-400 to-blue-500 text-white rounded-2xl p-8 mb-6">
-                        <div class="text-5xl font-bold mb-2" id="finalScore">0/8</div>
-                        <div class="text-xl">Markah Anda</div>
+            <!-- pH Scale -->
+            <div class="relative mb-6">
+                <div class="ph-gradient h-16 rounded-2xl shadow-lg relative overflow-hidden">
+                    <!-- pH Indicator Arrow -->
+                    <div id="phIndicator" class="ph-indicator absolute top-0 w-2 h-16 bg-white shadow-lg opacity-0 border-2 border-gray-800">
+                        <div class="absolute -top-2 left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-b-4 border-transparent border-b-gray-800"></div>
                     </div>
-                    <div id="scoreMessage" class="text-lg text-gray-600 mb-6"></div>
-                    <button onclick="restartQuiz()" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 py-3 rounded-xl font-semibold hover:from-purple-600 hover:to-pink-600 transition-all duration-300 transform hover:scale-105">
-                        Mula Semula
-                    </button>
+                </div>
+                
+                <!-- Scale Numbers -->
+                <div class="flex justify-between mt-3 px-2">
+                    <span class="text-sm font-bold text-red-600">1</span>
+                    <span class="text-sm font-bold text-red-500">2</span>
+                    <span class="text-sm font-bold text-orange-500">3</span>
+                    <span class="text-sm font-bold text-yellow-500">4</span>
+                    <span class="text-sm font-bold text-yellow-400">5</span>
+                    <span class="text-sm font-bold text-lime-500">6</span>
+                    <span class="text-lg font-bold text-green-600 bg-green-100 px-2 py-1 rounded-full">7</span>
+                    <span class="text-sm font-bold text-teal-500">8</span>
+                    <span class="text-sm font-bold text-cyan-500">9</span>
+                    <span class="text-sm font-bold text-blue-500">10</span>
+                    <span class="text-sm font-bold text-indigo-500">11</span>
+                    <span class="text-sm font-bold text-purple-500">12</span>
+                    <span class="text-sm font-bold text-violet-500">13</span>
+                    <span class="text-sm font-bold text-purple-600">14</span>
+                </div>
+                
+                <!-- Scale Labels -->
+                <div class="flex justify-between mt-2 text-sm font-semibold">
+                    <span id="strongAcid" class="text-red-600">ASID KUAT</span>
+                    <span id="neutral" class="text-green-600">NEUTRAL</span>
+                    <span id="strongAlkali" class="text-purple-600">ALKALI KUAT</span>
+                </div>
+            </div>
+
+            <!-- Current Solution Info -->
+            <div id="solutionInfo" class="text-center p-4 bg-gray-50 rounded-xl opacity-0 transition-all duration-500">
+                <div id="solutionName" class="text-2xl font-bold text-gray-800 mb-2"></div>
+                <div id="solutionType" class="text-lg text-gray-600"></div>
+            </div>
+        </div>
+
+        <!-- Solutions Grid -->
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-8">
+            <!-- Hydrochloric Acid -->
+            <div class="solution-card bg-gradient-to-br from-red-200 to-red-300 rounded-2xl shadow-lg p-6 cursor-pointer border-3 border-red-300 hover:border-red-500" 
+                 data-ph="1" data-name-ms="Asid Hidroklorik" data-name-en="Hydrochloric Acid" data-type-ms="Asid Sangat Kuat" data-type-en="Very Strong Acid" data-formula-ms="HCl" data-formula-en="HCl">
+                <div class="text-center">
+                    <div class="text-5xl mb-3">🧪</div>
+                    <h3 class="solution-name font-bold text-red-800 text-lg mb-1">Asid Hidroklorik</h3>
+                    <p class="solution-formula text-red-700 text-sm font-semibold">HCl</p>
+                    <div class="mt-2 px-3 py-1 bg-red-400 text-white rounded-full text-xs font-bold">
+                        pH = 1
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lemon Juice -->
+            <div class="solution-card bg-gradient-to-br from-yellow-200 to-yellow-300 rounded-2xl shadow-lg p-6 cursor-pointer border-3 border-yellow-300 hover:border-yellow-500" 
+                 data-ph="2" data-name-ms="Jus Lemon" data-name-en="Lemon Juice" data-type-ms="Asid Kuat" data-type-en="Strong Acid" data-formula-ms="Asid Sitrik" data-formula-en="Citric Acid">
+                <div class="text-center">
+                    <div class="text-5xl mb-3">🍋</div>
+                    <h3 class="solution-name font-bold text-yellow-800 text-lg mb-1">Jus Lemon</h3>
+                    <p class="solution-formula text-yellow-700 text-sm font-semibold">Asid Sitrik</p>
+                    <div class="mt-2 px-3 py-1 bg-yellow-500 text-white rounded-full text-xs font-bold">
+                        pH = 2
+                    </div>
+                </div>
+            </div>
+
+            <!-- Distilled Water -->
+            <div class="solution-card bg-gradient-to-br from-green-200 to-green-300 rounded-2xl shadow-lg p-6 cursor-pointer border-3 border-green-300 hover:border-green-500" 
+                 data-ph="7" data-name-ms="Air Suling" data-name-en="Distilled Water" data-type-ms="Neutral" data-type-en="Neutral" data-formula-ms="H₂O" data-formula-en="H₂O">
+                <div class="text-center">
+                    <div class="text-5xl mb-3">💧</div>
+                    <h3 class="solution-name font-bold text-green-800 text-lg mb-1">Air Suling</h3>
+                    <p class="solution-formula text-green-700 text-sm font-semibold">H₂O</p>
+                    <div class="mt-2 px-3 py-1 bg-green-500 text-white rounded-full text-xs font-bold">
+                        pH = 7
+                    </div>
+                </div>
+            </div>
+
+            <!-- Soap Water -->
+            <div class="solution-card bg-gradient-to-br from-blue-200 to-blue-300 rounded-2xl shadow-lg p-6 cursor-pointer border-3 border-blue-300 hover:border-blue-500" 
+                 data-ph="9" data-name-ms="Air Sabun" data-name-en="Soap Water" data-type-ms="Alkali Lemah" data-type-en="Weak Alkali" data-formula-ms="Sabun + H₂O" data-formula-en="Soap + H₂O">
+                <div class="text-center">
+                    <div class="text-5xl mb-3">🧼</div>
+                    <h3 class="solution-name font-bold text-blue-800 text-lg mb-1">Air Sabun</h3>
+                    <p class="solution-formula text-blue-700 text-sm font-semibold">Sabun + H₂O</p>
+                    <div class="mt-2 px-3 py-1 bg-blue-500 text-white rounded-full text-xs font-bold">
+                        pH = 9
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sodium Hydroxide -->
+            <div class="solution-card bg-gradient-to-br from-purple-200 to-purple-300 rounded-2xl shadow-lg p-6 cursor-pointer border-3 border-purple-300 hover:border-purple-500" 
+                 data-ph="13" data-name-ms="Natrium Hidroksida" data-name-en="Sodium Hydroxide" data-type-ms="Alkali Sangat Kuat" data-type-en="Very Strong Alkali" data-formula-ms="NaOH" data-formula-en="NaOH">
+                <div class="text-center">
+                    <div class="text-5xl mb-3">⚗️</div>
+                    <h3 class="solution-name font-bold text-purple-800 text-lg mb-1">Natrium Hidroksida</h3>
+                    <p class="solution-formula text-purple-700 text-sm font-semibold">NaOH</p>
+                    <div class="mt-2 px-3 py-1 bg-purple-500 text-white rounded-full text-xs font-bold">
+                        pH = 13
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Navigation Buttons -->
-        <div class="flex justify-between">
-            <button id="prevBtn" onclick="previousSlide()" class="bg-gray-500 text-white px-6 py-3 rounded-xl font-semibold hover:bg-gray-600 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
-                ← Previous
-            </button>
-            <button id="nextBtn" onclick="nextSlide()" class="bg-blue-500 text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-600 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
-                Next →
-            </button>
+        <!-- Information Panel -->
+        <div class="bg-gradient-to-r from-indigo-100 via-purple-50 to-pink-100 rounded-3xl shadow-xl p-8 border-4 border-indigo-200">
+            <h2 id="infoTitle" class="text-3xl font-bold text-center mb-8 text-indigo-800">📚 Maklumat Penting</h2>
+            
+            <div class="grid md:grid-cols-3 gap-6 mb-6">
+                <div class="bg-gradient-to-br from-red-100 to-red-200 p-6 rounded-2xl text-center border-3 border-red-300">
+                    <div class="text-4xl mb-3">🔴</div>
+                    <h3 id="acidTitle" class="text-2xl font-bold text-red-700 mb-2">ASID</h3>
+                    <p class="text-xl font-bold text-red-600 mb-2">pH < 7</p>
+                    <p id="acidDesc" class="text-sm text-red-700">Rasa masam, boleh mengakis</p>
+                </div>
+                
+                <div class="bg-gradient-to-br from-green-100 to-green-200 p-6 rounded-2xl text-center border-3 border-green-300">
+                    <div class="text-4xl mb-3">🟢</div>
+                    <h3 id="neutralTitle" class="text-2xl font-bold text-green-700 mb-2">NEUTRAL</h3>
+                    <p class="text-xl font-bold text-green-600 mb-2">pH = 7</p>
+                    <p id="neutralDesc" class="text-sm text-green-700">Tidak asid, tidak alkali</p>
+                </div>
+                
+                <div class="bg-gradient-to-br from-blue-100 to-blue-200 p-6 rounded-2xl text-center border-3 border-blue-300">
+                    <div class="text-4xl mb-3">🔵</div>
+                    <h3 id="alkaliTitle" class="text-2xl font-bold text-blue-700 mb-2">ALKALI</h3>
+                    <p class="text-xl font-bold text-blue-600 mb-2">pH > 7</p>
+                    <p id="alkaliDesc" class="text-sm text-blue-700">Rasa pahit, licin disentuh</p>
+                </div>
+            </div>
+
+            <!-- Key Formula -->
+            <div class="bg-white rounded-2xl p-6 text-center shadow-lg border-2 border-gray-200">
+                <h3 id="formulaTitle" class="text-2xl font-bold text-gray-800 mb-4">🔬 Rumus Penting</h3>
+                <div class="text-lg text-gray-700 space-y-2">
+                    <p><span class="font-bold text-red-600" id="acidLabel">Asid:</span> <span id="acidFormula">pH < 7 (Semakin rendah, semakin kuat)</span></p>
+                    <p><span class="font-bold text-green-600" id="neutralLabel">Neutral:</span> <span id="neutralFormula">pH = 7 (Seimbang)</span></p>
+                    <p><span class="font-bold text-blue-600" id="alkaliLabel">Alkali:</span> <span id="alkaliFormula">pH > 7 (Semakin tinggi, semakin kuat)</span></p>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
-        let currentSlide = 0;
-        let score = 0;
-        let answered = new Array(8).fill(false);
-        const totalQuestions = 8;
+        const solutionCards = document.querySelectorAll('.solution-card');
+        const phDisplay = document.getElementById('phDisplay');
+        const phIndicator = document.getElementById('phIndicator');
+        const solutionInfo = document.getElementById('solutionInfo');
+        const solutionName = document.getElementById('solutionName');
+        const solutionType = document.getElementById('solutionType');
+        const langToggle = document.getElementById('langToggle');
+        const langText = document.getElementById('langText');
 
-        function updateProgress() {
-            const progress = ((currentSlide + 1) / totalQuestions) * 100;
-            document.getElementById('progressBar').style.width = progress + '%';
-            document.getElementById('counter').textContent = `${currentSlide + 1}/${totalQuestions}`;
-        }
+        // Language state
+        let currentLang = 'ms';
 
-        function checkAnswer(questionIndex, isCorrect, button) {
-            const feedback = document.getElementById(`feedback-${questionIndex}`);
-            const allButtons = button.parentElement.querySelectorAll('.answer-btn');
-            
-            if (isCorrect) {
-                if (!answered[questionIndex]) {
-                    score++;
-                    answered[questionIndex] = true;
-                }
-                
-                // Disable all buttons for this question
-                allButtons.forEach(btn => btn.disabled = true);
-                
-                button.classList.add('correct');
-                button.classList.remove('bg-gray-50', 'hover:bg-green-50');
-                feedback.innerHTML = `<div class="text-green-600 font-semibold text-lg">${translations[currentLanguage].correctFeedback}</div>`;
-                document.getElementById('nextBtn').disabled = false;
-            } else {
-                button.classList.add('incorrect');
-                button.classList.remove('bg-gray-50', 'hover:bg-blue-50');
-                feedback.innerHTML = `<div class="text-red-600 font-semibold text-lg">${translations[currentLanguage].incorrectFeedback}</div>`;
-                
-                // Reset button after 1 second to allow retry
-                setTimeout(() => {
-                    button.classList.remove('incorrect');
-                    button.classList.add('bg-gray-50', 'hover:bg-blue-50');
-                    feedback.classList.add('hidden');
-                }, 1000);
-            }
-            
-            feedback.classList.remove('hidden');
-        }
+        // pH colors for display
+        const phColors = {
+            1: '#dc2626', 2: '#ef4444', 3: '#f97316', 4: '#fb923c',
+            5: '#fbbf24', 6: '#facc15', 7: '#22c55e', 8: '#16a34a',
+            9: '#0891b2', 10: '#0284c7', 11: '#3b82f6', 12: '#6366f1',
+            13: '#8b5cf6'
+        };
 
-        function showSlide(n) {
-            const slides = document.querySelectorAll('.slide');
-            slides.forEach(slide => slide.classList.remove('active'));
-            
-            if (n >= totalQuestions) {
-                showResults();
-                return;
-            }
-            
-            if (n < 0) {
-                document.getElementById('instructions-slide').classList.add('active');
-                currentSlide = -1;
-                document.getElementById('prevBtn').disabled = true;
-                document.getElementById('nextBtn').disabled = false;
-                document.getElementById('counter').textContent = translations[currentLanguage].instructionCounter;
-                document.getElementById('progressBar').style.width = '0%';
-                return;
-            }
-            
-            document.getElementById(`slide-${n}`).classList.add('active');
-            currentSlide = n;
-            updateProgress();
-            
-            // Update navigation buttons
-            document.getElementById('prevBtn').disabled = (n === 0);
-            document.getElementById('nextBtn').disabled = !answered[n];
-        }
-
-        function nextSlide() {
-            if (currentSlide === -1) {
-                startQuiz();
-            } else if (currentSlide < totalQuestions - 1) {
-                showSlide(currentSlide + 1);
-            } else {
-                showResults();
-            }
-        }
-
-        function previousSlide() {
-            if (currentSlide > 0) {
-                showSlide(currentSlide - 1);
-            }
-        }
-
-        function showResults() {
-            const slides = document.querySelectorAll('.slide');
-            slides.forEach(slide => slide.classList.remove('active'));
-            document.getElementById('results-slide').classList.add('active');
-            
-            document.getElementById('finalScore').textContent = `${score}/${totalQuestions}`;
-            
-            const t = translations[currentLanguage];
-            const percentage = (score / totalQuestions) * 100;
-            let messageIndex = 3; // Default to lowest score message
-            
-            if (percentage === 100) messageIndex = 0;
-            else if (percentage >= 75) messageIndex = 1;
-            else if (percentage >= 50) messageIndex = 2;
-            
-            document.getElementById('scoreMessage').textContent = t.scoreMessages[messageIndex];
-            
-            // Hide navigation buttons
-            document.getElementById('prevBtn').style.display = 'none';
-            document.getElementById('nextBtn').style.display = 'none';
-            
-            // Update progress to 100%
-            document.getElementById('progressBar').style.width = '100%';
-            document.getElementById('counter').textContent = translations[currentLanguage].completed;
-        }
-
-        function restartQuiz() {
-            currentSlide = -1;
-            score = 0;
-            answered.fill(false);
-            
-            // Reset all buttons
-            document.querySelectorAll('.answer-btn').forEach(btn => {
-                btn.disabled = false;
-                btn.classList.remove('correct', 'incorrect');
-                btn.classList.add('bg-gray-50');
-            });
-            
-            // Hide all feedback
-            document.querySelectorAll('.feedback').forEach(feedback => {
-                feedback.classList.add('hidden');
-            });
-            
-            // Show navigation buttons
-            document.getElementById('prevBtn').style.display = 'inline-block';
-            document.getElementById('nextBtn').style.display = 'inline-block';
-            
-            // Show instructions slide
-            const slides = document.querySelectorAll('.slide');
-            slides.forEach(slide => slide.classList.remove('active'));
-            document.getElementById('instructions-slide').classList.add('active');
-            
-            document.getElementById('counter').textContent = translations[currentLanguage].instructionCounter;
-            document.getElementById('progressBar').style.width = '0%';
-            document.getElementById('prevBtn').disabled = true;
-            document.getElementById('nextBtn').disabled = false;
-        }
-
-        // Language toggle functionality
-        let currentLanguage = 'ms'; // Default to Malay
-        
+        // Language translations
         const translations = {
             ms: {
-                title: '🐾 Ciri Haiwan Vertebrata 🐾',
-                progress: 'Progres',
-                previous: '← Previous',
-                next: 'Next →',
-                completed: 'Selesai!',
-                instructionCounter: 'Arahan',
-                congratulations: 'Tahniah! Kuiz Selesai!',
-                yourScore: 'Markah Anda',
-                restart: 'Mula Semula',
-                correctFeedback: '🎉 Tahniah! Jawapan anda betul.',
-                incorrectFeedback: '❌ Cuba lagi!',
-                langBtn: 'English',
-                instructionsTitle: 'Arahan Kuiz',
-                startBtn: 'Mula Kuiz',
-                instructions: [
-                    'Kuiz ini mengandungi 8 soalan tentang ciri-ciri haiwan vertebrata',
-                    'Setiap soalan mempunyai 2 pilihan jawapan',
-                    'Klik pada jawapan yang anda rasa betul',
-                    'Jika jawapan salah, anda boleh cuba lagi',
-                    'Gunakan butang "Previous" dan "Next" untuk navigasi',
-                    'Markah anda akan dipaparkan di akhir kuiz'
-                ],
-                questions: [
-                    'Apakah jenis darah kelawar?',
-                    'Apakah habitat bagi katak?',
-                    'Apakah jenis liputan badan ular?',
-                    'Apakah organ pernafasan bagi ikan?',
-                    'Apakah cara pembiakan bagi penyu?',
-                    'Apakah organ pernafasan bagi lembu?',
-                    'Apakah jenis liputan badan singa?',
-                    'Apakah kelas vertebrata bagi salamander?'
-                ],
-                animals: ['Kelawar', 'Katak', 'Ular', 'Ikan', 'Penyu', 'Lembu', 'Singa', 'Salamander'],
-                answers: [
-                    ['Berdarah sejuk', 'Berdarah panas'],
-                    ['Boleh hidup di darat dan air', 'Hanya hidup di darat'],
-                    ['Berlendir', 'Bersisik keras'],
-                    ['Paru-paru', 'Insang'],
-                    ['Bertelur', 'Melahirkan anak'],
-                    ['Insang', 'Paru-paru'],
-                    ['Mempunyai bulu, melahirkan anak', 'Bersisik dan bertelur'],
-                    ['Mamalia', 'Amfibia']
-                ],
-                scoreMessages: [
-                    'Sempurna! Anda menguasai topik ini dengan baik! 🌟',
-                    'Bagus sekali! Prestasi yang cemerlang! 👏',
-                    'Tidak buruk! Teruskan usaha anda! 💪',
-                    'Jangan berputus asa! Cuba lagi untuk hasil yang lebih baik! 📚'
-                ]
+                mainTitle: '🧪 Simulasi pH',
+                subTitle: 'Asid dan Alkali',
+                instruction: 'Klik pada larutan untuk melihat nilai pH!',
+                meterTitle: '📊 Meter pH Digital',
+                strongAcid: 'ASID KUAT',
+                neutral: 'NEUTRAL',
+                strongAlkali: 'ALKALI KUAT',
+                infoTitle: '📚 Maklumat Penting',
+                acidTitle: 'ASID',
+                neutralTitle: 'NEUTRAL',
+                alkaliTitle: 'ALKALI',
+                acidDesc: 'Rasa masam, boleh mengakis',
+                neutralDesc: 'Tidak asid, tidak alkali',
+                alkaliDesc: 'Rasa pahit, licin disentuh',
+                formulaTitle: '🔬 Rumus Penting',
+                acidLabel: 'Asid:',
+                neutralLabel: 'Neutral:',
+                alkaliLabel: 'Alkali:',
+                acidFormula: 'pH < 7 (Semakin rendah, semakin kuat)',
+                neutralFormula: 'pH = 7 (Seimbang)',
+                alkaliFormula: 'pH > 7 (Semakin tinggi, semakin kuat)',
+                selectSolution: 'Klik pada larutan untuk melihat pH',
+                chooseSolution: 'Pilih mana-mana larutan di atas'
             },
             en: {
-                title: '🐾 Vertebrate Animal Characteristics 🐾',
-                progress: 'Progress',
-                previous: '← Previous',
-                next: 'Next →',
-                completed: 'Complete!',
-                instructionCounter: 'Instructions',
-                congratulations: 'Congratulations! Quiz Complete!',
-                yourScore: 'Your Score',
-                restart: 'Restart',
-                correctFeedback: '🎉 Congratulations! Your answer is correct.',
-                incorrectFeedback: '❌ Try again!',
-                langBtn: 'Bahasa Malaysia',
-                instructionsTitle: 'Quiz Instructions',
-                startBtn: 'Start Quiz',
-                instructions: [
-                    'This quiz contains 8 questions about vertebrate animal characteristics',
-                    'Each question has 2 answer choices',
-                    'Click on the answer you think is correct',
-                    'If the answer is wrong, you can try again',
-                    'Use "Previous" and "Next" buttons for navigation',
-                    'Your score will be displayed at the end of the quiz'
-                ],
-                questions: [
-                    'What type of blood does a bat have?',
-                    'What is the habitat of a frog?',
-                    'What type of body covering does a snake have?',
-                    'What is the respiratory organ of a fish?',
-                    'What is the reproduction method of a turtle?',
-                    'What is the respiratory organ of a cow?',
-                    'What type of body covering does a lion have?',
-                    'What vertebrate class does a salamander belong to?'
-                ],
-                animals: ['Bat', 'Frog', 'Snake', 'Fish', 'Turtle', 'Cow', 'Lion', 'Salamander'],
-                answers: [
-                    ['Cold-blooded', 'Warm-blooded'],
-                    ['Can live on land and water', 'Only lives on land'],
-                    ['Slimy', 'Hard scales'],
-                    ['Lungs', 'Gills'],
-                    ['Lay eggs', 'Give birth to live young'],
-                    ['Gills', 'Lungs'],
-                    ['Has fur, gives birth to live young', 'Has scales and lays eggs'],
-                    ['Mammal', 'Amphibian']
-                ],
-                scoreMessages: [
-                    'Perfect! You have mastered this topic very well! 🌟',
-                    'Excellent! Outstanding performance! 👏',
-                    'Not bad! Keep up your efforts! 💪',
-                    'Don\'t give up! Try again for better results! 📚'
-                ]
+                mainTitle: '🧪 pH Simulation',
+                subTitle: 'Acids and Alkalis',
+                instruction: 'Click on solutions to see pH values!',
+                meterTitle: '📊 Digital pH Meter',
+                strongAcid: 'STRONG ACID',
+                neutral: 'NEUTRAL',
+                strongAlkali: 'STRONG ALKALI',
+                infoTitle: '📚 Important Information',
+                acidTitle: 'ACID',
+                neutralTitle: 'NEUTRAL',
+                alkaliTitle: 'ALKALI',
+                acidDesc: 'Sour taste, can corrode',
+                neutralDesc: 'Neither acid nor alkali',
+                alkaliDesc: 'Bitter taste, slippery feel',
+                formulaTitle: '🔬 Key Formulas',
+                acidLabel: 'Acid:',
+                neutralLabel: 'Neutral:',
+                alkaliLabel: 'Alkali:',
+                acidFormula: 'pH < 7 (Lower = stronger)',
+                neutralFormula: 'pH = 7 (Balanced)',
+                alkaliFormula: 'pH > 7 (Higher = stronger)',
+                selectSolution: 'Click on a solution to see pH',
+                chooseSolution: 'Choose any solution above'
             }
         };
 
-        function toggleLanguage() {
-            currentLanguage = currentLanguage === 'ms' ? 'en' : 'ms';
-            const t = translations[currentLanguage];
+        // Language toggle functionality
+        langToggle.addEventListener('click', () => {
+            currentLang = currentLang === 'ms' ? 'en' : 'ms';
+            updateLanguage();
+        });
+
+        function updateLanguage() {
+            const t = translations[currentLang];
             
-            // Update UI elements
-            document.getElementById('title').textContent = t.title;
-            document.querySelector('.text-sm.font-semibold.text-gray-600').textContent = t.progress;
-            document.getElementById('prevBtn').innerHTML = t.previous;
-            document.getElementById('nextBtn').innerHTML = t.next;
-            document.getElementById('langBtn').textContent = t.langBtn;
-            
-            // Update instructions slide
-            document.getElementById('instructionsTitle').textContent = t.instructionsTitle;
-            document.getElementById('startBtn').textContent = t.startBtn;
-            
-            // Update instruction list
-            const instructionsList = document.getElementById('instructionsList');
-            instructionsList.innerHTML = '';
-            t.instructions.forEach((instruction, index) => {
-                const li = document.createElement('li');
-                li.className = 'flex items-start';
-                li.innerHTML = `
-                    <span class="text-blue-500 mr-3">${index + 1}.</span>
-                    <span>${instruction}</span>
+            // Update toggle button
+            if (currentLang === 'ms') {
+                langToggle.innerHTML = `
+                    <span class="text-lg">🇲🇾</span>
+                    <span id="langText">BM</span>
+                    <span class="text-sm">|</span>
+                    <span class="text-lg opacity-50">🇺🇸</span>
+                    <span class="opacity-50">EN</span>
                 `;
-                instructionsList.appendChild(li);
+                langToggle.className = 'flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-300 bg-purple-500 text-white font-semibold';
+            } else {
+                langToggle.innerHTML = `
+                    <span class="text-lg opacity-50">🇲🇾</span>
+                    <span class="opacity-50">BM</span>
+                    <span class="text-sm">|</span>
+                    <span class="text-lg">🇺🇸</span>
+                    <span id="langText">EN</span>
+                `;
+                langToggle.className = 'flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-300 bg-blue-500 text-white font-semibold';
+            }
+            
+            // Update main content
+            document.getElementById('mainTitle').textContent = t.mainTitle;
+            document.getElementById('subTitle').textContent = t.subTitle;
+            document.getElementById('instruction').textContent = t.instruction;
+            document.getElementById('meterTitle').textContent = t.meterTitle;
+            document.getElementById('strongAcid').textContent = t.strongAcid;
+            document.getElementById('neutral').textContent = t.neutral;
+            document.getElementById('strongAlkali').textContent = t.strongAlkali;
+            document.getElementById('infoTitle').textContent = t.infoTitle;
+            document.getElementById('acidTitle').textContent = t.acidTitle;
+            document.getElementById('neutralTitle').textContent = t.neutralTitle;
+            document.getElementById('alkaliTitle').textContent = t.alkaliTitle;
+            document.getElementById('acidDesc').textContent = t.acidDesc;
+            document.getElementById('neutralDesc').textContent = t.neutralDesc;
+            document.getElementById('alkaliDesc').textContent = t.alkaliDesc;
+            document.getElementById('formulaTitle').textContent = t.formulaTitle;
+            document.getElementById('acidLabel').textContent = t.acidLabel;
+            document.getElementById('neutralLabel').textContent = t.neutralLabel;
+            document.getElementById('alkaliLabel').textContent = t.alkaliLabel;
+            document.getElementById('acidFormula').textContent = t.acidFormula;
+            document.getElementById('neutralFormula').textContent = t.neutralFormula;
+            document.getElementById('alkaliFormula').textContent = t.alkaliFormula;
+            
+            // Update solution cards
+            solutionCards.forEach(card => {
+                const nameElement = card.querySelector('.solution-name');
+                const formulaElement = card.querySelector('.solution-formula');
+                
+                if (currentLang === 'ms') {
+                    nameElement.textContent = card.dataset.nameMs;
+                    formulaElement.textContent = card.dataset.formulaMs;
+                } else {
+                    nameElement.textContent = card.dataset.nameEn;
+                    formulaElement.textContent = card.dataset.formulaEn;
+                }
             });
             
-            // Update question slides
-            for (let i = 0; i < 8; i++) {
-                const slide = document.getElementById(`slide-${i}`);
-                if (slide) {
-                    const animalName = slide.querySelector('h2');
-                    const questionText = slide.querySelector('p');
-                    const answerButtons = slide.querySelectorAll('.answer-btn');
-                    
-                    if (animalName) animalName.textContent = t.animals[i];
-                    if (questionText) questionText.textContent = t.questions[i];
-                    
-                    // Update answer buttons
-                    answerButtons.forEach((btn, btnIndex) => {
-                        btn.textContent = t.answers[i][btnIndex];
-                    });
+            // Update solution info if visible
+            if (solutionInfo.style.opacity === '1') {
+                solutionName.textContent = t.selectSolution;
+                solutionType.textContent = t.chooseSolution;
+            }
+        }
+
+        solutionCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const ph = parseInt(card.dataset.ph);
+                const name = currentLang === 'ms' ? card.dataset.nameMs : card.dataset.nameEn;
+                const type = currentLang === 'ms' ? card.dataset.typeMs : card.dataset.typeEn;
+
+                // Add bounce animation to clicked card
+                card.classList.add('bounce-animation');
+                setTimeout(() => {
+                    card.classList.remove('bounce-animation');
+                }, 600);
+
+                // Update pH display with animation
+                phDisplay.style.transform = 'scale(0.8)';
+                phDisplay.style.opacity = '0.5';
+                
+                setTimeout(() => {
+                    phDisplay.textContent = ph.toFixed(1);
+                    phDisplay.style.color = phColors[ph];
+                    phDisplay.style.transform = 'scale(1)';
+                    phDisplay.style.opacity = '1';
+                    phDisplay.classList.add('glow-animation');
+                }, 300);
+
+                // Update pH indicator position
+                const position = ((ph - 1) / 13) * 100;
+                phIndicator.style.left = `calc(${position}% - 4px)`;
+                phIndicator.style.opacity = '1';
+
+                // Update solution info
+                solutionName.textContent = name;
+                solutionType.textContent = type;
+                solutionInfo.style.opacity = '1';
+                solutionInfo.classList.add('slide-in');
+
+                // Remove glow animation after 2 seconds
+                setTimeout(() => {
+                    phDisplay.classList.remove('glow-animation');
+                }, 2000);
+
+                // Remove slide-in animation
+                setTimeout(() => {
+                    solutionInfo.classList.remove('slide-in');
+                }, 500);
+
+                // Update solution info background color based on pH
+                if (ph < 7) {
+                    solutionInfo.style.background = 'linear-gradient(135deg, #fecaca, #fed7d7)';
+                    solutionType.style.color = '#dc2626';
+                } else if (ph === 7) {
+                    solutionInfo.style.background = 'linear-gradient(135deg, #dcfce7, #d1fae5)';
+                    solutionType.style.color = '#16a34a';
+                } else {
+                    solutionInfo.style.background = 'linear-gradient(135deg, #dbeafe, #bfdbfe)';
+                    solutionType.style.color = '#2563eb';
                 }
-            }
-            
-            // Update results page if visible
-            const resultsSlide = document.getElementById('results-slide');
-            if (resultsSlide.classList.contains('active')) {
-                resultsSlide.querySelector('h2').textContent = t.congratulations;
-                resultsSlide.querySelector('.text-xl').textContent = t.yourScore;
-                resultsSlide.querySelector('button').textContent = t.restart;
-                
-                // Update score message
-                const percentage = (score / totalQuestions) * 100;
-                let messageIndex = 3; // Default to lowest score message
-                if (percentage === 100) messageIndex = 0;
-                else if (percentage >= 75) messageIndex = 1;
-                else if (percentage >= 50) messageIndex = 2;
-                
-                document.getElementById('scoreMessage').textContent = t.scoreMessages[messageIndex];
-            }
-        }
-
-        function startQuiz() {
-            const slides = document.querySelectorAll('.slide');
-            slides.forEach(slide => slide.classList.remove('active'));
-            
-            document.getElementById('slide-0').classList.add('active');
-            currentSlide = 0;
-            updateProgress();
-            document.getElementById('prevBtn').disabled = false;
-            document.getElementById('nextBtn').disabled = true;
-        }
-
-        // Initialize - fix the duplicate declaration
-        currentSlide = -1;
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('counter').textContent = translations[currentLanguage].instructionCounter;
-            document.getElementById('progressBar').style.width = '0%';
-            document.getElementById('prevBtn').disabled = true;
-            document.getElementById('nextBtn').disabled = false;
+            });
         });
-    </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97fd9a350265f594',t:'MTc1Nzk5Njc1Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
-</html>
 
+        // Add hover effects to solution cards
+        solutionCards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-5px) scale(1.02)';
+                card.style.boxShadow = '0 20px 40px rgba(0,0,0,0.1)';
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0) scale(1)';
+                card.style.boxShadow = '0 10px 25px rgba(0,0,0,0.1)';
+            });
+        });
+
+        // Initial instruction
+        setTimeout(() => {
+            const t = translations[currentLang];
+            solutionName.textContent = t.selectSolution;
+            solutionType.textContent = t.chooseSolution;
+            solutionInfo.style.opacity = '1';
+            solutionInfo.style.background = 'linear-gradient(135deg, #f3f4f6, #e5e7eb)';
+        }, 1000);
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'980e0d3b90a03cd8',t:'MTc1ODE2OTIzNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
