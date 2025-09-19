@@ -3,475 +3,481 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulasi pH Asid dan Alkali</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Simulasi Hukum 10% - Aliran Tenaga Ekosistem</title>
     <style>
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-10px); }
-            60% { transform: translateY(-5px); }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        
-        @keyframes glow {
-            0%, 100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.5); }
-            50% { box-shadow: 0 0 30px rgba(59, 130, 246, 0.8); }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #87CEEB 0%, #98FB98 50%, #F0E68C 100%);
+            min-height: 100vh;
+            padding: 20px;
         }
-        
-        @keyframes slideIn {
-            from { transform: translateX(-50px); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         }
-        
-        .bounce-animation {
-            animation: bounce 0.6s ease-in-out;
+
+        .title {
+            text-align: center;
+            color: #2c5530;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
         }
-        
-        .glow-animation {
-            animation: glow 2s ease-in-out infinite;
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 1.2rem;
+            margin-bottom: 30px;
         }
-        
-        .slide-in {
-            animation: slideIn 0.5s ease-out;
+
+        .ecosystem {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 40px 0;
+            position: relative;
+            flex-wrap: wrap;
+            gap: 20px;
         }
-        
-        .ph-gradient {
-            background: linear-gradient(to right, 
-                #dc2626 0%, #ef4444 7%, #f97316 14%, #fb923c 21%,
-                #fbbf24 28%, #facc15 35%, #eab308 42%, #84cc16 49%,
-                #22c55e 50%, #16a34a 51%, #059669 58%,
-                #0891b2 65%, #0284c7 72%, #3b82f6 79%,
-                #6366f1 86%, #8b5cf6 93%, #a855f7 100%);
+
+        .trophic-level {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            min-width: 180px;
         }
-        
-        .solution-card {
+
+        .trophic-level:hover {
+            transform: scale(1.05);
+        }
+
+        .organism {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            margin-bottom: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sun { background: linear-gradient(45deg, #FFD700, #FFA500); }
+        .plant { background: linear-gradient(45deg, #32CD32, #228B22); }
+        .rabbit { background: linear-gradient(45deg, #DEB887, #CD853F); }
+        .snake { background: linear-gradient(45deg, #9ACD32, #6B8E23); }
+        .eagle { background: linear-gradient(45deg, #8B4513, #A0522D); }
+
+        .energy-value {
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+
+        .organism-name {
+            font-weight: bold;
+            color: #2c5530;
+            text-align: center;
+            font-size: 1rem;
+        }
+
+        .arrow {
+            position: absolute;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #FF6B6B, #4ECDC4);
+            border-radius: 2px;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0;
+            animation: flowEnergy 3s infinite;
+        }
+
+        .arrow::after {
+            content: '';
+            position: absolute;
+            right: -10px;
+            top: -8px;
+            width: 0;
+            height: 0;
+            border-left: 15px solid #4ECDC4;
+            border-top: 8px solid transparent;
+            border-bottom: 8px solid transparent;
+        }
+
+        .arrow1 { left: 140px; animation-delay: 0s; }
+        .arrow2 { left: 140px; animation-delay: 0.7s; }
+        .arrow3 { left: 140px; animation-delay: 1.4s; }
+        .arrow4 { left: 140px; animation-delay: 2.1s; }
+
+        @keyframes flowEnergy {
+            0% { opacity: 0; transform: translateY(-50%) translateX(-20px); }
+            20% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { opacity: 0; transform: translateY(-50%) translateX(20px); }
+        }
+
+        .tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            max-width: 250px;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(10px);
             transition: all 0.3s ease;
+            pointer-events: none;
+            top: -120px;
+            left: 50%;
+            transform: translateX(-50%) translateY(10px);
         }
-        
-        .solution-card:hover {
-            transform: translateY(-5px) scale(1.02);
+
+        .tooltip.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
         }
-        
-        .ph-indicator {
-            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+
+        .tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 8px solid transparent;
+            border-top-color: rgba(0, 0, 0, 0.9);
+        }
+
+        .info-panel {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+
+        .info-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .info-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .info-list li {
+            margin: 10px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .info-list li::before {
+            content: '🔥';
+            position: absolute;
+            left: 0;
+        }
+
+        .control-panel {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .start-btn {
+            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .start-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .language-toggle {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .lang-btn {
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid #667eea;
+            color: #667eea;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .lang-btn:hover {
+            background: rgba(102, 126, 234, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .lang-btn.active {
+            background: #667eea;
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .energy-loss {
+            position: absolute;
+            top: -30px;
+            right: -20px;
+            background: #FF6B6B;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            opacity: 0;
+            animation: showLoss 3s infinite;
+        }
+
+        @keyframes showLoss {
+            0%, 70% { opacity: 0; transform: translateY(0); }
+            80%, 90% { opacity: 1; transform: translateY(-5px); }
+            100% { opacity: 0; transform: translateY(-10px); }
+        }
+
+        @media (max-width: 768px) {
+            .ecosystem {
+                flex-direction: column;
+                gap: 30px;
+            }
+            
+            .arrow {
+                display: none;
+            }
+            
+            .title {
+                font-size: 2rem;
+            }
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-blue-100 via-purple-50 to-pink-100 min-h-screen p-4">
-    <div class="max-w-6xl mx-auto">
-        <!-- Language Toggle -->
-        <div class="flex justify-end mb-4">
-            <div class="bg-white rounded-full shadow-lg p-1 border-2 border-purple-200">
-                <button id="langToggle" class="flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-300 bg-purple-500 text-white font-semibold">
-                    <span class="text-lg">🇲🇾</span>
-                    <span id="langText">BM</span>
-                    <span class="text-sm">|</span>
-                    <span class="text-lg opacity-50">🇺🇸</span>
-                    <span class="opacity-50">EN</span>
-                </button>
+<body>
+    <div class="container">
+        <h1 class="title">🌍 <span data-ms="Simulasi Aliran Tenaga Ekosistem" data-en="Ecosystem Energy Flow Simulation">Simulasi Aliran Tenaga Ekosistem</span></h1>
+        <p class="subtitle"><span data-ms="Rantai Makanan: Matahari → Tumbuhan → Arnab → Ular → Helang" data-en="Food Chain: Sun → Plants → Rabbit → Snake → Eagle">Rantai Makanan: Matahari → Tumbuhan → Arnab → Ular → Helang</span></p>
+        
+        <div class="control-panel">
+            <div class="language-toggle">
+                <button class="lang-btn active" onclick="switchLanguage('ms')">🇲🇾 Bahasa Malaysia</button>
+                <button class="lang-btn" onclick="switchLanguage('en')">🇬🇧 English</button>
+            </div>
+            <button class="start-btn" onclick="startAnimation()">▶️ <span data-ms="Mulakan Simulasi" data-en="Start Simulation">Mulakan Simulasi</span></button>
+        </div>
+
+        <div class="ecosystem" id="ecosystem">
+            <div class="trophic-level" data-tooltip-ms="Matahari memberikan tenaga cahaya sebanyak 100,000 kJ/m² kepada tumbuhan melalui fotosintesis." data-tooltip-en="The Sun provides 100,000 kJ/m² of light energy to plants through photosynthesis.">
+                <div class="energy-value">100,000 kJ/m²</div>
+                <div class="organism sun">☀️</div>
+                <div class="organism-name"><span data-ms="Matahari" data-en="Sun">Matahari</span></div>
+                <div class="arrow arrow1"></div>
+            </div>
+
+            <div class="trophic-level" data-tooltip-ms="Tumbuhan hijau menerima tenaga dari matahari. 99% tenaga hilang sebagai haba, hanya 1% (1,000 kJ/m²) tersimpan." data-tooltip-en="Green plants receive energy from the sun. 99% of energy is lost as heat, only 1% (1,000 kJ/m²) is stored.">
+                <div class="energy-value">1,000 kJ/m²</div>
+                <div class="organism plant">🌱</div>
+                <div class="organism-name"><span data-ms="Tumbuhan Hijau<br>(Pengeluar)" data-en="Green Plants<br>(Producer)">Tumbuhan Hijau<br>(Pengeluar)</span></div>
+                <div class="energy-loss"><span data-ms="99% hilang sebagai haba" data-en="99% lost as heat">99% hilang sebagai haba</span></div>
+                <div class="arrow arrow2"></div>
+            </div>
+
+            <div class="trophic-level" data-tooltip-ms="Arnab memakan tumbuhan dan mendapat 100 kJ. 90% tenaga hilang melalui respirasi dan metabolisme." data-tooltip-en="Rabbit eats plants and gets 100 kJ. 90% of energy is lost through respiration and metabolism.">
+                <div class="energy-value">100 kJ</div>
+                <div class="organism rabbit">🐰</div>
+                <div class="organism-name"><span data-ms="Arnab<br>(Herbivor)" data-en="Rabbit<br>(Herbivore)">Arnab<br>(Herbivor)</span></div>
+                <div class="energy-loss"><span data-ms="90% hilang respirasi" data-en="90% lost respiration">90% hilang respirasi</span></div>
+                <div class="arrow arrow3"></div>
+            </div>
+
+            <div class="trophic-level" data-tooltip-ms="Ular memakan arnab dan mendapat 10 kJ. 90% tenaga hilang melalui pergerakan dan aktiviti." data-tooltip-en="Snake eats rabbit and gets 10 kJ. 90% of energy is lost through movement and activities.">
+                <div class="energy-value">10 kJ</div>
+                <div class="organism snake">🐍</div>
+                <div class="organism-name"><span data-ms="Ular<br>(Karnivor Sekunder)" data-en="Snake<br>(Secondary Carnivore)">Ular<br>(Karnivor Sekunder)</span></div>
+                <div class="energy-loss"><span data-ms="90% hilang pergerakan" data-en="90% lost movement">90% hilang pergerakan</span></div>
+                <div class="arrow arrow4"></div>
+            </div>
+
+            <div class="trophic-level" data-tooltip-ms="Helang memakan ular dan mendapat 1 kJ. 90% tenaga hilang untuk terbang, haba, dan sisa." data-tooltip-en="Eagle eats snake and gets 1 kJ. 90% of energy is lost for flying, heat, and waste.">
+                <div class="energy-value">1 kJ</div>
+                <div class="organism eagle">🦅</div>
+                <div class="organism-name"><span data-ms="Helang<br>(Karnivor Tertier)" data-en="Eagle<br>(Tertiary Carnivore)">Helang<br>(Karnivor Tertier)</span></div>
+                <div class="energy-loss"><span data-ms="90% hilang terbang & haba" data-en="90% lost flying & heat">90% hilang terbang & haba</span></div>
             </div>
         </div>
 
-        <!-- Header -->
-        <div class="text-center mb-8">
-            <h1 id="mainTitle" class="text-5xl font-bold text-purple-800 mb-3">🧪 Simulasi pH</h1>
-            <h2 id="subTitle" class="text-2xl font-semibold text-blue-700 mb-2">Asid dan Alkali</h2>
-            <p id="instruction" class="text-lg text-gray-700">Klik pada larutan untuk melihat nilai pH!</p>
+        <div class="info-panel">
+            <div class="info-title">🌱 <span data-ms="Fotosintesis" data-en="Photosynthesis">Fotosintesis</span></div>
+            <p style="margin-bottom: 15px; text-align: center;">
+                <span data-ms="Tumbuhan hijau hanya dapat menangkap sekitar 1% tenaga matahari untuk fotosintesis. Ini kerana:" data-en="Green plants can only capture about 1% of solar energy for photosynthesis. This is because:">Tumbuhan hijau hanya dapat menangkap sekitar 1% tenaga matahari untuk fotosintesis. Ini kerana:</span>
+            </p>
+            <ul class="info-list">
+                <li><span data-ms="Hanya cahaya tampak yang digunakan" data-en="Only visible light is used">Hanya cahaya tampak yang digunakan</span></li>
+                <li><span data-ms="Pantulan dan penyerapan atmosfera" data-en="Atmospheric reflection and absorption">Pantulan dan penyerapan atmosfera</span></li>
+                <li><span data-ms="Had kecekapan klorofil" data-en="Chlorophyll efficiency limits">Had kecekapan klorofil</span></li>
+                <li><span data-ms="Respirasi tumbuhan" data-en="Plant respiration">Respirasi tumbuhan</span></li>
+            </ul>
         </div>
 
-        <!-- pH Meter Digital -->
-        <div class="bg-white rounded-3xl shadow-2xl p-8 mb-8 border-4 border-blue-200">
-            <h2 id="meterTitle" class="text-3xl font-bold text-center mb-6 text-gray-800">📊 Meter pH Digital</h2>
-            
-            <!-- Digital Display -->
-            <div class="bg-black rounded-2xl p-6 mb-6 relative overflow-hidden">
-                <div class="absolute inset-0 bg-gradient-to-r from-green-900 to-blue-900 opacity-20"></div>
-                <div class="text-center relative z-10">
-                    <div id="phDisplay" class="text-6xl font-mono font-bold text-green-400 mb-2 tracking-wider">
-                        --.-
-                    </div>
-                    <div class="text-xl text-green-300 font-semibold">pH</div>
-                </div>
-                <div class="absolute top-2 right-2 w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
-            </div>
-
-            <!-- pH Scale -->
-            <div class="relative mb-6">
-                <div class="ph-gradient h-16 rounded-2xl shadow-lg relative overflow-hidden">
-                    <!-- pH Indicator Arrow -->
-                    <div id="phIndicator" class="ph-indicator absolute top-0 w-2 h-16 bg-white shadow-lg opacity-0 border-2 border-gray-800">
-                        <div class="absolute -top-2 left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-b-4 border-transparent border-b-gray-800"></div>
-                    </div>
-                </div>
-                
-                <!-- Scale Numbers -->
-                <div class="flex justify-between mt-3 px-2">
-                    <span class="text-sm font-bold text-red-600">1</span>
-                    <span class="text-sm font-bold text-red-500">2</span>
-                    <span class="text-sm font-bold text-orange-500">3</span>
-                    <span class="text-sm font-bold text-yellow-500">4</span>
-                    <span class="text-sm font-bold text-yellow-400">5</span>
-                    <span class="text-sm font-bold text-lime-500">6</span>
-                    <span class="text-lg font-bold text-green-600 bg-green-100 px-2 py-1 rounded-full">7</span>
-                    <span class="text-sm font-bold text-teal-500">8</span>
-                    <span class="text-sm font-bold text-cyan-500">9</span>
-                    <span class="text-sm font-bold text-blue-500">10</span>
-                    <span class="text-sm font-bold text-indigo-500">11</span>
-                    <span class="text-sm font-bold text-purple-500">12</span>
-                    <span class="text-sm font-bold text-violet-500">13</span>
-                    <span class="text-sm font-bold text-purple-600">14</span>
-                </div>
-                
-                <!-- Scale Labels -->
-                <div class="flex justify-between mt-2 text-sm font-semibold">
-                    <span id="strongAcid" class="text-red-600">ASID KUAT</span>
-                    <span id="neutral" class="text-green-600">NEUTRAL</span>
-                    <span id="strongAlkali" class="text-purple-600">ALKALI KUAT</span>
-                </div>
-            </div>
-
-            <!-- Current Solution Info -->
-            <div id="solutionInfo" class="text-center p-4 bg-gray-50 rounded-xl opacity-0 transition-all duration-500">
-                <div id="solutionName" class="text-2xl font-bold text-gray-800 mb-2"></div>
-                <div id="solutionType" class="text-lg text-gray-600"></div>
-            </div>
+        <div class="info-panel">
+            <div class="info-title">📚 <span data-ms="Hukum 10% (Rule of 10%)" data-en="10% Rule (Rule of 10%)">Hukum 10% (Rule of 10%)</span></div>
+            <p style="margin-bottom: 15px; text-align: center;">
+                <span data-ms="Hanya sekitar 10% tenaga dipindahkan dari satu aras trofik ke aras trofik seterusnya." data-en="Only about 10% of energy is transferred from one trophic level to the next trophic level.">Hanya sekitar 10% tenaga dipindahkan dari satu aras trofik ke aras trofik seterusnya.</span>
+            </p>
+            <p style="margin-bottom: 15px; font-weight: bold;"><span data-ms="90% tenaga hilang melalui:" data-en="90% of energy is lost through:">90% tenaga hilang melalui:</span></p>
+            <ul class="info-list">
+                <li><span data-ms="Respirasi dan metabolisme untuk mengekalkan fungsi badan" data-en="Respiration and metabolism to maintain body functions">Respirasi dan metabolisme untuk mengekalkan fungsi badan</span></li>
+                <li><span data-ms="Pergerakan dan aktiviti harian organisma" data-en="Movement and daily activities of organisms">Pergerakan dan aktiviti harian organisma</span></li>
+                <li><span data-ms="Haba yang dibebaskan ke persekitaran" data-en="Heat released to the environment">Haba yang dibebaskan ke persekitaran</span></li>
+                <li><span data-ms="Sisa makanan yang tidak dapat dicerna" data-en="Food waste that cannot be digested">Sisa makanan yang tidak dapat dicerna</span></li>
+            </ul>
         </div>
 
-        <!-- Solutions Grid -->
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-8">
-            <!-- Hydrochloric Acid -->
-            <div class="solution-card bg-gradient-to-br from-red-200 to-red-300 rounded-2xl shadow-lg p-6 cursor-pointer border-3 border-red-300 hover:border-red-500" 
-                 data-ph="1" data-name-ms="Asid Hidroklorik" data-name-en="Hydrochloric Acid" data-type-ms="Asid Sangat Kuat" data-type-en="Very Strong Acid" data-formula-ms="HCl" data-formula-en="HCl">
-                <div class="text-center">
-                    <div class="text-5xl mb-3">🧪</div>
-                    <h3 class="solution-name font-bold text-red-800 text-lg mb-1">Asid Hidroklorik</h3>
-                    <p class="solution-formula text-red-700 text-sm font-semibold">HCl</p>
-                    <div class="mt-2 px-3 py-1 bg-red-400 text-white rounded-full text-xs font-bold">
-                        pH = 1
-                    </div>
-                </div>
-            </div>
-
-            <!-- Lemon Juice -->
-            <div class="solution-card bg-gradient-to-br from-yellow-200 to-yellow-300 rounded-2xl shadow-lg p-6 cursor-pointer border-3 border-yellow-300 hover:border-yellow-500" 
-                 data-ph="2" data-name-ms="Jus Lemon" data-name-en="Lemon Juice" data-type-ms="Asid Kuat" data-type-en="Strong Acid" data-formula-ms="Asid Sitrik" data-formula-en="Citric Acid">
-                <div class="text-center">
-                    <div class="text-5xl mb-3">🍋</div>
-                    <h3 class="solution-name font-bold text-yellow-800 text-lg mb-1">Jus Lemon</h3>
-                    <p class="solution-formula text-yellow-700 text-sm font-semibold">Asid Sitrik</p>
-                    <div class="mt-2 px-3 py-1 bg-yellow-500 text-white rounded-full text-xs font-bold">
-                        pH = 2
-                    </div>
-                </div>
-            </div>
-
-            <!-- Distilled Water -->
-            <div class="solution-card bg-gradient-to-br from-green-200 to-green-300 rounded-2xl shadow-lg p-6 cursor-pointer border-3 border-green-300 hover:border-green-500" 
-                 data-ph="7" data-name-ms="Air Suling" data-name-en="Distilled Water" data-type-ms="Neutral" data-type-en="Neutral" data-formula-ms="H₂O" data-formula-en="H₂O">
-                <div class="text-center">
-                    <div class="text-5xl mb-3">💧</div>
-                    <h3 class="solution-name font-bold text-green-800 text-lg mb-1">Air Suling</h3>
-                    <p class="solution-formula text-green-700 text-sm font-semibold">H₂O</p>
-                    <div class="mt-2 px-3 py-1 bg-green-500 text-white rounded-full text-xs font-bold">
-                        pH = 7
-                    </div>
-                </div>
-            </div>
-
-            <!-- Soap Water -->
-            <div class="solution-card bg-gradient-to-br from-blue-200 to-blue-300 rounded-2xl shadow-lg p-6 cursor-pointer border-3 border-blue-300 hover:border-blue-500" 
-                 data-ph="9" data-name-ms="Air Sabun" data-name-en="Soap Water" data-type-ms="Alkali Lemah" data-type-en="Weak Alkali" data-formula-ms="Sabun + H₂O" data-formula-en="Soap + H₂O">
-                <div class="text-center">
-                    <div class="text-5xl mb-3">🧼</div>
-                    <h3 class="solution-name font-bold text-blue-800 text-lg mb-1">Air Sabun</h3>
-                    <p class="solution-formula text-blue-700 text-sm font-semibold">Sabun + H₂O</p>
-                    <div class="mt-2 px-3 py-1 bg-blue-500 text-white rounded-full text-xs font-bold">
-                        pH = 9
-                    </div>
-                </div>
-            </div>
-
-            <!-- Sodium Hydroxide -->
-            <div class="solution-card bg-gradient-to-br from-purple-200 to-purple-300 rounded-2xl shadow-lg p-6 cursor-pointer border-3 border-purple-300 hover:border-purple-500" 
-                 data-ph="13" data-name-ms="Natrium Hidroksida" data-name-en="Sodium Hydroxide" data-type-ms="Alkali Sangat Kuat" data-type-en="Very Strong Alkali" data-formula-ms="NaOH" data-formula-en="NaOH">
-                <div class="text-center">
-                    <div class="text-5xl mb-3">⚗️</div>
-                    <h3 class="solution-name font-bold text-purple-800 text-lg mb-1">Natrium Hidroksida</h3>
-                    <p class="solution-formula text-purple-700 text-sm font-semibold">NaOH</p>
-                    <div class="mt-2 px-3 py-1 bg-purple-500 text-white rounded-full text-xs font-bold">
-                        pH = 13
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Information Panel -->
-        <div class="bg-gradient-to-r from-indigo-100 via-purple-50 to-pink-100 rounded-3xl shadow-xl p-8 border-4 border-indigo-200">
-            <h2 id="infoTitle" class="text-3xl font-bold text-center mb-8 text-indigo-800">📚 Maklumat Penting</h2>
-            
-            <div class="grid md:grid-cols-3 gap-6 mb-6">
-                <div class="bg-gradient-to-br from-red-100 to-red-200 p-6 rounded-2xl text-center border-3 border-red-300">
-                    <div class="text-4xl mb-3">🔴</div>
-                    <h3 id="acidTitle" class="text-2xl font-bold text-red-700 mb-2">ASID</h3>
-                    <p class="text-xl font-bold text-red-600 mb-2">pH < 7</p>
-                    <p id="acidDesc" class="text-sm text-red-700">Rasa masam, boleh mengakis</p>
-                </div>
-                
-                <div class="bg-gradient-to-br from-green-100 to-green-200 p-6 rounded-2xl text-center border-3 border-green-300">
-                    <div class="text-4xl mb-3">🟢</div>
-                    <h3 id="neutralTitle" class="text-2xl font-bold text-green-700 mb-2">NEUTRAL</h3>
-                    <p class="text-xl font-bold text-green-600 mb-2">pH = 7</p>
-                    <p id="neutralDesc" class="text-sm text-green-700">Tidak asid, tidak alkali</p>
-                </div>
-                
-                <div class="bg-gradient-to-br from-blue-100 to-blue-200 p-6 rounded-2xl text-center border-3 border-blue-300">
-                    <div class="text-4xl mb-3">🔵</div>
-                    <h3 id="alkaliTitle" class="text-2xl font-bold text-blue-700 mb-2">ALKALI</h3>
-                    <p class="text-xl font-bold text-blue-600 mb-2">pH > 7</p>
-                    <p id="alkaliDesc" class="text-sm text-blue-700">Rasa pahit, licin disentuh</p>
-                </div>
-            </div>
-
-            <!-- Key Formula -->
-            <div class="bg-white rounded-2xl p-6 text-center shadow-lg border-2 border-gray-200">
-                <h3 id="formulaTitle" class="text-2xl font-bold text-gray-800 mb-4">🔬 Rumus Penting</h3>
-                <div class="text-lg text-gray-700 space-y-2">
-                    <p><span class="font-bold text-red-600" id="acidLabel">Asid:</span> <span id="acidFormula">pH < 7 (Semakin rendah, semakin kuat)</span></p>
-                    <p><span class="font-bold text-green-600" id="neutralLabel">Neutral:</span> <span id="neutralFormula">pH = 7 (Seimbang)</span></p>
-                    <p><span class="font-bold text-blue-600" id="alkaliLabel">Alkali:</span> <span id="alkaliFormula">pH > 7 (Semakin tinggi, semakin kuat)</span></p>
-                </div>
-            </div>
-        </div>
+        <div class="tooltip" id="tooltip"></div>
     </div>
 
     <script>
-        const solutionCards = document.querySelectorAll('.solution-card');
-        const phDisplay = document.getElementById('phDisplay');
-        const phIndicator = document.getElementById('phIndicator');
-        const solutionInfo = document.getElementById('solutionInfo');
-        const solutionName = document.getElementById('solutionName');
-        const solutionType = document.getElementById('solutionType');
-        const langToggle = document.getElementById('langToggle');
-        const langText = document.getElementById('langText');
+        let animationRunning = false;
+        let currentLanguage = 'ms';
 
-        // Language state
-        let currentLang = 'ms';
-
-        // pH colors for display
-        const phColors = {
-            1: '#dc2626', 2: '#ef4444', 3: '#f97316', 4: '#fb923c',
-            5: '#fbbf24', 6: '#facc15', 7: '#22c55e', 8: '#16a34a',
-            9: '#0891b2', 10: '#0284c7', 11: '#3b82f6', 12: '#6366f1',
-            13: '#8b5cf6'
-        };
-
-        // Language translations
-        const translations = {
-            ms: {
-                mainTitle: '🧪 Simulasi pH',
-                subTitle: 'Asid dan Alkali',
-                instruction: 'Klik pada larutan untuk melihat nilai pH!',
-                meterTitle: '📊 Meter pH Digital',
-                strongAcid: 'ASID KUAT',
-                neutral: 'NEUTRAL',
-                strongAlkali: 'ALKALI KUAT',
-                infoTitle: '📚 Maklumat Penting',
-                acidTitle: 'ASID',
-                neutralTitle: 'NEUTRAL',
-                alkaliTitle: 'ALKALI',
-                acidDesc: 'Rasa masam, boleh mengakis',
-                neutralDesc: 'Tidak asid, tidak alkali',
-                alkaliDesc: 'Rasa pahit, licin disentuh',
-                formulaTitle: '🔬 Rumus Penting',
-                acidLabel: 'Asid:',
-                neutralLabel: 'Neutral:',
-                alkaliLabel: 'Alkali:',
-                acidFormula: 'pH < 7 (Semakin rendah, semakin kuat)',
-                neutralFormula: 'pH = 7 (Seimbang)',
-                alkaliFormula: 'pH > 7 (Semakin tinggi, semakin kuat)',
-                selectSolution: 'Klik pada larutan untuk melihat pH',
-                chooseSolution: 'Pilih mana-mana larutan di atas'
-            },
-            en: {
-                mainTitle: '🧪 pH Simulation',
-                subTitle: 'Acids and Alkalis',
-                instruction: 'Click on solutions to see pH values!',
-                meterTitle: '📊 Digital pH Meter',
-                strongAcid: 'STRONG ACID',
-                neutral: 'NEUTRAL',
-                strongAlkali: 'STRONG ALKALI',
-                infoTitle: '📚 Important Information',
-                acidTitle: 'ACID',
-                neutralTitle: 'NEUTRAL',
-                alkaliTitle: 'ALKALI',
-                acidDesc: 'Sour taste, can corrode',
-                neutralDesc: 'Neither acid nor alkali',
-                alkaliDesc: 'Bitter taste, slippery feel',
-                formulaTitle: '🔬 Key Formulas',
-                acidLabel: 'Acid:',
-                neutralLabel: 'Neutral:',
-                alkaliLabel: 'Alkali:',
-                acidFormula: 'pH < 7 (Lower = stronger)',
-                neutralFormula: 'pH = 7 (Balanced)',
-                alkaliFormula: 'pH > 7 (Higher = stronger)',
-                selectSolution: 'Click on a solution to see pH',
-                chooseSolution: 'Choose any solution above'
-            }
-        };
-
-        // Language toggle functionality
-        langToggle.addEventListener('click', () => {
-            currentLang = currentLang === 'ms' ? 'en' : 'ms';
-            updateLanguage();
-        });
-
-        function updateLanguage() {
-            const t = translations[currentLang];
+        function switchLanguage(lang) {
+            currentLanguage = lang;
             
-            // Update toggle button
-            if (currentLang === 'ms') {
-                langToggle.innerHTML = `
-                    <span class="text-lg">🇲🇾</span>
-                    <span id="langText">BM</span>
-                    <span class="text-sm">|</span>
-                    <span class="text-lg opacity-50">🇺🇸</span>
-                    <span class="opacity-50">EN</span>
-                `;
-                langToggle.className = 'flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-300 bg-purple-500 text-white font-semibold';
-            } else {
-                langToggle.innerHTML = `
-                    <span class="text-lg opacity-50">🇲🇾</span>
-                    <span class="opacity-50">BM</span>
-                    <span class="text-sm">|</span>
-                    <span class="text-lg">🇺🇸</span>
-                    <span id="langText">EN</span>
-                `;
-                langToggle.className = 'flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-300 bg-blue-500 text-white font-semibold';
-            }
+            // Update active button
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`[onclick="switchLanguage('${lang}')"]`).classList.add('active');
             
-            // Update main content
-            document.getElementById('mainTitle').textContent = t.mainTitle;
-            document.getElementById('subTitle').textContent = t.subTitle;
-            document.getElementById('instruction').textContent = t.instruction;
-            document.getElementById('meterTitle').textContent = t.meterTitle;
-            document.getElementById('strongAcid').textContent = t.strongAcid;
-            document.getElementById('neutral').textContent = t.neutral;
-            document.getElementById('strongAlkali').textContent = t.strongAlkali;
-            document.getElementById('infoTitle').textContent = t.infoTitle;
-            document.getElementById('acidTitle').textContent = t.acidTitle;
-            document.getElementById('neutralTitle').textContent = t.neutralTitle;
-            document.getElementById('alkaliTitle').textContent = t.alkaliTitle;
-            document.getElementById('acidDesc').textContent = t.acidDesc;
-            document.getElementById('neutralDesc').textContent = t.neutralDesc;
-            document.getElementById('alkaliDesc').textContent = t.alkaliDesc;
-            document.getElementById('formulaTitle').textContent = t.formulaTitle;
-            document.getElementById('acidLabel').textContent = t.acidLabel;
-            document.getElementById('neutralLabel').textContent = t.neutralLabel;
-            document.getElementById('alkaliLabel').textContent = t.alkaliLabel;
-            document.getElementById('acidFormula').textContent = t.acidFormula;
-            document.getElementById('neutralFormula').textContent = t.neutralFormula;
-            document.getElementById('alkaliFormula').textContent = t.alkaliFormula;
-            
-            // Update solution cards
-            solutionCards.forEach(card => {
-                const nameElement = card.querySelector('.solution-name');
-                const formulaElement = card.querySelector('.solution-formula');
-                
-                if (currentLang === 'ms') {
-                    nameElement.textContent = card.dataset.nameMs;
-                    formulaElement.textContent = card.dataset.formulaMs;
-                } else {
-                    nameElement.textContent = card.dataset.nameEn;
-                    formulaElement.textContent = card.dataset.formulaEn;
+            // Update all text elements
+            document.querySelectorAll('[data-ms][data-en]').forEach(element => {
+                if (element.getAttribute(`data-${lang}`)) {
+                    element.innerHTML = element.getAttribute(`data-${lang}`);
                 }
             });
             
-            // Update solution info if visible
-            if (solutionInfo.style.opacity === '1') {
-                solutionName.textContent = t.selectSolution;
-                solutionType.textContent = t.chooseSolution;
-            }
+            // Update tooltips
+            document.querySelectorAll('.trophic-level').forEach(level => {
+                const tooltipText = level.getAttribute(`data-tooltip-${lang}`);
+                if (tooltipText) {
+                    level.setAttribute('data-tooltip', tooltipText);
+                }
+            });
         }
 
-        solutionCards.forEach(card => {
-            card.addEventListener('click', () => {
-                const ph = parseInt(card.dataset.ph);
-                const name = currentLang === 'ms' ? card.dataset.nameMs : card.dataset.nameEn;
-                const type = currentLang === 'ms' ? card.dataset.typeMs : card.dataset.typeEn;
+        function startAnimation() {
+            if (animationRunning) return;
+            
+            animationRunning = true;
+            const btn = document.querySelector('.start-btn');
+            const runningText = currentLanguage === 'ms' ? '🔄 Simulasi Berjalan...' : '🔄 Simulation Running...';
+            const startText = currentLanguage === 'ms' ? '▶️ Mulakan Simulasi' : '▶️ Start Simulation';
+            
+            btn.innerHTML = runningText;
+            btn.disabled = true;
 
-                // Add bounce animation to clicked card
-                card.classList.add('bounce-animation');
-                setTimeout(() => {
-                    card.classList.remove('bounce-animation');
-                }, 600);
+            // Reset and start animations
+            const arrows = document.querySelectorAll('.arrow');
+            const energyLosses = document.querySelectorAll('.energy-loss');
+            
+            arrows.forEach(arrow => {
+                arrow.style.animation = 'none';
+                arrow.offsetHeight; // Trigger reflow
+                arrow.style.animation = null;
+            });
 
-                // Update pH display with animation
-                phDisplay.style.transform = 'scale(0.8)';
-                phDisplay.style.opacity = '0.5';
+            energyLosses.forEach(loss => {
+                loss.style.animation = 'none';
+                loss.offsetHeight; // Trigger reflow
+                loss.style.animation = null;
+            });
+
+            // Reset button after animation cycle
+            setTimeout(() => {
+                animationRunning = false;
+                btn.innerHTML = `▶️ <span data-ms="Mulakan Simulasi" data-en="Start Simulation">${startText}</span>`;
+                btn.disabled = false;
+            }, 3000);
+        }
+
+        // Tooltip functionality
+        const trophicLevels = document.querySelectorAll('.trophic-level');
+        const tooltip = document.getElementById('tooltip');
+
+        trophicLevels.forEach(level => {
+            level.addEventListener('mouseenter', (e) => {
+                const tooltipText = level.getAttribute(`data-tooltip-${currentLanguage}`) || level.getAttribute('data-tooltip');
+                tooltip.textContent = tooltipText;
+                tooltip.classList.add('show');
                 
-                setTimeout(() => {
-                    phDisplay.textContent = ph.toFixed(1);
-                    phDisplay.style.color = phColors[ph];
-                    phDisplay.style.transform = 'scale(1)';
-                    phDisplay.style.opacity = '1';
-                    phDisplay.classList.add('glow-animation');
-                }, 300);
+                const rect = level.getBoundingClientRect();
+                const containerRect = document.querySelector('.container').getBoundingClientRect();
+                
+                tooltip.style.left = (rect.left - containerRect.left + rect.width / 2) + 'px';
+                tooltip.style.top = (rect.top - containerRect.top - 10) + 'px';
+            });
 
-                // Update pH indicator position
-                const position = ((ph - 1) / 13) * 100;
-                phIndicator.style.left = `calc(${position}% - 4px)`;
-                phIndicator.style.opacity = '1';
-
-                // Update solution info
-                solutionName.textContent = name;
-                solutionType.textContent = type;
-                solutionInfo.style.opacity = '1';
-                solutionInfo.classList.add('slide-in');
-
-                // Remove glow animation after 2 seconds
-                setTimeout(() => {
-                    phDisplay.classList.remove('glow-animation');
-                }, 2000);
-
-                // Remove slide-in animation
-                setTimeout(() => {
-                    solutionInfo.classList.remove('slide-in');
-                }, 500);
-
-                // Update solution info background color based on pH
-                if (ph < 7) {
-                    solutionInfo.style.background = 'linear-gradient(135deg, #fecaca, #fed7d7)';
-                    solutionType.style.color = '#dc2626';
-                } else if (ph === 7) {
-                    solutionInfo.style.background = 'linear-gradient(135deg, #dcfce7, #d1fae5)';
-                    solutionType.style.color = '#16a34a';
-                } else {
-                    solutionInfo.style.background = 'linear-gradient(135deg, #dbeafe, #bfdbfe)';
-                    solutionType.style.color = '#2563eb';
-                }
+            level.addEventListener('mouseleave', () => {
+                tooltip.classList.remove('show');
             });
         });
 
-        // Add hover effects to solution cards
-        solutionCards.forEach(card => {
-            card.addEventListener('mouseenter', () => {
-                card.style.transform = 'translateY(-5px) scale(1.02)';
-                card.style.boxShadow = '0 20px 40px rgba(0,0,0,0.1)';
-            });
-
-            card.addEventListener('mouseleave', () => {
-                card.style.transform = 'translateY(0) scale(1)';
-                card.style.boxShadow = '0 10px 25px rgba(0,0,0,0.1)';
-            });
+        // Auto-start animation on load
+        window.addEventListener('load', () => {
+            setTimeout(startAnimation, 1000);
         });
 
-        // Initial instruction
-        setTimeout(() => {
-            const t = translations[currentLang];
-            solutionName.textContent = t.selectSolution;
-            solutionType.textContent = t.chooseSolution;
-            solutionInfo.style.opacity = '1';
-            solutionInfo.style.background = 'linear-gradient(135deg, #f3f4f6, #e5e7eb)';
-        }, 1000);
+        // Add pulsing effect to organisms
+        setInterval(() => {
+            const organisms = document.querySelectorAll('.organism');
+            organisms.forEach((org, index) => {
+                setTimeout(() => {
+                    org.style.transform = 'scale(1.1)';
+                    setTimeout(() => {
+                        org.style.transform = 'scale(1)';
+                    }, 200);
+                }, index * 300);
+            });
+        }, 4000);
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'980e0d3b90a03cd8',t:'MTc1ODE2OTIzNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9807b590a703c0c2',t:'MTc1ODEwMjczMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
