@@ -3,425 +3,598 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Kalori</title>
+    <title>Kuiz Flash Card - Kekurangan Vitamin & Mineral</title>
     <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
-    <div class="max-w-4xl mx-auto p-4">
-        <!-- Language Selector -->
-        <div class="flex justify-center mb-4">
-            <div class="bg-white rounded-2xl shadow-lg p-3">
-                <div class="flex gap-3">
-                    <button id="lang-en" onclick="switchLanguage('en')" class="px-4 py-2 rounded-2xl text-sm font-medium transition-all duration-300 bg-gray-100 text-gray-600 hover:bg-blue-100 hover:text-blue-600 hover:shadow-md">
-                        English
-                    </button>
-                    <button id="lang-ms" onclick="switchLanguage('ms')" class="px-4 py-2 rounded-2xl text-sm font-medium transition-all duration-300 bg-blue-500 text-white hover:bg-blue-600 hover:shadow-md">
-                        Bahasa Malaysia
-                    </button>
-                </div>
-            </div>
-        </div>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .flip-card {
+            perspective: 1000px;
+            width: 100%;
+            height: 300px;
+        }
         
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+        }
+        
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+        
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .flip-card-back {
+            transform: rotateY(180deg);
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .card-gradient-front-1 {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ffa500 100%);
+        }
+        .card-gradient-front-2 {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        .card-gradient-front-3 {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        .card-gradient-front-4 {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+        .card-gradient-front-5 {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+        .card-gradient-front-6 {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+        }
+        .card-gradient-front-7 {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+        }
+        
+        .card-gradient-back-1 {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+        .card-gradient-back-2 {
+            background: linear-gradient(135deg, #fc466b 0%, #3f5efb 100%);
+        }
+        .card-gradient-back-3 {
+            background: linear-gradient(135deg, #fdbb2d 0%, #22c1c3 100%);
+        }
+        .card-gradient-back-4 {
+            background: linear-gradient(135deg, #ee9ca7 0%, #ffdde1 100%);
+        }
+        .card-gradient-back-5 {
+            background: linear-gradient(135deg, #2196f3 0%, #21cbf3 100%);
+        }
+        .card-gradient-back-6 {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        .card-gradient-back-7 {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+        
+        .progress-fill {
+            transition: width 0.3s ease;
+        }
+        
+        @media (max-width: 640px) {
+            .flip-card {
+                height: 250px;
+            }
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen">
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
         <!-- Header -->
         <div class="text-center mb-8">
-            <h1 class="text-4xl font-bold text-gray-800 mb-2">🍽️ Kalkulator Kalori</h1>
-            <p class="text-gray-600">Jejaki pengambilan harian anda dan dapatkan maklum balas yang diperibadikan</p>
+            <h1 id="main-title" class="text-3xl md:text-4xl font-bold text-white mb-4">
+                Kuiz Kekurangan Vitamin & Mineral dalam Badan Manusia
+            </h1>
+            
+            <!-- Language Toggle -->
+            <div class="flex justify-center mb-6">
+                <div class="bg-white/20 backdrop-blur-sm rounded-full p-1">
+                    <button id="lang-ms" class="px-4 py-2 rounded-full text-white font-medium transition-all duration-300 bg-white/30">
+                        Bahasa Malaysia
+                    </button>
+                    <button id="lang-en" class="px-4 py-2 rounded-full text-white font-medium transition-all duration-300">
+                        English
+                    </button>
+                </div>
+            </div>
+            
+
         </div>
 
-        <!-- Main Calculator -->
-        <div class="bg-white rounded-2xl shadow-xl p-6 mb-6">
-            <!-- Food Database -->
-            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-                <div class="food-item bg-gradient-to-br from-orange-50 to-orange-100 p-4 rounded-xl border border-orange-200">
-                    <div class="text-center mb-3">
-                        <div class="text-2xl mb-2">🍚</div>
-                        <h3 class="font-semibold text-gray-800" data-food="rice">Nasi Putih</h3>
-                        <p class="text-sm text-gray-600">130 kJ/100g</p>
-                    </div>
-                    <div class="space-y-2">
-                        <input type="number" id="rice-input" placeholder="Gram" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-center">
-                        <div class="flex gap-1">
-                            <button onclick="setAmount('rice', 100)" class="flex-1 bg-orange-200 hover:bg-orange-300 px-2 py-1 rounded text-xs">100g</button>
-                            <button onclick="setAmount('rice', 200)" class="flex-1 bg-orange-200 hover:bg-orange-300 px-2 py-1 rounded text-xs">200g</button>
-                            <button onclick="setAmount('rice', 300)" class="flex-1 bg-orange-200 hover:bg-orange-300 px-2 py-1 rounded text-xs">300g</button>
-                        </div>
-                        <button onclick="addFood('rice')" class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-lg font-medium">Tambah Nasi</button>
-                    </div>
+        <!-- Instructions Page -->
+        <div id="instructions-page" class="text-center">
+            <div class="bg-white/10 backdrop-blur-sm rounded-xl p-8 mb-8 border-l-4 border-yellow-400">
+                <div class="text-2xl md:text-3xl font-bold mb-6 text-white" id="instructions-title">📚 Arahan Kuiz</div>
+                <div class="space-y-4 text-base md:text-lg text-white text-left max-w-2xl mx-auto">
+                    <p class="flex items-center"><span class="mr-3">🔄</span> <span id="instruction-1">Tekan butang "Balikkan Kad" atau tekan <kbd class="bg-white/20 px-2 py-1 rounded mx-1">Spacebar</kbd> untuk melihat jawapan</span></p>
+                    <p class="flex items-center"><span class="mr-3">⬅️➡️</span> <span id="instruction-2">Gunakan butang atau <kbd class="bg-white/20 px-2 py-1 rounded mx-1">←→</kbd> untuk navigasi</span></p>
+                    <p class="flex items-center"><span class="mr-3">🌐</span> <span id="instruction-3">Tukar bahasa dengan menekan butang di sudut atas</span></p>
                 </div>
+            </div>
+            <button id="start-quiz-btn" class="bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-8 rounded-lg transition-all duration-300 shadow-lg text-lg">
+                <span id="start-text">Mula Kuiz</span> 🚀
+            </button>
+        </div>
 
-                <div class="food-item bg-gradient-to-br from-red-50 to-red-100 p-4 rounded-xl border border-red-200">
-                    <div class="text-center mb-3">
-                        <div class="text-2xl mb-2">🦐</div>
-                        <h3 class="font-semibold text-gray-800" data-food="prawn">Sambal Udang</h3>
-                        <p class="text-sm text-gray-600">350 kJ/100g</p>
-                    </div>
-                    <div class="space-y-2">
-                        <input type="number" id="prawn-input" placeholder="Gram" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-center">
-                        <div class="flex gap-1">
-                            <button onclick="setAmount('prawn', 100)" class="flex-1 bg-red-200 hover:bg-red-300 px-2 py-1 rounded text-xs">100g</button>
-                            <button onclick="setAmount('prawn', 200)" class="flex-1 bg-red-200 hover:bg-red-300 px-2 py-1 rounded text-xs">200g</button>
-                            <button onclick="setAmount('prawn', 300)" class="flex-1 bg-red-200 hover:bg-red-300 px-2 py-1 rounded text-xs">300g</button>
-                        </div>
-                        <button onclick="addFood('prawn')" class="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg font-medium">Tambah Sambal Udang</button>
-                    </div>
+        <!-- Quiz Page -->
+        <div id="quiz-page" class="hidden">
+            <!-- Progress Bar -->
+            <div class="mb-6">
+                <div class="flex justify-between items-center mb-2">
+                    <span id="progress-text" class="text-white font-medium">Soalan 1 daripada 7</span>
+                    <span id="progress-percentage" class="text-white font-medium">14%</span>
                 </div>
-
-                <div class="food-item bg-gradient-to-br from-amber-50 to-amber-100 p-4 rounded-xl border border-amber-200">
-                    <div class="text-center mb-3">
-                        <div class="text-2xl mb-2">🍄</div>
-                        <h3 class="font-semibold text-gray-800" data-food="soup">Sup Cendawan</h3>
-                        <p class="text-sm text-gray-600">210 kJ/100g</p>
-                    </div>
-                    <div class="space-y-2">
-                        <input type="number" id="soup-input" placeholder="Gram" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-center">
-                        <div class="flex gap-1">
-                            <button onclick="setAmount('soup', 100)" class="flex-1 bg-amber-200 hover:bg-amber-300 px-2 py-1 rounded text-xs">100g</button>
-                            <button onclick="setAmount('soup', 200)" class="flex-1 bg-amber-200 hover:bg-amber-300 px-2 py-1 rounded text-xs">200g</button>
-                            <button onclick="setAmount('soup', 300)" class="flex-1 bg-amber-200 hover:bg-amber-300 px-2 py-1 rounded text-xs">300g</button>
-                        </div>
-                        <button onclick="addFood('soup')" class="w-full bg-amber-500 hover:bg-amber-600 text-white py-2 rounded-lg font-medium">Tambah Sup</button>
-                    </div>
-                </div>
-
-                <div class="food-item bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-xl border border-green-200">
-                    <div class="text-center mb-3">
-                        <div class="text-2xl mb-2">
-                            <svg width="48" height="48" viewBox="0 0 2122 2122" xmlns="http://www.w3.org/2000/svg" style="display: inline-block; vertical-align: middle;">
-                                <g>
-                                    <path style="fill:#CFC900;stroke:#2D5016;stroke-width:8;" d="M1823.128,1381.86c-16.69-193.261-107.277-429.914-193.561-563.114c-85.068-131.316-233.557-248.771-316.304-293.617c-210.767-114.219-425.909-195.648-555.957-261.735C649.997,208.86,573.461,120.387,507.735,151.381c-54.299,25.605-41.245,81.73-84.763,113.868c-49.652,36.667-87.145,0.479-114.781,48.716c-36.123,63.051,15.239,149.923,39.236,267.878c29.084,142.948,52.601,374.51,106.593,608.074c21.198,91.702,94.889,266.1,198.824,383.056c105.421,118.63,309.42,268.945,491.264,336.477c199.664,74.153,468.887,91.804,548.053,26.821C1771.326,1871.287,1839.653,1573.226,1823.128,1381.86z"/>
-                                    <path style="fill:#FFE15D;stroke:#E6B800;stroke-width:6;" d="M1779.225,1361.472c-16.989-180.19-103.282-401.347-184.805-526.082c-80.374-122.972-219.856-233.49-297.435-275.876C1099.385,451.556,897.94,374.12,776.048,311.597c-100.58-51.592-172.676-134.583-233.811-106.184c-50.506,23.462-37.911,75.851-78.304,105.478c-46.087,33.803-81.353-0.188-106.803,44.555c-33.265,58.483,15.318,139.799,38.581,249.877c28.193,133.401,51.833,349.326,103.94,567.34c20.458,85.596,90.525,248.626,188.408,358.354c99.284,111.299,290.827,252.839,461.086,317.085c186.943,70.545,438.414,88.951,511.848,28.98C1734.428,1817.111,1796.047,1539.895,1779.225,1361.472z"/>
-                                    <path style="fill:#F6A140;" d="M426.465,383.589c0.661-0.387,1.33-0.744,2.003-1.083C427.795,382.845,427.125,383.202,426.465,383.589z"/>
-                                    <path style="fill:#F6A140;" d="M420.856,387.646c1.723-1.496,3.489-2.785,5.304-3.868C424.345,384.864,422.577,386.147,420.856,387.646z"/>
-                                    <path style="fill:#F6A140;" d="M1697.956,1660.399c0.046-0.175,0.095-0.345,0.142-0.519c-0.001,0.001-0.004,0.002-0.006,0.004C1698.046,1660.054,1698.001,1660.228,1697.956,1660.399z"/>
-                                    <path style="fill:#F6A140;stroke:#D4841F;stroke-width:4;" d="M1729.515,1350.434c-15.484-164.23-94.134-365.798-168.437-479.485c-73.255-112.08-200.382-212.809-271.089-251.441c-180.099-98.395-363.701-168.972-474.797-225.957c-91.67-47.022-183.776-149.111-239.495-123.227c-46.032,21.383-28.757,63.271-65.573,90.274c-24.279,17.808-46.107,14.956-64.693,17.235c229.376,496.111,314.119,1206.343,942.51,1324.888c106.889,28.277,214.711,8.307,310.15-42.839C1724.048,1562.55,1738.165,1442.178,1729.515,1350.434z"/>
-                                    <path style="fill:#F18825;" d="M1672.813,1737.453c0.007-0.017,0.014-0.035,0.021-0.053c9.238-23.071,17.748-49.33,25.263-77.521c-95.44,51.148-203.264,71.12-310.156,42.842C759.55,1584.176,674.807,873.945,445.432,377.834c-5.898,0.72-11.472,1.957-16.694,4.534c-0.09,0.044-0.18,0.092-0.269,0.138c-0.673,0.339-1.342,0.697-2.003,1.083c-0.103,0.059-0.203,0.127-0.305,0.189c-1.815,1.084-3.581,2.372-5.304,3.868c-0.352,0.306-0.706,0.604-1.054,0.929c-0.366,0.341-0.726,0.712-1.088,1.075c-0.402,0.403-0.803,0.814-1.199,1.245c-0.329,0.359-0.656,0.733-0.982,1.112c-0.429,0.499-0.854,1.019-1.276,1.553c-0.294,0.371-0.587,0.742-0.877,1.131c-0.472,0.633-0.938,1.303-1.402,1.984c-0.234,0.344-0.471,0.673-0.703,1.03c-0.693,1.067-1.379,2.179-2.053,3.364c-10.21,17.951-9.309,41.957-2.845,69.715c0.967,4.156,2.065,8.401,3.264,12.719c0.747,2.689,1.534,5.407,2.359,8.154c15.286,50.853,43.22,111.272,55.548,169.604c17.383,82.256,32.878,198.954,55.782,327.359c0.724,4.061,1.456,8.132,2.196,12.215c1.323,7.306,2.673,14.647,4.047,22.02c5.495,29.48,11.414,59.45,17.861,89.663c4.663,21.857,9.587,43.829,14.846,65.832c18.647,78.014,82.507,226.605,171.721,326.612c76.35,85.592,212.566,190.804,346.479,256.767c24.799,12.215,49.519,23.085,73.765,32.235c47.922,18.083,100.494,32.407,152.801,42.44c5.812,1.115,11.621,2.177,17.419,3.185c127.568,22.179,250.279,18.364,296.294-19.215c1.675-1.368,3.342-2.893,5.003-4.505c0.23-0.224,0.462-0.435,0.691-0.663c1.587-1.574,3.166-3.267,4.738-5.055c0.271-0.309,0.543-0.622,0.815-0.937c1.58-1.836,3.151-3.763,4.714-5.807c0.191-0.251,0.382-0.515,0.573-0.769c3.3-4.375,6.559-9.198,9.767-14.441c0.155-0.252,0.31-0.498,0.464-0.753c1.574-2.594,3.135-5.291,4.683-8.079c0.165-0.297,0.329-0.595,0.493-0.895c1.584-2.877,3.156-5.839,4.711-8.909c0.036-0.07,0.071-0.143,0.106-0.213c3.271-6.469,6.477-13.352,9.607-20.609c0.01-0.024,0.021-0.047,0.032-0.071C1669.726,1745.021,1671.28,1741.281,1672.813,1737.453z"/>
-                                    <path style="fill:#FFE15D;" d="M1167.137,1447.419c-0.139,0.828-0.263,1.658-0.448,2.48c0.605-0.385,1.209-0.77,1.831-1.123C1168.047,1448.334,1167.591,1447.878,1167.137,1447.419z"/>
-                                    <path style="fill:#FFE15D;" d="M1452.329,1198.369c-79.763-149.092-240.698-240.901-383.29-335.539c-127.424-84.57-225.493-151.974-322.321-271.423c-85.335-105.272-136.863-191.821-161.804-163.515c-24.94,28.306,65.257,116.158,119.304,228.597c42.95,89.352,103.238,230.198,142.22,349.605c32.356,99.11,74.563,333.863,251.477,489.739c76.976,67.822,242.534,164.571,338.004,96.689C1525.663,1528.714,1539.342,1361.011,1452.329,1198.369z"/>
-                                    <path style="fill:#FFE15D;" d="M1327.885,1497.831c0.186,0.577,0.371,1.155,0.531,1.741c0.214-0.198,0.42-0.401,0.637-0.595C1328.659,1498.599,1328.264,1498.222,1327.885,1497.831z"/>
-                                    <path style="fill:#FFE15D;" d="M1235.582,1327.879c-0.233-0.06-0.468-0.106-0.7-0.169c-0.038,0.292-0.044,0.582-0.088,0.875C1235.042,1328.335,1235.328,1328.123,1235.582,1327.879z"/>
-                                    <path style="fill:#FAB961;" d="M1483.903,835.318C1314.231,601.749,856.03,453.076,756.283,390.33c-99.748-62.746-25.926,53.525,67.335,113.799c134.131,86.688,312.466,190.095,438.338,288.517c113.955,89.104,201.17,211.401,284.116,328.111c27.42,38.581,67.404,82.897,72.553,14.561C1624.683,1054.909,1538.186,910.043,1483.903,835.318z"/>
-                                    <path style="fill:#43150A;stroke:#1A0804;stroke-width:2;" d="M988.321,987.917c-0.773-2.458-1.249-5.062-1.387-7.739c-0.293-5.724,2.737-12.903,5.657-17.166c5.354-7.814,14.363-10.276,22.597-6.276c6.994,3.399,11.768,10.2,12.415,18.011c0.672,8.103-1.756,17.172-7.69,22.957c-1.103,1.077-2.383,1.922-3.733,2.637c5.354,5.077,9.708,11.378,12.791,18.395c4.067-2.049,7.736-4.925,10.518-8.609c8.282-10.967,10.408-26.015,7.82-38.574c-0.427-2.074-1.102-4.025-1.883-5.914c-6.828-3.503-12.395-9.543-15.785-16.571c-1.706-0.804-3.469-1.517-5.336-2.024c-13.76-3.735-28.476,2.792-34.851,16.838c-0.65,1.432-2.775,7-3.411,9.947c-0.982,4.544-1.813,9.362-2.003,14.041C985.488,987.803,986.909,987.84,988.321,987.917z"/>
-                                    <path style="fill:#5B1A0F;stroke:#2D0D07;stroke-width:2;" d="M1027.603,974.747c-0.646-7.811-5.421-14.613-12.415-18.011c-8.233-4-17.243-1.538-22.597,6.276c-2.92,4.263-5.949,11.442-5.657,17.166c0.137,2.677,0.614,5.281,1.387,7.739c10.732,0.586,20.279,5.236,27.858,12.425c1.351-0.716,2.63-1.561,3.733-2.637C1025.847,991.919,1028.275,982.851,1027.603,974.747z"/>
-                                    <path style="fill:#2B0B00;" d="M1455.662,1323.244c7.474-23.101,0.693-49.943-21.028-60.926c5.91-22.91-1.828-48.408-23.885-58.263c8.312-20.345,1.298-46.085-22.075-51.637c-5.975-1.419-11.945-1.119-17.545,0.489c1.38-16.928-6.855-33.838-25.269-38.212c-3.304-0.785-6.6-0.998-9.839-0.803c2.33-17.651-5.845-35.885-25.072-40.452c-7.376-1.752-14.748-0.89-21.419,1.83c-5.153-11.839-14.925-21.305-29.573-24.784c-8.72-2.071-17.412-1.329-25.474,1.38c6.371-20.992-1.703-45.519-25.145-51.088c-5.529-1.313-11.039-1.19-16.307-0.041c5.11-20.442-3.21-43.395-25.79-48.758c-9.248-2.197-18.477-0.532-26.513,3.647c5.987-18.765-1.134-40.951-22.166-45.947c-9.082-2.157-18.133-0.11-25.761,4.511c-3.617-8.695-10.665-15.678-21.337-18.213c-22.545-5.354-45.061,14.915-45.459,37.272c-0.015,0.856,0.062,1.716,0.117,2.575c-2.813,0.258-5.668,0.701-8.597,1.546c-22.233,6.409-35.531,28.501-36.215,50.746c-2.558,0.282-5.149,0.71-7.801,1.474c-31.566,9.099-45.241,49.815-30.153,77.695c0.685,1.268,1.491,2.474,2.301,3.676c-18.299,16.214-24.213,45.904-12.382,67.766c8.625,15.937,27.486,26.903,45.857,26.46c0.72,6.626,2.552,13.107,5.743,19.005c2.557,4.724,6.042,8.994,10.118,12.687c-11.518,5.201-20.234,17.182-20.461,30.001c-0.263,14.762,11.885,30.376,27.445,30.574c-2.444,5.04-3.905,10.53-4.006,16.16c-0.285,16.069,11.432,32.886,27.402,36.674c-7.716,8.44-12.708,19.412-12.912,30.868c-0.461,25.881,25.865,53.599,55.064,39.931c4.564-2.136,10.442-5.957,15.64-10.833c-0.296,2.023-0.483,4.066-0.519,6.124c-0.289,16.21,8.631,32.995,22.212,42.371c-6.275,7.174-10.313,16.323-10.482,25.87c-0.397,22.308,22.293,46.2,47.462,34.419c1.818-0.852,3.886-2.014,6.025-3.424c-0.678,2.714-1.081,5.498-1.131,8.318c-0.397,22.308,22.294,46.199,47.463,34.419c3.378-1.581,7.601-4.233,11.565-7.603c-0.431,1.971-0.72,3.974-0.757,6.007c-0.332,18.64,18.628,38.603,39.658,28.759c3.634-1.7,8.439-4.86,12.442-8.92c8.584,15.102,26.199,25.245,45.18,16.361c3.96-1.854,9.006-5.077,13.581-9.199c6.415,18.881,26.59,34.04,48.548,23.763c5.29-2.476,12.5-7.388,17.94-13.657c9.363,10.457,23.83,15.969,39.213,8.768c7.474-3.498,18.917-11.863,23.374-22.152c5.731-13.229,5.177-28.789-1.846-40.227c4.922-2.195,9.487-5.713,13.239-10.977c4.789-6.72,10.643-19.629,9.467-30.78c-1.821-17.261-13.222-32.995-28.985-37.204c4.089-7.134,7.975-17.57,6.998-26.842c-0.272-2.583-0.793-5.122-1.476-7.604c3.577-0.009,7.321-0.788,11.138-2.575c5.94-2.78,15.036-9.429,18.579-17.608C1479.239,1350.062,1474.005,1328.864,1455.662,1323.244z"/>
-                                    <path style="fill:#5B1A0F;" d="M1414.212,1499.495c2.345,4.638,2.538,10.14,0.317,14.968c-2.655,5.772-7.79,11.01-14.049,12.669c-5.8,1.537-12.372-1.401-15.644-6.289c-3.743-5.59-3.039-12.34-0.066-18.302c1.999-4.008,6.817-7.729,10.442-9.509c2.341-1.149,4.732-1.639,7.03-1.576c-0.866-0.827-1.706-1.671-2.489-2.567c-2.421,0.776-4.792,1.91-7.011,3.531c-0.993,0.725-4.577,3.697-6.142,5.458c-3.273,3.682-6.561,7.808-8.61,12.159c-4.519,9.599-3.202,20.402,4.132,27.871c6.414,6.532,17.781,9.166,26.906,5.196c9.847-4.282,17.073-13.705,20.135-23.245c1.839-5.728,1.574-11.637-0.511-16.888C1423.714,1502.768,1418.797,1501.543,1414.212,1499.495z"/>
-                                </g>
-                            </svg>
-                        </div>
-                        <h3 class="font-semibold text-gray-800" data-food="papaya">Betik</h3>
-                        <p class="text-sm text-gray-600">147 kJ/100g</p>
-                    </div>
-                    <div class="space-y-2">
-                        <input type="number" id="papaya-input" placeholder="Gram" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-center">
-                        <div class="flex gap-1">
-                            <button onclick="setAmount('papaya', 100)" class="flex-1 bg-green-200 hover:bg-green-300 px-2 py-1 rounded text-xs">100g</button>
-                            <button onclick="setAmount('papaya', 200)" class="flex-1 bg-green-200 hover:bg-green-300 px-2 py-1 rounded text-xs">200g</button>
-                            <button onclick="setAmount('papaya', 300)" class="flex-1 bg-green-200 hover:bg-green-300 px-2 py-1 rounded text-xs">300g</button>
-                        </div>
-                        <button onclick="addFood('papaya')" class="w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg font-medium">Tambah Betik</button>
-                    </div>
+                <div class="w-full bg-white/20 rounded-full h-3">
+                    <div id="progress-bar" class="progress-fill bg-white h-3 rounded-full" style="width: 14.3%"></div>
                 </div>
             </div>
 
-            <!-- Results Section -->
-            <div class="grid md:grid-cols-2 gap-6">
-                <!-- Food Log -->
-                <div class="bg-gray-50 rounded-xl p-4">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-semibold text-gray-800" data-section="today-intake">Pengambilan Hari Ini</h3>
-                        <button onclick="resetCalculator()" class="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded-lg text-sm" data-section="reset">Set Semula</button>
-                    </div>
-                    <div id="food-log" class="space-y-2 min-h-[100px]">
-                        <p class="text-gray-500 text-center py-4">Tiada makanan ditambah lagi</p>
-                    </div>
-                </div>
-
-                <!-- Summary -->
-                <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-4">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-4" data-section="daily-summary">Ringkasan Harian</h3>
-                    
-                    <!-- Energy Display -->
-                    <div class="bg-white rounded-lg p-4 mb-4">
+            <!-- Flash Card -->
+            <div class="flip-card mb-8" id="flashCard">
+                <div class="flip-card-inner">
+                    <!-- Front of Card (Question) -->
+                    <div class="flip-card-front" id="card-front">
                         <div class="text-center">
-                            <div class="text-3xl font-bold text-blue-600" id="total-kj">0 kJ</div>
+                            <div class="text-lg md:text-xl font-bold text-black mb-4" id="question-number">Soalan 1</div>
+                            <div class="text-base md:text-lg text-black leading-relaxed font-medium" id="question-text">
+                                Siti kerap berasa letih, pucat dan mengalami anemia. Ujian darah menunjukkan kekurangan mineral tertentu.
+                            </div>
+                            <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3" id="options">
+                                <div class="bg-white/20 backdrop-blur-sm rounded-lg p-3 text-black font-medium">Zat besi (Fe)</div>
+                                <div class="bg-white/20 backdrop-blur-sm rounded-lg p-3 text-black font-medium">Kalsium (Ca)</div>
+                            </div>
                         </div>
                     </div>
-
-                    <!-- Progress Bar -->
-                    <div class="mb-4">
-                        <div class="flex justify-between text-sm text-gray-600 mb-1">
-                            <span data-section="daily-goal">Sasaran Harian</span>
-                            <span>8368 kJ</span>
+                    
+                    <!-- Back of Card (Answer) -->
+                    <div class="flip-card-back" id="card-back">
+                        <div class="text-center">
+                            <div class="text-3xl md:text-4xl font-bold text-black mb-4">✓</div>
+                            <div class="text-lg md:text-xl font-bold text-black mb-4" id="answer-label">Jawapan Betul:</div>
+                            <div class="text-xl md:text-2xl font-bold text-black" id="answer-text">
+                                Zat besi (Fe)
+                            </div>
                         </div>
-                        <div class="w-full bg-gray-200 rounded-full h-3">
-                            <div id="progress-bar" class="bg-blue-500 h-3 rounded-full transition-all duration-500" style="width: 0%"></div>
-                        </div>
-                        <div class="text-center text-sm text-gray-600 mt-1" id="progress-text">0% daripada sasaran harian</div>
-                    </div>
-
-                    <!-- Feedback -->
-                    <div id="feedback" class="bg-white rounded-lg p-3 text-center">
-                        <p class="text-gray-500">Tambah beberapa makanan untuk mendapat maklum balas yang diperibadikan!</p>
                     </div>
                 </div>
             </div>
+
+            <!-- Controls -->
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <!-- Navigation Buttons -->
+                <div class="flex gap-3">
+                    <button id="prevBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 px-6 rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg">
+                        ← <span id="prev-text">Sebelumnya</span>
+                    </button>
+                    
+                    <button id="flipBtn" class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 shadow-lg">
+                        <span id="flip-text">Balikkan Kad</span>
+                    </button>
+                    
+                    <button id="nextBtn" class="bg-purple-500 hover:bg-purple-600 text-white font-medium py-3 px-6 rounded-lg transition-all duration-300 shadow-lg">
+                        <span id="next-text">Seterusnya</span> →
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Completion Page -->
+        <div id="completion-page" class="text-center hidden">
+            <div class="bg-white/10 backdrop-blur-sm rounded-xl p-8 mb-8 border-l-4 border-green-400">
+                <div class="text-4xl md:text-5xl mb-6">🎉</div>
+                <div class="text-2xl md:text-3xl font-bold mb-4 text-white" id="congratulations-title">Tahniah!</div>
+                <div class="text-lg md:text-xl text-white mb-6" id="completion-message">
+                    Anda telah berjaya menyelesaikan semua 7 soalan tentang kekurangan vitamin dan mineral dalam badan manusia!
+                </div>
+                <div class="text-base md:text-lg text-white/80" id="completion-subtitle">
+                    Semoga pengetahuan ini membantu anda memahami kepentingan vitamin dan mineral untuk kesihatan.
+                </div>
+            </div>
+            <button id="restart-btn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-4 px-8 rounded-lg transition-all duration-300 shadow-lg text-lg">
+                <span id="restart-text">Mula Semula</span> 🔄
+            </button>
         </div>
     </div>
 
     <script>
-        // Language data
-        const languages = {
-            en: {
-                title: 'Calorie Calculator',
-                subtitle: 'Track your daily intake and get personalized feedback',
-                foods: {
-                    rice: 'White Rice',
-                    prawn: 'Chili Prawn',
-                    soup: 'Mushroom Soup',
-                    papaya: 'Papaya'
+        // Quiz data
+        const quizData = {
+            ms: [
+                {
+                    question: "Siti kerap berasa letih, pucat dan mengalami anemia. Ujian darah menunjukkan kekurangan mineral tertentu.",
+                    options: ["Zat besi (Fe)", "Kalsium (Ca)"],
+                    answer: "Zat besi (Fe)"
                 },
-                ui: {
-                    placeholder: 'Grams',
-                    addButtons: {
-                        rice: 'Add Rice',
-                        prawn: 'Add Prawn',
-                        soup: 'Add Soup',
-                        papaya: 'Add Papaya'
-                    },
-                    todayIntake: "Today's Intake",
-                    reset: 'Reset',
-                    dailySummary: 'Daily Summary',
-                    dailyGoal: 'Daily Goal',
-                    progressText: '% of daily goal',
-                    noFoodsAdded: 'No foods added yet',
-                    addFoodsMessage: 'Add some foods to get personalized feedback!',
-                    validAmountAlert: 'Please enter a valid amount in grams'
+                {
+                    question: "Farid mengalami masalah gigi rapuh dan tulang yang mudah patah. Kekurangan mineral tertentu dikesan dalam badannya.",
+                    options: ["Kalsium (Ca)", "Fosforus (P)"],
+                    answer: "Kalsium (Ca)"
                 },
-                feedback: {
-                    tooHigh: '⚠️ Too high! Try reducing sugar and fried foods for better balance.',
-                    tooLow: '📈 Too low! Add more fruits and protein to meet your energy needs.',
-                    perfect: '🎯 Perfect! You are right on track with your daily goal!',
-                    goodProgress: '👍 Good progress! Keep adding nutritious foods to reach your goal.'
+                {
+                    question: "Rafiq mengalami masalah darah sukar membeku apabila terluka. Ini disebabkan oleh kekurangan sejenis vitamin.",
+                    options: ["Vitamin K", "Vitamin D"],
+                    answer: "Vitamin K"
+                },
+                {
+                    question: "Amir sukar melihat dengan jelas pada waktu malam. Keadaan ini berpunca daripada kekurangan vitamin.",
+                    options: ["Vitamin B₁₂", "Vitamin A"],
+                    answer: "Vitamin A"
+                },
+                {
+                    question: "Aisyah sering mengalami pendarahan gusi apabila memberus gigi. Doktor mendapati badannya kekurangan sejenis vitamin.",
+                    options: ["Vitamin D", "Vitamin C"],
+                    answer: "Vitamin C"
+                },
+                {
+                    question: "Azman mempunyai leher yang membengkak akibat pembesaran kelenjar tiroid. Doktor mendapati keadaan ini berpunca daripada kekurangan mineral tertentu.",
+                    options: ["Iodin (I)", "Magnesium (Mg)"],
+                    answer: "Iodin (I)"
+                },
+                {
+                    question: "Seorang kanak-kanak didapati mengalami masalah kaki bengkok, gigi lambat tumbuh, dan tulangnya rapuh. Doktor mengesahkan dia menghidap penyakit riket. Kekurangan vitamin apakah yang menyebabkan penyakit ini?",
+                    options: ["Vitamin C", "Vitamin D"],
+                    answer: "Vitamin D"
                 }
-            },
+            ],
+            en: [
+                {
+                    question: "Siti often feels tired, pale and experiences anemia. Blood tests show a deficiency of certain minerals.",
+                    options: ["Iron (Fe)", "Calcium (Ca)"],
+                    answer: "Iron (Fe)"
+                },
+                {
+                    question: "Farid experiences brittle teeth and bones that break easily. A deficiency of certain minerals is detected in his body.",
+                    options: ["Calcium (Ca)", "Phosphorus (P)"],
+                    answer: "Calcium (Ca)"
+                },
+                {
+                    question: "Rafiq has problems with blood clotting when injured. This is caused by a deficiency of a certain vitamin.",
+                    options: ["Vitamin K", "Vitamin D"],
+                    answer: "Vitamin K"
+                },
+                {
+                    question: "Amir has difficulty seeing clearly at night. This condition stems from a vitamin deficiency.",
+                    options: ["Vitamin B₁₂", "Vitamin A"],
+                    answer: "Vitamin A"
+                },
+                {
+                    question: "Aisyah often experiences bleeding gums when brushing her teeth. The doctor found that her body lacks a certain vitamin.",
+                    options: ["Vitamin D", "Vitamin C"],
+                    answer: "Vitamin C"
+                },
+                {
+                    question: "Azman has a swollen neck due to thyroid gland enlargement. The doctor found this condition stems from a deficiency of certain minerals.",
+                    options: ["Iodine (I)", "Magnesium (Mg)"],
+                    answer: "Iodine (I)"
+                },
+                {
+                    question: "A child is found to have problems with bow legs, delayed tooth growth, and brittle bones. The doctor confirmed he has rickets. What deficiency causes this disease?",
+                    options: ["Vitamin C", "Vitamin D"],
+                    answer: "Vitamin D"
+                }
+            ]
+        };
+
+        // Language translations
+        const translations = {
             ms: {
-                title: 'Kalkulator Kalori',
-                subtitle: 'Jejaki pengambilan harian anda dan dapatkan maklum balas yang diperibadikan',
-                foods: {
-                    rice: 'Nasi Putih',
-                    prawn: 'Sambal Udang',
-                    soup: 'Sup Cendawan',
-                    papaya: 'Betik'
-                },
-                ui: {
-                    placeholder: 'Gram',
-                    addButtons: {
-                        rice: 'Tambah Nasi',
-                        prawn: 'Tambah Sambal Udang',
-                        soup: 'Tambah Sup',
-                        papaya: 'Tambah Betik'
-                    },
-                    todayIntake: 'Pengambilan Hari Ini',
-                    reset: 'Set Semula',
-                    dailySummary: 'Ringkasan Harian',
-                    dailyGoal: 'Sasaran Harian',
-                    progressText: '% daripada sasaran harian',
-                    noFoodsAdded: 'Tiada makanan ditambah lagi',
-                    addFoodsMessage: 'Tambah beberapa makanan untuk mendapat maklum balas yang diperibadikan!',
-                    validAmountAlert: 'Sila masukkan jumlah yang sah dalam gram'
-                },
-                feedback: {
-                    tooHigh: '⚠️ Terlalu tinggi! Cuba kurangkan gula dan makanan goreng untuk keseimbangan yang lebih baik.',
-                    tooLow: '📈 Terlalu rendah! Tambah lebih banyak buah-buahan dan protein untuk memenuhi keperluan tenaga anda.',
-                    perfect: '🎯 Sempurna! Anda berada di landasan yang betul dengan sasaran harian anda!',
-                    goodProgress: '👍 Kemajuan yang baik! Terus tambah makanan berkhasiat untuk mencapai sasaran anda.'
-                }
+                title: "Kuiz Kekurangan Vitamin & Mineral dalam Badan Manusia",
+                progressText: "Soalan {current} daripada {total}",
+                questionLabel: "Soalan {number}",
+                answerLabel: "Jawapan Betul:",
+                prevText: "Sebelumnya",
+                nextText: "Seterusnya",
+                flipText: "Balikkan Kad",
+                startText: "Mula Kuiz",
+                congratulationsTitle: "Tahniah!",
+                completionMessage: "Anda telah berjaya menyelesaikan kesemua soalan tentang kekurangan vitamin dan mineral dalam badan manusia!",
+                completionSubtitle: "Semoga pengetahuan ini membantu anda memahami kepentingan vitamin dan mineral untuk kesihatan.",
+                restartText: "Mula Semula",
+                instructionsTitle: "📚 Arahan Kuiz",
+                instruction1: 'Tekan butang "Balikkan Kad" atau tekan <kbd class="bg-white/20 px-2 py-1 rounded mx-1">Spacebar</kbd> untuk melihat jawapan',
+                instruction2: 'Gunakan butang atau <kbd class="bg-white/20 px-2 py-1 rounded mx-1">←→</kbd> untuk navigasi',
+                instruction3: 'Tukar bahasa dengan menekan butang di sudut atas'
+            },
+            en: {
+                title: "Quiz on Vitamin & Mineral Deficiencies in Human Body",
+                progressText: "Question {current} of {total}",
+                questionLabel: "Question {number}",
+                answerLabel: "Correct Answer:",
+                prevText: "Previous",
+                nextText: "Next",
+                flipText: "Flip Card",
+                startText: "Start Quiz",
+                congratulationsTitle: "Congratulations!",
+                completionMessage: "You have successfully completed all 7 questions about vitamin and mineral deficiencies in the human body!",
+                completionSubtitle: "Hope this knowledge helps you understand the importance of vitamins and minerals for health.",
+                restartText: "Restart",
+                instructionsTitle: "📚 Quiz Instructions",
+                instruction1: 'Press "Flip Card" button or press <kbd class="bg-white/20 px-2 py-1 rounded mx-1">Spacebar</kbd> to see answer',
+                instruction2: 'Use buttons or <kbd class="bg-white/20 px-2 py-1 rounded mx-1">←→</kbd> for navigation',
+                instruction3: 'Change language by pressing button at top corner'
             }
         };
 
-        // Current language
+        // State
+        let currentQuestion = 0;
         let currentLanguage = 'ms';
+        let isFlipped = false;
+        let currentPage = 'instructions'; // 'instructions', 'quiz', 'completion'
 
-        // Language switching function
-        function switchLanguage(lang) {
-            currentLanguage = lang;
+        // DOM elements
+        const flashCard = document.getElementById('flashCard');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const flipBtn = document.getElementById('flipBtn');
+        const progressBar = document.getElementById('progress-bar');
+        const progressText = document.getElementById('progress-text');
+        const progressPercentage = document.getElementById('progress-percentage');
+        const langMsBtn = document.getElementById('lang-ms');
+        const langEnBtn = document.getElementById('lang-en');
+        const startQuizBtn = document.getElementById('start-quiz-btn');
+        const restartBtn = document.getElementById('restart-btn');
+        const instructionsPage = document.getElementById('instructions-page');
+        const quizPage = document.getElementById('quiz-page');
+        const completionPage = document.getElementById('completion-page');
+
+        // Initialize
+        function init() {
+            showPage('instructions');
+            updateLanguage();
+        }
+
+        // Show specific page
+        function showPage(page) {
+            currentPage = page;
+            
+            // Hide all pages
+            instructionsPage.classList.add('hidden');
+            quizPage.classList.add('hidden');
+            completionPage.classList.add('hidden');
+            
+            // Show current page
+            switch(page) {
+                case 'instructions':
+                    instructionsPage.classList.remove('hidden');
+                    break;
+                case 'quiz':
+                    quizPage.classList.remove('hidden');
+                    updateCard();
+                    updateProgress();
+                    updateNavigation();
+                    break;
+                case 'completion':
+                    completionPage.classList.remove('hidden');
+                    break;
+            }
+        }
+
+        // Update card content
+        function updateCard() {
+            const data = quizData[currentLanguage][currentQuestion];
+            const trans = translations[currentLanguage];
+            
+            document.getElementById('question-number').textContent = trans.questionLabel.replace('{number}', currentQuestion + 1);
+            document.getElementById('question-text').textContent = data.question;
+            document.getElementById('answer-text').textContent = data.answer;
+            document.getElementById('answer-label').textContent = trans.answerLabel;
+            
+            // Update card colors based on question number
+            const cardFront = document.getElementById('card-front');
+            const cardBack = document.getElementById('card-back');
+            const questionNum = currentQuestion + 1;
+            
+            // Remove all existing gradient classes
+            cardFront.className = 'flip-card-front';
+            cardBack.className = 'flip-card-back';
+            
+            // Add new gradient classes
+            cardFront.classList.add(`card-gradient-front-${questionNum}`);
+            cardBack.classList.add(`card-gradient-back-${questionNum}`);
+            
+            // Update options
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+            data.options.forEach((option, index) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'bg-white/20 backdrop-blur-sm rounded-lg p-3 text-black font-medium';
+                optionDiv.textContent = option;
+                optionsContainer.appendChild(optionDiv);
+            });
+            
+            // Ensure card shows question side (not flipped)
+            flashCard.classList.remove('flipped');
+            isFlipped = false;
+        }
+
+        // Update progress
+        function updateProgress() {
+            const progress = ((currentQuestion + 1) / quizData[currentLanguage].length) * 100;
+            const trans = translations[currentLanguage];
+            
+            progressBar.style.width = `${progress}%`;
+            progressText.textContent = trans.progressText
+                .replace('{current}', currentQuestion + 1)
+                .replace('{total}', quizData[currentLanguage].length);
+            progressPercentage.textContent = `${Math.round(progress)}%`;
+        }
+
+        // Update navigation buttons
+        function updateNavigation() {
+            prevBtn.disabled = currentQuestion === 0;
+            nextBtn.disabled = currentQuestion === quizData[currentLanguage].length - 1;
+        }
+
+        // Update language
+        function updateLanguage() {
+            const trans = translations[currentLanguage];
+            
+            document.getElementById('main-title').textContent = trans.title;
+            document.getElementById('prev-text').textContent = trans.prevText;
+            document.getElementById('next-text').textContent = trans.nextText;
+            document.getElementById('flip-text').textContent = trans.flipText;
+            document.getElementById('start-text').textContent = trans.startText;
+            document.getElementById('congratulations-title').textContent = trans.congratulationsTitle;
+            document.getElementById('completion-message').textContent = trans.completionMessage;
+            document.getElementById('completion-subtitle').textContent = trans.completionSubtitle;
+            document.getElementById('restart-text').textContent = trans.restartText;
+            document.getElementById('instructions-title').textContent = trans.instructionsTitle;
+            document.getElementById('instruction-1').innerHTML = trans.instruction1;
+            document.getElementById('instruction-2').innerHTML = trans.instruction2;
+            document.getElementById('instruction-3').innerHTML = trans.instruction3;
             
             // Update language buttons
-            document.getElementById('lang-en').className = lang === 'en' 
-                ? 'px-3 py-1 rounded-md text-sm font-medium transition-colors duration-200 bg-blue-500 text-white'
-                : 'px-3 py-1 rounded-md text-sm font-medium transition-colors duration-200 bg-gray-100 text-gray-600 hover:bg-blue-100 hover:text-blue-600';
-            
-            document.getElementById('lang-ms').className = lang === 'ms' 
-                ? 'px-3 py-1 rounded-md text-sm font-medium transition-colors duration-200 bg-blue-500 text-white'
-                : 'px-3 py-1 rounded-md text-sm font-medium transition-colors duration-200 bg-gray-100 text-gray-600 hover:bg-blue-100 hover:text-blue-600';
-            
-            // Update page language attribute
-            document.documentElement.lang = lang;
-            
-            // Update page title
-            document.title = languages[lang].title;
-            
-            updatePageContent();
-        }
-
-        // Update page content with current language
-        function updatePageContent() {
-            const lang = languages[currentLanguage];
-            
-            // Update main title and subtitle
-            document.querySelector('h1').innerHTML = `🍽️ ${lang.title}`;
-            document.querySelector('h1').nextElementSibling.textContent = lang.subtitle;
-            
-            // Update food names
-            document.querySelector('h3[data-food="rice"]').textContent = lang.foods.rice;
-            document.querySelector('h3[data-food="prawn"]').textContent = lang.foods.prawn;
-            document.querySelector('h3[data-food="soup"]').textContent = lang.foods.soup;
-            document.querySelector('h3[data-food="papaya"]').textContent = lang.foods.papaya;
-            
-            // Update placeholders
-            document.querySelectorAll('input[type="number"]').forEach(input => {
-                input.placeholder = lang.ui.placeholder;
-            });
-            
-            // Update add buttons
-            document.querySelector('[onclick="addFood(\'rice\')"]').textContent = lang.ui.addButtons.rice;
-            document.querySelector('[onclick="addFood(\'prawn\')"]').textContent = lang.ui.addButtons.prawn;
-            document.querySelector('[onclick="addFood(\'soup\')"]').textContent = lang.ui.addButtons.soup;
-            document.querySelector('[onclick="addFood(\'papaya\')"]').textContent = lang.ui.addButtons.papaya;
-            
-            // Update section headers
-            document.querySelector('[data-section="today-intake"]').textContent = lang.ui.todayIntake;
-            document.querySelector('[data-section="reset"]').textContent = lang.ui.reset;
-            document.querySelector('[data-section="daily-summary"]').textContent = lang.ui.dailySummary;
-            document.querySelector('[data-section="daily-goal"]').textContent = lang.ui.dailyGoal;
-            
-            // Update food database for dynamic content
-            foods.rice.name = lang.foods.rice;
-            foods.prawn.name = lang.foods.prawn;
-            foods.soup.name = lang.foods.soup;
-            foods.papaya.name = lang.foods.papaya;
-            
-            // Refresh display
-            updateDisplay();
-        }
-
-        // Food database with kJ per 100g
-        const foods = {
-            rice: { name: 'Nasi Putih', kj: 130, emoji: '🍚' },
-            prawn: { name: 'Sambal Udang', kj: 350, emoji: '🦐' },
-            soup: { name: 'Sup Cendawan', kj: 210, emoji: '🍄' },
-            papaya: { 
-                name: 'Betik', 
-                kj: 147, 
-                emoji: '<svg width="40" height="40" viewBox="0 0 2122 2122" xmlns="http://www.w3.org/2000/svg" style="display: inline-block; vertical-align: middle;"><g><path style="fill:#CFC900;stroke:#2D5016;stroke-width:8;" d="M1823.128,1381.86c-16.69-193.261-107.277-429.914-193.561-563.114c-85.068-131.316-233.557-248.771-316.304-293.617c-210.767-114.219-425.909-195.648-555.957-261.735C649.997,208.86,573.461,120.387,507.735,151.381c-54.299,25.605-41.245,81.73-84.763,113.868c-49.652,36.667-87.145,0.479-114.781,48.716c-36.123,63.051,15.239,149.923,39.236,267.878c29.084,142.948,52.601,374.51,106.593,608.074c21.198,91.702,94.889,266.1,198.824,383.056c105.421,118.63,309.42,268.945,491.264,336.477c199.664,74.153,468.887,91.804,548.053,26.821C1771.326,1871.287,1839.653,1573.226,1823.128,1381.86z"/><path style="fill:#FFE15D;stroke:#E6B800;stroke-width:6;" d="M1779.225,1361.472c-16.989-180.19-103.282-401.347-184.805-526.082c-80.374-122.972-219.856-233.49-297.435-275.876C1099.385,451.556,897.94,374.12,776.048,311.597c-100.58-51.592-172.676-134.583-233.811-106.184c-50.506,23.462-37.911,75.851-78.304,105.478c-46.087,33.803-81.353-0.188-106.803,44.555c-33.265,58.483,15.318,139.799,38.581,249.877c28.193,133.401,51.833,349.326,103.94,567.34c20.458,85.596,90.525,248.626,188.408,358.354c99.284,111.299,290.827,252.839,461.086,317.085c186.943,70.545,438.414,88.951,511.848,28.98C1734.428,1817.111,1796.047,1539.895,1779.225,1361.472z"/><path style="fill:#F6A140;" d="M426.465,383.589c0.661-0.387,1.33-0.744,2.003-1.083C427.795,382.845,427.125,383.202,426.465,383.589z"/><path style="fill:#F6A140;" d="M420.856,387.646c1.723-1.496,3.489-2.785,5.304-3.868C424.345,384.864,422.577,386.147,420.856,387.646z"/><path style="fill:#F6A140;" d="M1697.956,1660.399c0.046-0.175,0.095-0.345,0.142-0.519c-0.001,0.001-0.004,0.002-0.006,0.004C1698.046,1660.054,1698.001,1660.228,1697.956,1660.399z"/><path style="fill:#F6A140;stroke:#D4841F;stroke-width:4;" d="M1729.515,1350.434c-15.484-164.23-94.134-365.798-168.437-479.485c-73.255-112.08-200.382-212.809-271.089-251.441c-180.099-98.395-363.701-168.972-474.797-225.957c-91.67-47.022-183.776-149.111-239.495-123.227c-46.032,21.383-28.757,63.271-65.573,90.274c-24.279,17.808-46.107,14.956-64.693,17.235c229.376,496.111,314.119,1206.343,942.51,1324.888c106.889,28.277,214.711,8.307,310.15-42.839C1724.048,1562.55,1738.165,1442.178,1729.515,1350.434z"/><path style="fill:#F18825;" d="M1672.813,1737.453c0.007-0.017,0.014-0.035,0.021-0.053c9.238-23.071,17.748-49.33,25.263-77.521c-95.44,51.148-203.264,71.12-310.156,42.842C759.55,1584.176,674.807,873.945,445.432,377.834c-5.898,0.72-11.472,1.957-16.694,4.534c-0.09,0.044-0.18,0.092-0.269,0.138c-0.673,0.339-1.342,0.697-2.003,1.083c-0.103,0.059-0.203,0.127-0.305,0.189c-1.815,1.084-3.581,2.372-5.304,3.868c-0.352,0.306-0.706,0.604-1.054,0.929c-0.366,0.341-0.726,0.712-1.088,1.075c-0.402,0.403-0.803,0.814-1.199,1.245c-0.329,0.359-0.656,0.733-0.982,1.112c-0.429,0.499-0.854,1.019-1.276,1.553c-0.294,0.371-0.587,0.742-0.877,1.131c-0.472,0.633-0.938,1.303-1.402,1.984c-0.234,0.344-0.471,0.673-0.703,1.03c-0.693,1.067-1.379,2.179-2.053,3.364c-10.21,17.951-9.309,41.957-2.845,69.715c0.967,4.156,2.065,8.401,3.264,12.719c0.747,2.689,1.534,5.407,2.359,8.154c15.286,50.853,43.22,111.272,55.548,169.604c17.383,82.256,32.878,198.954,55.782,327.359c0.724,4.061,1.456,8.132,2.196,12.215c1.323,7.306,2.673,14.647,4.047,22.02c5.495,29.48,11.414,59.45,17.861,89.663c4.663,21.857,9.587,43.829,14.846,65.832c18.647,78.014,82.507,226.605,171.721,326.612c76.35,85.592,212.566,190.804,346.479,256.767c24.799,12.215,49.519,23.085,73.765,32.235c47.922,18.083,100.494,32.407,152.801,42.44c5.812,1.115,11.621,2.177,17.419,3.185c127.568,22.179,250.279,18.364,296.294-19.215c1.675-1.368,3.342-2.893,5.003-4.505c0.23-0.224,0.462-0.435,0.691-0.663c1.587-1.574,3.166-3.267,4.738-5.055c0.271-0.309,0.543-0.622,0.815-0.937c1.58-1.836,3.151-3.763,4.714-5.807c0.191-0.251,0.382-0.515,0.573-0.769c3.3-4.375,6.559-9.198,9.767-14.441c0.155-0.252,0.31-0.498,0.464-0.753c1.574-2.594,3.135-5.291,4.683-8.079c0.165-0.297,0.329-0.595,0.493-0.895c1.584-2.877,3.156-5.839,4.711-8.909c0.036-0.07,0.071-0.143,0.106-0.213c3.271-6.469,6.477-13.352,9.607-20.609c0.01-0.024,0.021-0.047,0.032-0.071C1669.726,1745.021,1671.28,1741.281,1672.813,1737.453z"/><path style="fill:#FFE15D;" d="M1167.137,1447.419c-0.139,0.828-0.263,1.658-0.448,2.48c0.605-0.385,1.209-0.77,1.831-1.123C1168.047,1448.334,1167.591,1447.878,1167.137,1447.419z"/><path style="fill:#FFE15D;" d="M1452.329,1198.369c-79.763-149.092-240.698-240.901-383.29-335.539c-127.424-84.57-225.493-151.974-322.321-271.423c-85.335-105.272-136.863-191.821-161.804-163.515c-24.94,28.306,65.257,116.158,119.304,228.597c42.95,89.352,103.238,230.198,142.22,349.605c32.356,99.11,74.563,333.863,251.477,489.739c76.976,67.822,242.534,164.571,338.004,96.689C1525.663,1528.714,1539.342,1361.011,1452.329,1198.369z"/><path style="fill:#FFE15D;" d="M1327.885,1497.831c0.186,0.577,0.371,1.155,0.531,1.741c0.214-0.198,0.42-0.401,0.637-0.595C1328.659,1498.599,1328.264,1498.222,1327.885,1497.831z"/><path style="fill:#FFE15D;" d="M1235.582,1327.879c-0.233-0.06-0.468-0.106-0.7-0.169c-0.038,0.292-0.044,0.582-0.088,0.875C1235.042,1328.335,1235.328,1328.123,1235.582,1327.879z"/><path style="fill:#FAB961;" d="M1483.903,835.318C1314.231,601.749,856.03,453.076,756.283,390.33c-99.748-62.746-25.926,53.525,67.335,113.799c134.131,86.688,312.466,190.095,438.338,288.517c113.955,89.104,201.17,211.401,284.116,328.111c27.42,38.581,67.404,82.897,72.553,14.561C1624.683,1054.909,1538.186,910.043,1483.903,835.318z"/><path style="fill:#43150A;stroke:#1A0804;stroke-width:2;" d="M988.321,987.917c-0.773-2.458-1.249-5.062-1.387-7.739c-0.293-5.724,2.737-12.903,5.657-17.166c5.354-7.814,14.363-10.276,22.597-6.276c6.994,3.399,11.768,10.2,12.415,18.011c0.672,8.103-1.756,17.172-7.69,22.957c-1.103,1.077-2.383,1.922-3.733,2.637c5.354,5.077,9.708,11.378,12.791,18.395c4.067-2.049,7.736-4.925,10.518-8.609c8.282-10.967,10.408-26.015,7.82-38.574c-0.427-2.074-1.102-4.025-1.883-5.914c-6.828-3.503-12.395-9.543-15.785-16.571c-1.706-0.804-3.469-1.517-5.336-2.024c-13.76-3.735-28.476,2.792-34.851,16.838c-0.65,1.432-2.775,7-3.411,9.947c-0.982,4.544-1.813,9.362-2.003,14.041C985.488,987.803,986.909,987.84,988.321,987.917z"/><path style="fill:#5B1A0F;stroke:#2D0D07;stroke-width:2;" d="M1027.603,974.747c-0.646-7.811-5.421-14.613-12.415-18.011c-8.233-4-17.243-1.538-22.597,6.276c-2.92,4.263-5.949,11.442-5.657,17.166c0.137,2.677,0.614,5.281,1.387,7.739c10.732,0.586,20.279,5.236,27.858,12.425c1.351-0.716,2.63-1.561,3.733-2.637C1025.847,991.919,1028.275,982.851,1027.603,974.747z"/><path style="fill:#2B0B00;" d="M1455.662,1323.244c7.474-23.101,0.693-49.943-21.028-60.926c5.91-22.91-1.828-48.408-23.885-58.263c8.312-20.345,1.298-46.085-22.075-51.637c-5.975-1.419-11.945-1.119-17.545,0.489c1.38-16.928-6.855-33.838-25.269-38.212c-3.304-0.785-6.6-0.998-9.839-0.803c2.33-17.651-5.845-35.885-25.072-40.452c-7.376-1.752-14.748-0.89-21.419,1.83c-5.153-11.839-14.925-21.305-29.573-24.784c-8.72-2.071-17.412-1.329-25.474,1.38c6.371-20.992-1.703-45.519-25.145-51.088c-5.529-1.313-11.039-1.19-16.307-0.041c5.11-20.442-3.21-43.395-25.79-48.758c-9.248-2.197-18.477-0.532-26.513,3.647c5.987-18.765-1.134-40.951-22.166-45.947c-9.082-2.157-18.133-0.11-25.761,4.511c-3.617-8.695-10.665-15.678-21.337-18.213c-22.545-5.354-45.061,14.915-45.459,37.272c-0.015,0.856,0.062,1.716,0.117,2.575c-2.813,0.258-5.668,0.701-8.597,1.546c-22.233,6.409-35.531,28.501-36.215,50.746c-2.558,0.282-5.149,0.71-7.801,1.474c-31.566,9.099-45.241,49.815-30.153,77.695c0.685,1.268,1.491,2.474,2.301,3.676c-18.299,16.214-24.213,45.904-12.382,67.766c8.625,15.937,27.486,26.903,45.857,26.46c0.72,6.626,2.552,13.107,5.743,19.005c2.557,4.724,6.042,8.994,10.118,12.687c-11.518,5.201-20.234,17.182-20.461,30.001c-0.263,14.762,11.885,30.376,27.445,30.574c-2.444,5.04-3.905,10.53-4.006,16.16c-0.285,16.069,11.432,32.886,27.402,36.674c-7.716,8.44-12.708,19.412-12.912,30.868c-0.461,25.881,25.865,53.599,55.064,39.931c4.564-2.136,10.442-5.957,15.64-10.833c-0.296,2.023-0.483,4.066-0.519,6.124c-0.289,16.21,8.631,32.995,22.212,42.371c-6.275,7.174-10.313,16.323-10.482,25.87c-0.397,22.308,22.293,46.2,47.462,34.419c1.818-0.852,3.886-2.014,6.025-3.424c-0.678,2.714-1.081,5.498-1.131,8.318c-0.397,22.308,22.294,46.199,47.463,34.419c3.378-1.581,7.601-4.233,11.565-7.603c-0.431,1.971-0.72,3.974-0.757,6.007c-0.332,18.64,18.628,38.603,39.658,28.759c3.634-1.7,8.439-4.86,12.442-8.92c8.584,15.102,26.199,25.245,45.18,16.361c3.96-1.854,9.006-5.077,13.581-9.199c6.415,18.881,26.59,34.04,48.548,23.763c5.29-2.476,12.5-7.388,17.94-13.657c9.363,10.457,23.83,15.969,39.213,8.768c7.474-3.498,18.917-11.863,23.374-22.152c5.731-13.229,5.177-28.789-1.846-40.227c4.922-2.195,9.487-5.713,13.239-10.977c4.789-6.72,10.643-19.629,9.467-30.78c-1.821-17.261-13.222-32.995-28.985-37.204c4.089-7.134,7.975-17.57,6.998-26.842c-0.272-2.583-0.793-5.122-1.476-7.604c3.577-0.009,7.321-0.788,11.138-2.575c5.94-2.78,15.036-9.429,18.579-17.608C1479.239,1350.062,1474.005,1328.864,1455.662,1323.244z"/><path style="fill:#5B1A0F;" d="M1414.212,1499.495c2.345,4.638,2.538,10.14,0.317,14.968c-2.655,5.772-7.79,11.01-14.049,12.669c-5.8,1.537-12.372-1.401-15.644-6.289c-3.743-5.59-3.039-12.34-0.066-18.302c1.999-4.008,6.817-7.729,10.442-9.509c2.341-1.149,4.732-1.639,7.03-1.576c-0.866-0.827-1.706-1.671-2.489-2.567c-2.421,0.776-4.792,1.91-7.011,3.531c-0.993,0.725-4.577,3.697-6.142,5.458c-3.273,3.682-6.561,7.808-8.61,12.159c-4.519,9.599-3.202,20.402,4.132,27.871c6.414,6.532,17.781,9.166,26.906,5.196c9.847-4.282,17.073-13.705,20.135-23.245c1.839-5.728,1.574-11.637-0.511-16.888C1423.714,1502.768,1418.797,1501.543,1414.212,1499.495z"/></g></svg>'
-            }
-        };
-
-        let dailyIntake = [];
-        const dailyGoalKJ = 8368; // Daily goal in kJ
-
-        function setAmount(foodType, amount) {
-            document.getElementById(foodType + '-input').value = amount;
-        }
-
-        function addFood(foodType) {
-            const input = document.getElementById(foodType + '-input');
-            const amount = parseFloat(input.value);
-            
-            if (!amount || amount <= 0) {
-                alert(languages[currentLanguage].ui.validAmountAlert);
-                return;
-            }
-
-            const food = foods[foodType];
-            const totalKJ = (food.kj * amount) / 100;
-            
-            dailyIntake.push({
-                type: foodType, // 保存食物类型而不是名称
-                emoji: food.emoji,
-                amount: amount,
-                kj: totalKJ
-            });
-
-            input.value = '';
-            updateDisplay();
-        }
-
-        function updateDisplay() {
-            updateFoodLog();
-            updateSummary();
-        }
-
-        function updateFoodLog() {
-            const foodLog = document.getElementById('food-log');
-            
-            if (dailyIntake.length === 0) {
-                foodLog.innerHTML = `<p class="text-gray-500 text-center py-4">${languages[currentLanguage].ui.noFoodsAdded}</p>`;
-                return;
-            }
-
-            foodLog.innerHTML = dailyIntake.map((item, index) => `
-                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-md">
-                    <div class="flex items-center space-x-3">
-                        <span class="text-xl">${item.emoji}</span>
-                        <div>
-                            <span class="font-medium">${languages[currentLanguage].foods[item.type]}</span>
-                            <span class="text-gray-500 text-sm ml-2">${item.amount}g</span>
-                        </div>
-                    </div>
-                    <div class="text-right">
-                        <div class="font-semibold">${Math.round(item.kj)} kJ</div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function updateSummary() {
-            const totalKJ = dailyIntake.reduce((sum, item) => sum + item.kj, 0);
-            const progressPercent = (totalKJ / dailyGoalKJ) * 100;
-
-            document.getElementById('total-kj').textContent = `${Math.round(totalKJ)} kJ`;
-            document.getElementById('progress-bar').style.width = `${Math.min(progressPercent, 100)}%`;
-            document.getElementById('progress-text').textContent = `${Math.round(progressPercent)}${languages[currentLanguage].ui.progressText}`;
-
-            updateFeedback(totalKJ);
-        }
-
-        function updateFeedback(totalKJ) {
-            const feedback = document.getElementById('feedback');
-            const lang = languages[currentLanguage];
-            
-            if (totalKJ === 0) {
-                feedback.innerHTML = `<p class="text-gray-500">${lang.ui.addFoodsMessage}</p>`;
-            } else if (totalKJ > 9200) {
-                feedback.innerHTML = `<p class="text-orange-600">${lang.feedback.tooHigh}</p>`;
-                feedback.className = 'bg-orange-50 border border-orange-200 rounded-lg p-3 text-center';
-            } else if (totalKJ < 6300) {
-                feedback.innerHTML = `<p class="text-blue-600">${lang.feedback.tooLow}</p>`;
-                feedback.className = 'bg-blue-50 border border-blue-200 rounded-lg p-3 text-center';
-            } else if (totalKJ >= 7950 && totalKJ <= 8800) {
-                feedback.innerHTML = `<p class="text-green-600">${lang.feedback.perfect}</p>`;
-                feedback.className = 'bg-green-50 border border-green-200 rounded-lg p-3 text-center';
+            if (currentLanguage === 'ms') {
+                langMsBtn.classList.add('bg-white/30');
+                langEnBtn.classList.remove('bg-white/30');
             } else {
-                feedback.innerHTML = `<p class="text-blue-600">${lang.feedback.goodProgress}</p>`;
-                feedback.className = 'bg-blue-50 border border-blue-200 rounded-lg p-3 text-center';
+                langEnBtn.classList.add('bg-white/30');
+                langMsBtn.classList.remove('bg-white/30');
+            }
+            
+            if (currentPage === 'quiz') {
+                updateCard();
+                updateProgress();
             }
         }
 
-        function resetCalculator() {
-            dailyIntake = [];
-            document.querySelectorAll('input[type="number"]').forEach(input => {
-                input.value = '';
-            });
-            updateDisplay();
+        // Flip card
+        function flipCard() {
+            flashCard.classList.toggle('flipped');
+            isFlipped = !isFlipped;
         }
 
-        // Initialize display
-        updateDisplay();
-        
-        // Initialize page with current language on load
-        document.addEventListener('DOMContentLoaded', function() {
-            updatePageContent();
+        // Navigation functions
+        function nextQuestion() {
+            if (currentQuestion < quizData[currentLanguage].length - 1) {
+                currentQuestion++;
+                // Reset flip state before updating card
+                if (isFlipped) {
+                    flashCard.classList.remove('flipped');
+                    isFlipped = false;
+                }
+                updateCard();
+                updateProgress();
+                updateNavigation();
+            } else {
+                // Quiz completed, show completion page
+                showPage('completion');
+            }
+        }
+
+        function prevQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                // Reset flip state before updating card
+                if (isFlipped) {
+                    flashCard.classList.remove('flipped');
+                    isFlipped = false;
+                }
+                updateCard();
+                updateProgress();
+                updateNavigation();
+            }
+        }
+
+        // Event listeners
+        flashCard.addEventListener('click', flipCard);
+        flipBtn.addEventListener('click', flipCard);
+        nextBtn.addEventListener('click', nextQuestion);
+        prevBtn.addEventListener('click', prevQuestion);
+
+        // Page navigation
+        startQuizBtn.addEventListener('click', () => {
+            currentQuestion = 0;
+            isFlipped = false;
+            showPage('quiz');
         });
+
+        restartBtn.addEventListener('click', () => {
+            currentQuestion = 0;
+            isFlipped = false;
+            showPage('instructions');
+        });
+
+        // Language toggle
+        langMsBtn.addEventListener('click', () => {
+            currentLanguage = 'ms';
+            updateLanguage();
+        });
+
+        langEnBtn.addEventListener('click', () => {
+            currentLanguage = 'en';
+            updateLanguage();
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (currentPage !== 'quiz') return; // Only work in quiz page
+            
+            switch(e.code) {
+                case 'Space':
+                    e.preventDefault();
+                    flipCard();
+                    break;
+                case 'ArrowLeft':
+                    e.preventDefault();
+                    if (currentQuestion > 0) {
+                        currentQuestion--;
+                        // Force reset to question side
+                        flashCard.classList.remove('flipped');
+                        isFlipped = false;
+                        updateCard();
+                        updateProgress();
+                        updateNavigation();
+                    }
+                    break;
+                case 'ArrowRight':
+                    e.preventDefault();
+                    if (currentQuestion < quizData[currentLanguage].length - 1) {
+                        currentQuestion++;
+                        // Force reset to question side
+                        flashCard.classList.remove('flipped');
+                        isFlipped = false;
+                        updateCard();
+                        updateProgress();
+                        updateNavigation();
+                    } else {
+                        // Quiz completed, show completion page
+                        showPage('completion');
+                    }
+                    break;
+            }
+        });
+
+        // Initialize the quiz
+        init();
     </script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9817b40831ed26f2',t:'MTc1ODI3MDQ0MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
