@@ -3,600 +3,481 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kuiz Haiwan Interaktif</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Simulasi Hukum 10% - Aliran Tenaga Ekosistem</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
-        body { font-family: 'Poppins', sans-serif; }
-        .slide { display: none; }
-        .slide.active { display: block; }
-        .progress-fill { transition: width 0.3s ease; }
-        .answer-btn { transition: all 0.3s ease; }
-        .answer-btn:hover { transform: translateY(-2px); }
-        .correct { background: linear-gradient(135deg, #10b981, #059669); }
-        .incorrect { background: linear-gradient(135deg, #ef4444, #dc2626); }
-        .feedback { animation: fadeIn 0.5s ease; }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #87CEEB 0%, #98FB98 50%, #F0E68C 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .title {
+            text-align: center;
+            color: #2c5530;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+
+        .ecosystem {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 40px 0;
+            position: relative;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .trophic-level {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            min-width: 180px;
+        }
+
+        .trophic-level:hover {
+            transform: scale(1.05);
+        }
+
+        .organism {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            margin-bottom: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sun { background: linear-gradient(45deg, #FFD700, #FFA500); }
+        .plant { background: linear-gradient(45deg, #32CD32, #228B22); }
+        .rabbit { background: linear-gradient(45deg, #DEB887, #CD853F); }
+        .snake { background: linear-gradient(45deg, #9ACD32, #6B8E23); }
+        .eagle { background: linear-gradient(45deg, #8B4513, #A0522D); }
+
+        .energy-value {
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+
+        .organism-name {
+            font-weight: bold;
+            color: #2c5530;
+            text-align: center;
+            font-size: 1rem;
+        }
+
+        .arrow {
+            position: absolute;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #FF6B6B, #4ECDC4);
+            border-radius: 2px;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0;
+            animation: flowEnergy 3s infinite;
+        }
+
+        .arrow::after {
+            content: '';
+            position: absolute;
+            right: -10px;
+            top: -8px;
+            width: 0;
+            height: 0;
+            border-left: 15px solid #4ECDC4;
+            border-top: 8px solid transparent;
+            border-bottom: 8px solid transparent;
+        }
+
+        .arrow1 { left: 140px; animation-delay: 0s; }
+        .arrow2 { left: 140px; animation-delay: 0.7s; }
+        .arrow3 { left: 140px; animation-delay: 1.4s; }
+        .arrow4 { left: 140px; animation-delay: 2.1s; }
+
+        @keyframes flowEnergy {
+            0% { opacity: 0; transform: translateY(-50%) translateX(-20px); }
+            20% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { opacity: 0; transform: translateY(-50%) translateX(20px); }
+        }
+
+        .tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            max-width: 250px;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            pointer-events: none;
+            top: -120px;
+            left: 50%;
+            transform: translateX(-50%) translateY(10px);
+        }
+
+        .tooltip.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 8px solid transparent;
+            border-top-color: rgba(0, 0, 0, 0.9);
+        }
+
+        .info-panel {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+
+        .info-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .info-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .info-list li {
+            margin: 10px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .info-list li::before {
+            content: '🔥';
+            position: absolute;
+            left: 0;
+        }
+
+        .control-panel {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .start-btn {
+            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .start-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .language-toggle {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .lang-btn {
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid #667eea;
+            color: #667eea;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .lang-btn:hover {
+            background: rgba(102, 126, 234, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .lang-btn.active {
+            background: #667eea;
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .energy-loss {
+            position: absolute;
+            top: -30px;
+            right: -20px;
+            background: #FF6B6B;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            opacity: 0;
+            animation: showLoss 3s infinite;
+        }
+
+        @keyframes showLoss {
+            0%, 70% { opacity: 0; transform: translateY(0); }
+            80%, 90% { opacity: 1; transform: translateY(-5px); }
+            100% { opacity: 0; transform: translateY(-10px); }
+        }
+
+        @media (max-width: 768px) {
+            .ecosystem {
+                flex-direction: column;
+                gap: 30px;
+            }
+            
+            .arrow {
+                display: none;
+            }
+            
+            .title {
+                font-size: 2rem;
+            }
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-blue-100 via-purple-50 to-pink-100 min-h-screen">
-    <div class="container mx-auto px-4 py-8 max-w-4xl">
-        <!-- Header -->
-        <div class="text-center mb-8">
-            <div class="flex justify-end mb-4">
-                <button id="langBtn" onclick="toggleLanguage()" class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-4 py-2 rounded-lg font-semibold hover:from-indigo-600 hover:to-purple-700 transition-all duration-300">
-                    English
-                </button>
+<body>
+    <div class="container">
+        <h1 class="title">🌍 <span data-ms="Simulasi Aliran Tenaga Ekosistem" data-en="Ecosystem Energy Flow Simulation">Simulasi Aliran Tenaga Ekosistem</span></h1>
+        <p class="subtitle"><span data-ms="Rantai Makanan: Matahari → Tumbuhan → Arnab → Ular → Helang" data-en="Food Chain: Sun → Plants → Rabbit → Snake → Eagle">Rantai Makanan: Matahari → Tumbuhan → Arnab → Ular → Helang</span></p>
+        
+        <div class="control-panel">
+            <div class="language-toggle">
+                <button class="lang-btn active" onclick="switchLanguage('ms')">🇲🇾 Bahasa Malaysia</button>
+                <button class="lang-btn" onclick="switchLanguage('en')">🇬🇧 English</button>
             </div>
-            <h1 id="title" class="text-4xl font-bold text-gray-800 mb-2">🐾 Ciri Haiwan Vertebrata 🐾</h1>
+            <button class="start-btn" onclick="startAnimation()">▶️ <span data-ms="Mulakan Simulasi" data-en="Start Simulation">Mulakan Simulasi</span></button>
         </div>
 
-        <!-- Progress Bar -->
-        <div class="mb-8">
-            <div class="flex justify-between items-center mb-2">
-                <span class="text-sm font-semibold text-gray-600">Progres</span>
-                <span id="counter" class="text-sm font-semibold text-gray-600">1/8</span>
-            </div>
-            <div class="w-full bg-gray-200 rounded-full h-3">
-                <div id="progressBar" class="progress-fill bg-gradient-to-r from-blue-500 to-purple-600 h-3 rounded-full" style="width: 12.5%"></div>
-            </div>
-        </div>
-
-        <!-- Quiz Container -->
-        <div class="bg-white rounded-2xl shadow-xl p-8 mb-6">
-            <!-- Instructions Slide -->
-            <div class="slide active" id="instructions-slide">
-                <div class="text-center">
-                    <div class="text-6xl mb-6">📚</div>
-                    <h2 id="instructionsTitle" class="text-3xl font-bold text-gray-800 mb-6">Arahan Kuiz</h2>
-                    <div class="bg-blue-50 rounded-xl p-6 mb-6 text-left">
-                        <ul id="instructionsList" class="space-y-3 text-lg text-gray-700">
-                            <li class="flex items-start">
-                                <span class="text-blue-500 mr-3">1.</span>
-                                <span>Kuiz ini mengandungi 8 soalan tentang ciri-ciri haiwan vertebrata</span>
-                            </li>
-                            <li class="flex items-start">
-                                <span class="text-blue-500 mr-3">2.</span>
-                                <span>Setiap soalan mempunyai 2 pilihan jawapan</span>
-                            </li>
-                            <li class="flex items-start">
-                                <span class="text-blue-500 mr-3">3.</span>
-                                <span>Klik pada jawapan yang anda rasa betul</span>
-                            </li>
-                            <li class="flex items-start">
-                                <span class="text-blue-500 mr-3">4.</span>
-                                <span>Jika jawapan salah, anda boleh cuba lagi</span>
-                            </li>
-                            <li class="flex items-start">
-                                <span class="text-blue-500 mr-3">5.</span>
-                                <span>Gunakan butang "Previous" dan "Next" untuk navigasi</span>
-                            </li>
-                            <li class="flex items-start">
-                                <span class="text-blue-500 mr-3">6.</span>
-                                <span>Markah anda akan dipaparkan di akhir kuiz</span>
-                            </li>
-                        </ul>
-                    </div>
-                    <button id="startQuizBtn" onclick="startQuiz()" class="bg-gradient-to-r from-green-500 to-blue-500 text-white px-8 py-3 rounded-xl font-semibold hover:from-green-600 hover:to-blue-600 transition-all duration-300 transform hover:scale-105">
-                        <span id="startBtn">Mula Kuiz</span>
-                    </button>
-                </div>
+        <div class="ecosystem" id="ecosystem">
+            <div class="trophic-level" data-tooltip-ms="Matahari memberikan tenaga cahaya sebanyak 100,000 kJ/m² kepada tumbuhan melalui fotosintesis." data-tooltip-en="The Sun provides 100,000 kJ/m² of light energy to plants through photosynthesis.">
+                <div class="energy-value">100,000 kJ/m²</div>
+                <div class="organism sun">☀️</div>
+                <div class="organism-name"><span data-ms="Matahari" data-en="Sun">Matahari</span></div>
+                <div class="arrow arrow1"></div>
             </div>
 
-            <!-- Question 1 -->
-            <div class="slide" id="slide-0">
-                <div class="text-center mb-8">
-                    <div class="text-8xl mb-4">🦇</div>
-                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Kelawar</h2>
-                    <p class="text-lg text-gray-600 mb-6">Apakah jenis darah kelawar?</p>
-                </div>
-                <div class="space-y-4">
-                    <button class="answer-btn w-full p-4 text-lg font-semibold rounded-xl border-2 border-gray-200 hover:border-blue-400 bg-gray-50 hover:bg-blue-50 text-gray-700" onclick="checkAnswer(0, false, this)">
-                        Berdarah sejuk
-                    </button>
-                    <button class="answer-btn w-full p-4 text-lg font-semibold rounded-xl border-2 border-gray-200 hover:border-green-400 bg-gray-50 hover:bg-green-50 text-gray-700" onclick="checkAnswer(0, true, this)">
-                        Berdarah panas
-                    </button>
-                </div>
-                <div id="feedback-0" class="feedback mt-6 text-center hidden"></div>
+            <div class="trophic-level" data-tooltip-ms="Tumbuhan hijau menerima tenaga dari matahari. 99% tenaga hilang sebagai haba, hanya 1% (1,000 kJ/m²) tersimpan." data-tooltip-en="Green plants receive energy from the sun. 99% of energy is lost as heat, only 1% (1,000 kJ/m²) is stored.">
+                <div class="energy-value">1,000 kJ/m²</div>
+                <div class="organism plant">🌱</div>
+                <div class="organism-name"><span data-ms="Tumbuhan Hijau<br>(Pengeluar)" data-en="Green Plants<br>(Producer)">Tumbuhan Hijau<br>(Pengeluar)</span></div>
+                <div class="energy-loss"><span data-ms="99% hilang sebagai haba" data-en="99% lost as heat">99% hilang sebagai haba</span></div>
+                <div class="arrow arrow2"></div>
             </div>
 
-            <!-- Question 2 -->
-            <div class="slide" id="slide-1">
-                <div class="text-center mb-8">
-                    <div class="text-8xl mb-4">🐸</div>
-                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Katak</h2>
-                    <p class="text-lg text-gray-600 mb-6">Apakah habitat bagi katak?</p>
-                </div>
-                <div class="space-y-4">
-                    <button class="answer-btn w-full p-4 text-lg font-semibold rounded-xl border-2 border-gray-200 hover:border-green-400 bg-gray-50 hover:bg-green-50 text-gray-700" onclick="checkAnswer(1, true, this)">
-                        Boleh hidup di darat dan air
-                    </button>
-                    <button class="answer-btn w-full p-4 text-lg font-semibold rounded-xl border-2 border-gray-200 hover:border-blue-400 bg-gray-50 hover:bg-blue-50 text-gray-700" onclick="checkAnswer(1, false, this)">
-                        Hanya hidup di darat
-                    </button>
-                </div>
-                <div id="feedback-1" class="feedback mt-6 text-center hidden"></div>
+            <div class="trophic-level" data-tooltip-ms="Arnab memakan tumbuhan dan mendapat 100 kJ. 90% tenaga hilang melalui respirasi dan metabolisme." data-tooltip-en="Rabbit eats plants and gets 100 kJ. 90% of energy is lost through respiration and metabolism.">
+                <div class="energy-value">100 kJ</div>
+                <div class="organism rabbit">🐰</div>
+                <div class="organism-name"><span data-ms="Arnab<br>(Herbivor)" data-en="Rabbit<br>(Herbivore)">Arnab<br>(Herbivor)</span></div>
+                <div class="energy-loss"><span data-ms="90% hilang respirasi" data-en="90% lost respiration">90% hilang respirasi</span></div>
+                <div class="arrow arrow3"></div>
             </div>
 
-            <!-- Question 3 -->
-            <div class="slide" id="slide-2">
-                <div class="text-center mb-8">
-                    <div class="text-8xl mb-4">🐍</div>
-                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Ular</h2>
-                    <p class="text-lg text-gray-600 mb-6">Apakah jenis liputan badan ular?</p>
-                </div>
-                <div class="space-y-4">
-                    <button class="answer-btn w-full p-4 text-lg font-semibold rounded-xl border-2 border-gray-200 hover:border-blue-400 bg-gray-50 hover:bg-blue-50 text-gray-700" onclick="checkAnswer(2, false, this)">
-                        Berlendir
-                    </button>
-                    <button class="answer-btn w-full p-4 text-lg font-semibold rounded-xl border-2 border-gray-200 hover:border-green-400 bg-gray-50 hover:bg-green-50 text-gray-700" onclick="checkAnswer(2, true, this)">
-                        Bersisik keras
-                    </button>
-                </div>
-                <div id="feedback-2" class="feedback mt-6 text-center hidden"></div>
+            <div class="trophic-level" data-tooltip-ms="Ular memakan arnab dan mendapat 10 kJ. 90% tenaga hilang melalui pergerakan dan aktiviti." data-tooltip-en="Snake eats rabbit and gets 10 kJ. 90% of energy is lost through movement and activities.">
+                <div class="energy-value">10 kJ</div>
+                <div class="organism snake">🐍</div>
+                <div class="organism-name"><span data-ms="Ular<br>(Karnivor Sekunder)" data-en="Snake<br>(Secondary Carnivore)">Ular<br>(Karnivor Sekunder)</span></div>
+                <div class="energy-loss"><span data-ms="90% hilang pergerakan" data-en="90% lost movement">90% hilang pergerakan</span></div>
+                <div class="arrow arrow4"></div>
             </div>
 
-            <!-- Question 4 -->
-            <div class="slide" id="slide-3">
-                <div class="text-center mb-8">
-                    <div class="text-8xl mb-4">🐟</div>
-                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Ikan</h2>
-                    <p class="text-lg text-gray-600 mb-6">Apakah organ pernafasan bagi ikan?</p>
-                </div>
-                <div class="space-y-4">
-                    <button class="answer-btn w-full p-4 text-lg font-semibold rounded-xl border-2 border-gray-200 hover:border-blue-400 bg-gray-50 hover:bg-blue-50 text-gray-700" onclick="checkAnswer(3, false, this)">
-                        Paru-paru
-                    </button>
-                    <button class="answer-btn w-full p-4 text-lg font-semibold rounded-xl border-2 border-gray-200 hover:border-green-400 bg-gray-50 hover:bg-green-50 text-gray-700" onclick="checkAnswer(3, true, this)">
-                        Insang
-                    </button>
-                </div>
-                <div id="feedback-3" class="feedback mt-6 text-center hidden"></div>
-            </div>
-
-            <!-- Question 5 -->
-            <div class="slide" id="slide-4">
-                <div class="text-center mb-8">
-                    <div class="text-8xl mb-4">🐢</div>
-                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Penyu</h2>
-                    <p class="text-lg text-gray-600 mb-6">Apakah cara pembiakan bagi penyu?</p>
-                </div>
-                <div class="space-y-4">
-                    <button class="answer-btn w-full p-4 text-lg font-semibold rounded-xl border-2 border-gray-200 hover:border-green-400 bg-gray-50 hover:bg-green-50 text-gray-700" onclick="checkAnswer(4, true, this)">
-                        Bertelur
-                    </button>
-                    <button class="answer-btn w-full p-4 text-lg font-semibold rounded-xl border-2 border-gray-200 hover:border-blue-400 bg-gray-50 hover:bg-blue-50 text-gray-700" onclick="checkAnswer(4, false, this)">
-                        Melahirkan anak
-                    </button>
-                </div>
-                <div id="feedback-4" class="feedback mt-6 text-center hidden"></div>
-            </div>
-
-            <!-- Question 6 -->
-            <div class="slide" id="slide-5">
-                <div class="text-center mb-8">
-                    <div class="text-8xl mb-4">🐄</div>
-                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Lembu</h2>
-                    <p class="text-lg text-gray-600 mb-6">Apakah organ pernafasan bagi lembu?</p>
-                </div>
-                <div class="space-y-4">
-                    <button class="answer-btn w-full p-4 text-lg font-semibold rounded-xl border-2 border-gray-200 hover:border-blue-400 bg-gray-50 hover:bg-blue-50 text-gray-700" onclick="checkAnswer(5, false, this)">
-                        Insang
-                    </button>
-                    <button class="answer-btn w-full p-4 text-lg font-semibold rounded-xl border-2 border-gray-200 hover:border-green-400 bg-gray-50 hover:bg-green-50 text-gray-700" onclick="checkAnswer(5, true, this)">
-                        Paru-paru
-                    </button>
-                </div>
-                <div id="feedback-5" class="feedback mt-6 text-center hidden"></div>
-            </div>
-
-            <!-- Question 7 -->
-            <div class="slide" id="slide-6">
-                <div class="text-center mb-8">
-                    <div class="text-8xl mb-4">🦁</div>
-                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Singa</h2>
-                    <p class="text-lg text-gray-600 mb-6">Apakah jenis liputan badan singa?</p>
-                </div>
-                <div class="space-y-4">
-                    <button class="answer-btn w-full p-4 text-lg font-semibold rounded-xl border-2 border-gray-200 hover:border-green-400 bg-gray-50 hover:bg-green-50 text-gray-700" onclick="checkAnswer(6, true, this)">
-                        Mempunyai bulu, melahirkan anak
-                    </button>
-                    <button class="answer-btn w-full p-4 text-lg font-semibold rounded-xl border-2 border-gray-200 hover:border-blue-400 bg-gray-50 hover:bg-blue-50 text-gray-700" onclick="checkAnswer(6, false, this)">
-                        Bersisik dan bertelur
-                    </button>
-                </div>
-                <div id="feedback-6" class="feedback mt-6 text-center hidden"></div>
-            </div>
-
-            <!-- Question 8 -->
-            <div class="slide" id="slide-7">
-                <div class="text-center mb-8">
-                    <div class="text-8xl mb-4">🦎</div>
-                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Salamander</h2>
-                    <p class="text-lg text-gray-600 mb-6">Apakah kelas vertebrata bagi salamander?</p>
-                </div>
-                <div class="space-y-4">
-                    <button class="answer-btn w-full p-4 text-lg font-semibold rounded-xl border-2 border-gray-200 hover:border-blue-400 bg-gray-50 hover:bg-blue-50 text-gray-700" onclick="checkAnswer(7, false, this)">
-                        Mamalia
-                    </button>
-                    <button class="answer-btn w-full p-4 text-lg font-semibold rounded-xl border-2 border-gray-200 hover:border-green-400 bg-gray-50 hover:bg-green-50 text-gray-700" onclick="checkAnswer(7, true, this)">
-                        Amfibia
-                    </button>
-                </div>
-                <div id="feedback-7" class="feedback mt-6 text-center hidden"></div>
-            </div>
-
-            <!-- Results Slide -->
-            <div class="slide" id="results-slide">
-                <div class="text-center">
-                    <div class="text-6xl mb-6">🎉</div>
-                    <h2 class="text-3xl font-bold text-gray-800 mb-6">Tahniah! Kuiz Selesai!</h2>
-                    <div class="bg-gradient-to-r from-green-400 to-blue-500 text-white rounded-2xl p-8 mb-6">
-                        <div class="text-5xl font-bold mb-2" id="finalScore">0/8</div>
-                        <div class="text-xl">Markah Anda</div>
-                    </div>
-                    <div id="scoreMessage" class="text-lg text-gray-600 mb-6"></div>
-                    <button onclick="restartQuiz()" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 py-3 rounded-xl font-semibold hover:from-purple-600 hover:to-pink-600 transition-all duration-300 transform hover:scale-105">
-                        Mula Semula
-                    </button>
-                </div>
+            <div class="trophic-level" data-tooltip-ms="Helang memakan ular dan mendapat 1 kJ. 90% tenaga hilang untuk terbang, haba, dan sisa." data-tooltip-en="Eagle eats snake and gets 1 kJ. 90% of energy is lost for flying, heat, and waste.">
+                <div class="energy-value">1 kJ</div>
+                <div class="organism eagle">🦅</div>
+                <div class="organism-name"><span data-ms="Helang<br>(Karnivor Tertier)" data-en="Eagle<br>(Tertiary Carnivore)">Helang<br>(Karnivor Tertier)</span></div>
+                <div class="energy-loss"><span data-ms="90% hilang terbang & haba" data-en="90% lost flying & heat">90% hilang terbang & haba</span></div>
             </div>
         </div>
 
-        <!-- Navigation Buttons -->
-        <div class="flex justify-between">
-            <button id="prevBtn" onclick="previousSlide()" class="bg-gray-500 text-white px-6 py-3 rounded-xl font-semibold hover:bg-gray-600 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
-                ← Previous
-            </button>
-            <button id="nextBtn" onclick="nextSlide()" class="bg-blue-500 text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-600 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
-                Next →
-            </button>
+        <div class="info-panel">
+            <div class="info-title">🌱 <span data-ms="Fotosintesis" data-en="Photosynthesis">Fotosintesis</span></div>
+            <p style="margin-bottom: 15px; text-align: center;">
+                <span data-ms="Tumbuhan hijau hanya dapat menangkap sekitar 1% tenaga matahari untuk fotosintesis. Ini kerana:" data-en="Green plants can only capture about 1% of solar energy for photosynthesis. This is because:">Tumbuhan hijau hanya dapat menangkap sekitar 1% tenaga matahari untuk fotosintesis. Ini kerana:</span>
+            </p>
+            <ul class="info-list">
+                <li><span data-ms="Hanya cahaya tampak yang digunakan" data-en="Only visible light is used">Hanya cahaya tampak yang digunakan</span></li>
+                <li><span data-ms="Pantulan dan penyerapan atmosfera" data-en="Atmospheric reflection and absorption">Pantulan dan penyerapan atmosfera</span></li>
+                <li><span data-ms="Had kecekapan klorofil" data-en="Chlorophyll efficiency limits">Had kecekapan klorofil</span></li>
+                <li><span data-ms="Respirasi tumbuhan" data-en="Plant respiration">Respirasi tumbuhan</span></li>
+            </ul>
         </div>
+
+        <div class="info-panel">
+            <div class="info-title">📚 <span data-ms="Hukum 10% (Rule of 10%)" data-en="10% Rule (Rule of 10%)">Hukum 10% (Rule of 10%)</span></div>
+            <p style="margin-bottom: 15px; text-align: center;">
+                <span data-ms="Hanya sekitar 10% tenaga dipindahkan dari satu aras trofik ke aras trofik seterusnya." data-en="Only about 10% of energy is transferred from one trophic level to the next trophic level.">Hanya sekitar 10% tenaga dipindahkan dari satu aras trofik ke aras trofik seterusnya.</span>
+            </p>
+            <p style="margin-bottom: 15px; font-weight: bold;"><span data-ms="90% tenaga hilang melalui:" data-en="90% of energy is lost through:">90% tenaga hilang melalui:</span></p>
+            <ul class="info-list">
+                <li><span data-ms="Respirasi dan metabolisme untuk mengekalkan fungsi badan" data-en="Respiration and metabolism to maintain body functions">Respirasi dan metabolisme untuk mengekalkan fungsi badan</span></li>
+                <li><span data-ms="Pergerakan dan aktiviti harian organisma" data-en="Movement and daily activities of organisms">Pergerakan dan aktiviti harian organisma</span></li>
+                <li><span data-ms="Haba yang dibebaskan ke persekitaran" data-en="Heat released to the environment">Haba yang dibebaskan ke persekitaran</span></li>
+                <li><span data-ms="Sisa makanan yang tidak dapat dicerna" data-en="Food waste that cannot be digested">Sisa makanan yang tidak dapat dicerna</span></li>
+            </ul>
+        </div>
+
+        <div class="tooltip" id="tooltip"></div>
     </div>
 
     <script>
-        let currentSlide = 0;
-        let score = 0;
-        let answered = new Array(8).fill(false);
-        const totalQuestions = 8;
+        let animationRunning = false;
+        let currentLanguage = 'ms';
 
-        function updateProgress() {
-            const progress = ((currentSlide + 1) / totalQuestions) * 100;
-            document.getElementById('progressBar').style.width = progress + '%';
-            document.getElementById('counter').textContent = `${currentSlide + 1}/${totalQuestions}`;
-        }
-
-        function checkAnswer(questionIndex, isCorrect, button) {
-            const feedback = document.getElementById(`feedback-${questionIndex}`);
-            const allButtons = button.parentElement.querySelectorAll('.answer-btn');
+        function switchLanguage(lang) {
+            currentLanguage = lang;
             
-            if (isCorrect) {
-                if (!answered[questionIndex]) {
-                    score++;
-                    answered[questionIndex] = true;
+            // Update active button
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`[onclick="switchLanguage('${lang}')"]`).classList.add('active');
+            
+            // Update all text elements
+            document.querySelectorAll('[data-ms][data-en]').forEach(element => {
+                if (element.getAttribute(`data-${lang}`)) {
+                    element.innerHTML = element.getAttribute(`data-${lang}`);
                 }
-                
-                // Disable all buttons for this question
-                allButtons.forEach(btn => btn.disabled = true);
-                
-                button.classList.add('correct');
-                button.classList.remove('bg-gray-50', 'hover:bg-green-50');
-                feedback.innerHTML = `<div class="text-green-600 font-semibold text-lg">${translations[currentLanguage].correctFeedback}</div>`;
-                document.getElementById('nextBtn').disabled = false;
-            } else {
-                button.classList.add('incorrect');
-                button.classList.remove('bg-gray-50', 'hover:bg-blue-50');
-                feedback.innerHTML = `<div class="text-red-600 font-semibold text-lg">${translations[currentLanguage].incorrectFeedback}</div>`;
-                
-                // Reset button after 1 second to allow retry
-                setTimeout(() => {
-                    button.classList.remove('incorrect');
-                    button.classList.add('bg-gray-50', 'hover:bg-blue-50');
-                    feedback.classList.add('hidden');
-                }, 1000);
-            }
+            });
             
-            feedback.classList.remove('hidden');
+            // Update tooltips
+            document.querySelectorAll('.trophic-level').forEach(level => {
+                const tooltipText = level.getAttribute(`data-tooltip-${lang}`);
+                if (tooltipText) {
+                    level.setAttribute('data-tooltip', tooltipText);
+                }
+            });
         }
 
-        function showSlide(n) {
-            const slides = document.querySelectorAll('.slide');
-            slides.forEach(slide => slide.classList.remove('active'));
+        function startAnimation() {
+            if (animationRunning) return;
             
-            if (n >= totalQuestions) {
-                showResults();
-                return;
-            }
+            animationRunning = true;
+            const btn = document.querySelector('.start-btn');
+            const runningText = currentLanguage === 'ms' ? '🔄 Simulasi Berjalan...' : '🔄 Simulation Running...';
+            const startText = currentLanguage === 'ms' ? '▶️ Mulakan Simulasi' : '▶️ Start Simulation';
             
-            if (n < 0) {
-                document.getElementById('instructions-slide').classList.add('active');
-                currentSlide = -1;
-                document.getElementById('prevBtn').disabled = true;
-                document.getElementById('nextBtn').disabled = false;
-                document.getElementById('counter').textContent = translations[currentLanguage].instructionCounter;
-                document.getElementById('progressBar').style.width = '0%';
-                return;
-            }
-            
-            document.getElementById(`slide-${n}`).classList.add('active');
-            currentSlide = n;
-            updateProgress();
-            
-            // Update navigation buttons
-            document.getElementById('prevBtn').disabled = (n === 0);
-            document.getElementById('nextBtn').disabled = !answered[n];
-        }
+            btn.innerHTML = runningText;
+            btn.disabled = true;
 
-        function nextSlide() {
-            if (currentSlide === -1) {
-                startQuiz();
-            } else if (currentSlide < totalQuestions - 1) {
-                showSlide(currentSlide + 1);
-            } else {
-                showResults();
-            }
-        }
+            // Reset and start animations
+            const arrows = document.querySelectorAll('.arrow');
+            const energyLosses = document.querySelectorAll('.energy-loss');
+            
+            arrows.forEach(arrow => {
+                arrow.style.animation = 'none';
+                arrow.offsetHeight; // Trigger reflow
+                arrow.style.animation = null;
+            });
 
-        function previousSlide() {
-            if (currentSlide > 0) {
-                showSlide(currentSlide - 1);
-            }
-        }
+            energyLosses.forEach(loss => {
+                loss.style.animation = 'none';
+                loss.offsetHeight; // Trigger reflow
+                loss.style.animation = null;
+            });
 
-        function showResults() {
-            const slides = document.querySelectorAll('.slide');
-            slides.forEach(slide => slide.classList.remove('active'));
-            document.getElementById('results-slide').classList.add('active');
-            
-            document.getElementById('finalScore').textContent = `${score}/${totalQuestions}`;
-            
-            const t = translations[currentLanguage];
-            const percentage = (score / totalQuestions) * 100;
-            let messageIndex = 3; // Default to lowest score message
-            
-            if (percentage === 100) messageIndex = 0;
-            else if (percentage >= 75) messageIndex = 1;
-            else if (percentage >= 50) messageIndex = 2;
-            
-            document.getElementById('scoreMessage').textContent = t.scoreMessages[messageIndex];
-            
-            // Hide navigation buttons
-            document.getElementById('prevBtn').style.display = 'none';
-            document.getElementById('nextBtn').style.display = 'none';
-            
-            // Update progress to 100%
-            document.getElementById('progressBar').style.width = '100%';
-            document.getElementById('counter').textContent = translations[currentLanguage].completed;
-        }
-
-        function restartQuiz() {
-            currentSlide = -1;
-            score = 0;
-            answered.fill(false);
-            
-            // Reset all buttons
-            document.querySelectorAll('.answer-btn').forEach(btn => {
+            // Reset button after animation cycle
+            setTimeout(() => {
+                animationRunning = false;
+                btn.innerHTML = `▶️ <span data-ms="Mulakan Simulasi" data-en="Start Simulation">${startText}</span>`;
                 btn.disabled = false;
-                btn.classList.remove('correct', 'incorrect');
-                btn.classList.add('bg-gray-50');
-            });
-            
-            // Hide all feedback
-            document.querySelectorAll('.feedback').forEach(feedback => {
-                feedback.classList.add('hidden');
-            });
-            
-            // Show navigation buttons
-            document.getElementById('prevBtn').style.display = 'inline-block';
-            document.getElementById('nextBtn').style.display = 'inline-block';
-            
-            // Show instructions slide
-            const slides = document.querySelectorAll('.slide');
-            slides.forEach(slide => slide.classList.remove('active'));
-            document.getElementById('instructions-slide').classList.add('active');
-            
-            document.getElementById('counter').textContent = translations[currentLanguage].instructionCounter;
-            document.getElementById('progressBar').style.width = '0%';
-            document.getElementById('prevBtn').disabled = true;
-            document.getElementById('nextBtn').disabled = false;
+            }, 3000);
         }
 
-        // Language toggle functionality
-        let currentLanguage = 'ms'; // Default to Malay
-        
-        const translations = {
-            ms: {
-                title: '🐾 Ciri Haiwan Vertebrata 🐾',
-                progress: 'Progres',
-                previous: '← Previous',
-                next: 'Next →',
-                completed: 'Selesai!',
-                instructionCounter: 'Arahan',
-                congratulations: 'Tahniah! Kuiz Selesai!',
-                yourScore: 'Markah Anda',
-                restart: 'Mula Semula',
-                correctFeedback: '🎉 Tahniah! Jawapan anda betul.',
-                incorrectFeedback: '❌ Cuba lagi!',
-                langBtn: 'English',
-                instructionsTitle: 'Arahan Kuiz',
-                startBtn: 'Mula Kuiz',
-                instructions: [
-                    'Kuiz ini mengandungi 8 soalan tentang ciri-ciri haiwan vertebrata',
-                    'Setiap soalan mempunyai 2 pilihan jawapan',
-                    'Klik pada jawapan yang anda rasa betul',
-                    'Jika jawapan salah, anda boleh cuba lagi',
-                    'Gunakan butang "Previous" dan "Next" untuk navigasi',
-                    'Markah anda akan dipaparkan di akhir kuiz'
-                ],
-                questions: [
-                    'Apakah jenis darah kelawar?',
-                    'Apakah habitat bagi katak?',
-                    'Apakah jenis liputan badan ular?',
-                    'Apakah organ pernafasan bagi ikan?',
-                    'Apakah cara pembiakan bagi penyu?',
-                    'Apakah organ pernafasan bagi lembu?',
-                    'Apakah jenis liputan badan singa?',
-                    'Apakah kelas vertebrata bagi salamander?'
-                ],
-                animals: ['Kelawar', 'Katak', 'Ular', 'Ikan', 'Penyu', 'Lembu', 'Singa', 'Salamander'],
-                answers: [
-                    ['Berdarah sejuk', 'Berdarah panas'],
-                    ['Boleh hidup di darat dan air', 'Hanya hidup di darat'],
-                    ['Berlendir', 'Bersisik keras'],
-                    ['Paru-paru', 'Insang'],
-                    ['Bertelur', 'Melahirkan anak'],
-                    ['Insang', 'Paru-paru'],
-                    ['Mempunyai bulu, melahirkan anak', 'Bersisik dan bertelur'],
-                    ['Mamalia', 'Amfibia']
-                ],
-                scoreMessages: [
-                    'Sempurna! Anda menguasai topik ini dengan baik! 🌟',
-                    'Bagus sekali! Prestasi yang cemerlang! 👏',
-                    'Tidak buruk! Teruskan usaha anda! 💪',
-                    'Jangan berputus asa! Cuba lagi untuk hasil yang lebih baik! 📚'
-                ]
-            },
-            en: {
-                title: '🐾 Vertebrate Animal Characteristics 🐾',
-                progress: 'Progress',
-                previous: '← Previous',
-                next: 'Next →',
-                completed: 'Complete!',
-                instructionCounter: 'Instructions',
-                congratulations: 'Congratulations! Quiz Complete!',
-                yourScore: 'Your Score',
-                restart: 'Restart',
-                correctFeedback: '🎉 Congratulations! Your answer is correct.',
-                incorrectFeedback: '❌ Try again!',
-                langBtn: 'Bahasa Malaysia',
-                instructionsTitle: 'Quiz Instructions',
-                startBtn: 'Start Quiz',
-                instructions: [
-                    'This quiz contains 8 questions about vertebrate animal characteristics',
-                    'Each question has 2 answer choices',
-                    'Click on the answer you think is correct',
-                    'If the answer is wrong, you can try again',
-                    'Use "Previous" and "Next" buttons for navigation',
-                    'Your score will be displayed at the end of the quiz'
-                ],
-                questions: [
-                    'What type of blood does a bat have?',
-                    'What is the habitat of a frog?',
-                    'What type of body covering does a snake have?',
-                    'What is the respiratory organ of a fish?',
-                    'What is the reproduction method of a turtle?',
-                    'What is the respiratory organ of a cow?',
-                    'What type of body covering does a lion have?',
-                    'What vertebrate class does a salamander belong to?'
-                ],
-                animals: ['Bat', 'Frog', 'Snake', 'Fish', 'Turtle', 'Cow', 'Lion', 'Salamander'],
-                answers: [
-                    ['Cold-blooded', 'Warm-blooded'],
-                    ['Can live on land and water', 'Only lives on land'],
-                    ['Slimy', 'Hard scales'],
-                    ['Lungs', 'Gills'],
-                    ['Lay eggs', 'Give birth to live young'],
-                    ['Gills', 'Lungs'],
-                    ['Has fur, gives birth to live young', 'Has scales and lays eggs'],
-                    ['Mammal', 'Amphibian']
-                ],
-                scoreMessages: [
-                    'Perfect! You have mastered this topic very well! 🌟',
-                    'Excellent! Outstanding performance! 👏',
-                    'Not bad! Keep up your efforts! 💪',
-                    'Don\'t give up! Try again for better results! 📚'
-                ]
-            }
-        };
+        // Tooltip functionality
+        const trophicLevels = document.querySelectorAll('.trophic-level');
+        const tooltip = document.getElementById('tooltip');
 
-        function toggleLanguage() {
-            currentLanguage = currentLanguage === 'ms' ? 'en' : 'ms';
-            const t = translations[currentLanguage];
-            
-            // Update UI elements
-            document.getElementById('title').textContent = t.title;
-            document.querySelector('.text-sm.font-semibold.text-gray-600').textContent = t.progress;
-            document.getElementById('prevBtn').innerHTML = t.previous;
-            document.getElementById('nextBtn').innerHTML = t.next;
-            document.getElementById('langBtn').textContent = t.langBtn;
-            
-            // Update instructions slide
-            document.getElementById('instructionsTitle').textContent = t.instructionsTitle;
-            document.getElementById('startBtn').textContent = t.startBtn;
-            
-            // Update instruction list
-            const instructionsList = document.getElementById('instructionsList');
-            instructionsList.innerHTML = '';
-            t.instructions.forEach((instruction, index) => {
-                const li = document.createElement('li');
-                li.className = 'flex items-start';
-                li.innerHTML = `
-                    <span class="text-blue-500 mr-3">${index + 1}.</span>
-                    <span>${instruction}</span>
-                `;
-                instructionsList.appendChild(li);
-            });
-            
-            // Update question slides
-            for (let i = 0; i < 8; i++) {
-                const slide = document.getElementById(`slide-${i}`);
-                if (slide) {
-                    const animalName = slide.querySelector('h2');
-                    const questionText = slide.querySelector('p');
-                    const answerButtons = slide.querySelectorAll('.answer-btn');
-                    
-                    if (animalName) animalName.textContent = t.animals[i];
-                    if (questionText) questionText.textContent = t.questions[i];
-                    
-                    // Update answer buttons
-                    answerButtons.forEach((btn, btnIndex) => {
-                        btn.textContent = t.answers[i][btnIndex];
-                    });
-                }
-            }
-            
-            // Update results page if visible
-            const resultsSlide = document.getElementById('results-slide');
-            if (resultsSlide.classList.contains('active')) {
-                resultsSlide.querySelector('h2').textContent = t.congratulations;
-                resultsSlide.querySelector('.text-xl').textContent = t.yourScore;
-                resultsSlide.querySelector('button').textContent = t.restart;
+        trophicLevels.forEach(level => {
+            level.addEventListener('mouseenter', (e) => {
+                const tooltipText = level.getAttribute(`data-tooltip-${currentLanguage}`) || level.getAttribute('data-tooltip');
+                tooltip.textContent = tooltipText;
+                tooltip.classList.add('show');
                 
-                // Update score message
-                const percentage = (score / totalQuestions) * 100;
-                let messageIndex = 3; // Default to lowest score message
-                if (percentage === 100) messageIndex = 0;
-                else if (percentage >= 75) messageIndex = 1;
-                else if (percentage >= 50) messageIndex = 2;
+                const rect = level.getBoundingClientRect();
+                const containerRect = document.querySelector('.container').getBoundingClientRect();
                 
-                document.getElementById('scoreMessage').textContent = t.scoreMessages[messageIndex];
-            }
-        }
+                tooltip.style.left = (rect.left - containerRect.left + rect.width / 2) + 'px';
+                tooltip.style.top = (rect.top - containerRect.top - 10) + 'px';
+            });
 
-        function startQuiz() {
-            const slides = document.querySelectorAll('.slide');
-            slides.forEach(slide => slide.classList.remove('active'));
-            
-            document.getElementById('slide-0').classList.add('active');
-            currentSlide = 0;
-            updateProgress();
-            document.getElementById('prevBtn').disabled = false;
-            document.getElementById('nextBtn').disabled = true;
-        }
-
-        // Initialize - fix the duplicate declaration
-        currentSlide = -1;
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('counter').textContent = translations[currentLanguage].instructionCounter;
-            document.getElementById('progressBar').style.width = '0%';
-            document.getElementById('prevBtn').disabled = true;
-            document.getElementById('nextBtn').disabled = false;
+            level.addEventListener('mouseleave', () => {
+                tooltip.classList.remove('show');
+            });
         });
-    </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97fd9a350265f594',t:'MTc1Nzk5Njc1Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
-</html>
 
+        // Auto-start animation on load
+        window.addEventListener('load', () => {
+            setTimeout(startAnimation, 1000);
+        });
+
+        // Add pulsing effect to organisms
+        setInterval(() => {
+            const organisms = document.querySelectorAll('.organism');
+            organisms.forEach((org, index) => {
+                setTimeout(() => {
+                    org.style.transform = 'scale(1.1)';
+                    setTimeout(() => {
+                        org.style.transform = 'scale(1)';
+                    }, 200);
+                }, index * 300);
+            });
+        }, 4000);
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9807b590a703c0c2',t:'MTc1ODEwMjczMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
