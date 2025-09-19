@@ -13,7 +13,7 @@
         .flip-card {
             perspective: 1000px;
             width: 100%;
-            height: 300px;
+            height: 350px;
         }
         
         .flip-card-inner {
@@ -39,8 +39,14 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 24px;
+            padding: 20px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        @media (max-width: 640px) {
+            .flip-card-front, .flip-card-back {
+                padding: 16px;
+            }
         }
         
         .flip-card-back {
@@ -96,12 +102,12 @@
         }
         
         .progress-fill {
-            transition: width 0.3s ease;
+            transition: width 0.1s ease;
         }
         
         @media (max-width: 640px) {
             .flip-card {
-                height: 250px;
+                height: 320px;
             }
         }
     </style>
@@ -163,13 +169,13 @@
                     <!-- Front of Card (Question) -->
                     <div class="flip-card-front" id="card-front">
                         <div class="text-center">
-                            <div class="text-lg md:text-xl font-bold text-black mb-4" id="question-number">Soalan 1</div>
-                            <div class="text-base md:text-lg text-black leading-relaxed font-medium" id="question-text">
+                            <div class="text-xl md:text-2xl font-bold text-black mb-4" id="question-number">Soalan 1</div>
+                            <div class="text-lg md:text-xl text-black leading-relaxed font-medium px-2" id="question-text">
                                 Siti kerap berasa letih, pucat dan mengalami anemia. Ujian darah menunjukkan kekurangan mineral tertentu.
                             </div>
                             <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3" id="options">
-                                <div class="bg-white/20 backdrop-blur-sm rounded-lg p-3 text-black font-medium">Zat besi (Fe)</div>
-                                <div class="bg-white/20 backdrop-blur-sm rounded-lg p-3 text-black font-medium">Kalsium (Ca)</div>
+                                <div class="bg-white/20 backdrop-blur-sm rounded-lg p-3 text-black font-semibold text-base md:text-lg">Zat besi (Fe)</div>
+                                <div class="bg-white/20 backdrop-blur-sm rounded-lg p-3 text-black font-semibold text-base md:text-lg">Kalsium (Ca)</div>
                             </div>
                         </div>
                     </div>
@@ -178,8 +184,8 @@
                     <div class="flip-card-back" id="card-back">
                         <div class="text-center">
                             <div class="text-3xl md:text-4xl font-bold text-black mb-4">✓</div>
-                            <div class="text-lg md:text-xl font-bold text-black mb-4" id="answer-label">Jawapan Betul:</div>
-                            <div class="text-xl md:text-2xl font-bold text-black" id="answer-text">
+                            <div class="text-xl md:text-2xl font-bold text-black mb-4" id="answer-label">Jawapan Betul:</div>
+                            <div class="text-2xl md:text-3xl font-bold text-black px-2" id="answer-text">
                                 Zat besi (Fe)
                             </div>
                         </div>
@@ -201,6 +207,10 @@
                     
                     <button id="nextBtn" class="bg-purple-500 hover:bg-purple-600 text-white font-medium py-3 px-6 rounded-lg transition-all duration-300 shadow-lg">
                         <span id="next-text">Seterusnya</span> →
+                    </button>
+                    
+                    <button id="finishBtn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 shadow-lg hidden">
+                        <span id="finish-text">Tamat Kuiz</span> ✓
                     </button>
                 </div>
             </div>
@@ -318,6 +328,7 @@
                 completionMessage: "Anda telah berjaya menyelesaikan kesemua soalan tentang kekurangan vitamin dan mineral dalam badan manusia!",
                 completionSubtitle: "Semoga pengetahuan ini membantu anda memahami kepentingan vitamin dan mineral untuk kesihatan.",
                 restartText: "Mula Semula",
+                finishText: "Tamat Kuiz",
                 instructionsTitle: "📚 Arahan Kuiz",
                 instruction1: 'Tekan butang "Balikkan Kad" atau tekan <kbd class="bg-white/20 px-2 py-1 rounded mx-1">Spacebar</kbd> untuk melihat jawapan',
                 instruction2: 'Gunakan butang atau <kbd class="bg-white/20 px-2 py-1 rounded mx-1">←→</kbd> untuk navigasi',
@@ -336,6 +347,7 @@
                 completionMessage: "You have successfully completed all 7 questions about vitamin and mineral deficiencies in the human body!",
                 completionSubtitle: "Hope this knowledge helps you understand the importance of vitamins and minerals for health.",
                 restartText: "Restart",
+                finishText: "Finish Quiz",
                 instructionsTitle: "📚 Quiz Instructions",
                 instruction1: 'Press "Flip Card" button or press <kbd class="bg-white/20 px-2 py-1 rounded mx-1">Spacebar</kbd> to see answer',
                 instruction2: 'Use buttons or <kbd class="bg-white/20 px-2 py-1 rounded mx-1">←→</kbd> for navigation',
@@ -353,6 +365,7 @@
         const flashCard = document.getElementById('flashCard');
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
+        const finishBtn = document.getElementById('finishBtn');
         const flipBtn = document.getElementById('flipBtn');
         const progressBar = document.getElementById('progress-bar');
         const progressText = document.getElementById('progress-text');
@@ -425,7 +438,7 @@
             optionsContainer.innerHTML = '';
             data.options.forEach((option, index) => {
                 const optionDiv = document.createElement('div');
-                optionDiv.className = 'bg-white/20 backdrop-blur-sm rounded-lg p-3 text-black font-medium';
+                optionDiv.className = 'bg-white/20 backdrop-blur-sm rounded-lg p-3 text-black font-semibold text-base md:text-lg';
                 optionDiv.textContent = option;
                 optionsContainer.appendChild(optionDiv);
             });
@@ -450,7 +463,16 @@
         // Update navigation buttons
         function updateNavigation() {
             prevBtn.disabled = currentQuestion === 0;
-            nextBtn.disabled = currentQuestion === quizData[currentLanguage].length - 1;
+            
+            // Show/hide buttons based on current question
+            if (currentQuestion === quizData[currentLanguage].length - 1) {
+                nextBtn.style.display = 'none';
+                finishBtn.style.display = 'inline-block';
+            } else {
+                nextBtn.style.display = 'inline-block';
+                finishBtn.style.display = 'none';
+                nextBtn.disabled = false;
+            }
         }
 
         // Update language
@@ -466,6 +488,7 @@
             document.getElementById('completion-message').textContent = trans.completionMessage;
             document.getElementById('completion-subtitle').textContent = trans.completionSubtitle;
             document.getElementById('restart-text').textContent = trans.restartText;
+            document.getElementById('finish-text').textContent = trans.finishText;
             document.getElementById('instructions-title').textContent = trans.instructionsTitle;
             document.getElementById('instruction-1').innerHTML = trans.instruction1;
             document.getElementById('instruction-2').innerHTML = trans.instruction2;
@@ -496,11 +519,9 @@
         function nextQuestion() {
             if (currentQuestion < quizData[currentLanguage].length - 1) {
                 currentQuestion++;
-                // Reset flip state before updating card
-                if (isFlipped) {
-                    flashCard.classList.remove('flipped');
-                    isFlipped = false;
-                }
+                // Force reset to question side and update immediately
+                isFlipped = false;
+                flashCard.classList.remove('flipped');
                 updateCard();
                 updateProgress();
                 updateNavigation();
@@ -513,11 +534,9 @@
         function prevQuestion() {
             if (currentQuestion > 0) {
                 currentQuestion--;
-                // Reset flip state before updating card
-                if (isFlipped) {
-                    flashCard.classList.remove('flipped');
-                    isFlipped = false;
-                }
+                // Force reset to question side and update immediately
+                isFlipped = false;
+                flashCard.classList.remove('flipped');
                 updateCard();
                 updateProgress();
                 updateNavigation();
@@ -529,6 +548,7 @@
         flipBtn.addEventListener('click', flipCard);
         nextBtn.addEventListener('click', nextQuestion);
         prevBtn.addEventListener('click', prevQuestion);
+        finishBtn.addEventListener('click', () => showPage('completion'));
 
         // Page navigation
         startQuizBtn.addEventListener('click', () => {
@@ -565,30 +585,11 @@
                     break;
                 case 'ArrowLeft':
                     e.preventDefault();
-                    if (currentQuestion > 0) {
-                        currentQuestion--;
-                        // Force reset to question side
-                        flashCard.classList.remove('flipped');
-                        isFlipped = false;
-                        updateCard();
-                        updateProgress();
-                        updateNavigation();
-                    }
+                    prevQuestion();
                     break;
                 case 'ArrowRight':
                     e.preventDefault();
-                    if (currentQuestion < quizData[currentLanguage].length - 1) {
-                        currentQuestion++;
-                        // Force reset to question side
-                        flashCard.classList.remove('flipped');
-                        isFlipped = false;
-                        updateCard();
-                        updateProgress();
-                        updateNavigation();
-                    } else {
-                        // Quiz completed, show completion page
-                        showPage('completion');
-                    }
+                    nextQuestion();
                     break;
             }
         });
@@ -596,5 +597,5 @@
         // Initialize the quiz
         init();
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9817b40831ed26f2',t:'MTc1ODI3MDQ0MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'981805d3f616d4a9',t:'MTc1ODI3Mzc5MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
