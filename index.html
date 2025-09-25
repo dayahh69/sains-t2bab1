@@ -3,601 +3,718 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kuiz Flash Card - Kekurangan Vitamin & Mineral</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>Kuiz Mikroorganisma</title>
     <style>
         body {
-            font-family: 'Inter', sans-serif;
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            transition: background 0.8s ease;
         }
-        .flip-card {
-            perspective: 1000px;
-            width: 100%;
-            height: 350px;
+
+        .bg-gradient-1 { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .bg-gradient-2 { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .bg-gradient-3 { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .bg-gradient-4 { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+        .bg-gradient-5 { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+        .bg-gradient-6 { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); }
+        .bg-gradient-7 { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); }
+        .bg-gradient-8 { background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); }
+        .bg-gradient-9 { background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); }
+        .bg-gradient-10 { background: linear-gradient(135deg, #fad0c4 0%, #ffd1ff 100%); }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
-        
-        .flip-card-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
             text-align: center;
-            transition: transform 0.8s;
-            transform-style: preserve-3d;
+            animation: slideIn 0.6s ease-out;
         }
-        
-        .flip-card.flipped .flip-card-inner {
-            transform: rotateY(180deg);
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        
-        .flip-card-front, .flip-card-back {
+
+        .language-toggle {
             position: absolute;
-            width: 100%;
-            height: 100%;
-            -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
-            border-radius: 16px;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 25px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .language-toggle:hover {
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        h1 {
+            color: #2d3748;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+
+        .instructions-title {
+            color: #2d3748;
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        .instructions-container {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .instruction-item {
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            border: 2px solid #e2e8f0;
+            border-radius: 15px;
+            padding: 20px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            padding: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            gap: 15px;
+            transition: all 0.3s ease;
+            cursor: default;
+            position: relative;
+            overflow: hidden;
         }
-        
-        @media (max-width: 640px) {
-            .flip-card-front, .flip-card-back {
-                padding: 16px;
-            }
+
+        .instruction-item:hover {
+            border-color: #4299e1;
+            background: linear-gradient(135deg, #ebf8ff 0%, #bee3f8 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(66, 153, 225, 0.2);
         }
-        
-        .flip-card-back {
-            transform: rotateY(180deg);
+
+        .instruction-icon {
+            font-size: 1.5rem;
+            min-width: 30px;
+            text-align: center;
         }
-        
-        .gradient-bg {
+
+        .instruction-item span:last-child {
+            font-size: 1.1rem;
+            color: #2d3748;
+            font-weight: 500;
+        }
+
+        .instruction-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s;
+        }
+
+        .instruction-item:hover::before {
+            left: 100%;
+        }
+
+        .question-header {
+            font-size: 1.1rem;
+            color: #718096;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .question {
+            font-size: 1.4rem;
+            color: #2d3748;
+            margin-bottom: 30px;
+            font-weight: 600;
+            line-height: 1.5;
+        }
+
+        .options {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .option {
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            font-size: 1.1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .option:hover {
+            border-color: #4299e1;
+            background: #ebf8ff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(66, 153, 225, 0.15);
+        }
+
+        .option.selected {
+            border-color: #3182ce;
+            background: #bee3f8;
+            color: #2c5282;
+        }
+
+        .option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.5s;
+        }
+
+        .option:hover::before {
+            left: 100%;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            min-width: 120px;
         }
-        
-        .card-gradient-front-1 {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ffa500 100%);
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
         }
-        .card-gradient-front-2 {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+
+        .btn:active {
+            transform: translateY(-1px);
         }
-        .card-gradient-front-3 {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #718096 0%, #4a5568 100%);
         }
-        .card-gradient-front-4 {
-            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+
+        .btn-secondary:hover {
+            box-shadow: 0 8px 25px rgba(113, 128, 150, 0.4);
         }
-        .card-gradient-front-5 {
-            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
         }
-        .card-gradient-front-6 {
-            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+
+        .btn:disabled:hover {
+            transform: none;
+            box-shadow: none;
         }
-        .card-gradient-front-7 {
-            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+
+        .results {
+            text-align: center;
         }
-        
-        .card-gradient-back-1 {
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+
+        .score {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #2d3748;
+            margin: 20px 0;
         }
-        .card-gradient-back-2 {
-            background: linear-gradient(135deg, #fc466b 0%, #3f5efb 100%);
+
+        .results-summary {
+            font-size: 1.5rem;
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-weight: 600;
         }
-        .card-gradient-back-3 {
-            background: linear-gradient(135deg, #fdbb2d 0%, #22c1c3 100%);
+
+        .motivation {
+            font-size: 1.2rem;
+            color: #38a169;
+            margin: 20px 0 30px 0;
+            font-weight: 600;
+            font-style: italic;
         }
-        .card-gradient-back-4 {
-            background: linear-gradient(135deg, #ee9ca7 0%, #ffdde1 100%);
+
+        .hidden {
+            display: none;
         }
-        .card-gradient-back-5 {
-            background: linear-gradient(135deg, #2196f3 0%, #21cbf3 100%);
+
+        .italic {
+            font-style: italic;
         }
-        .card-gradient-back-6 {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+
+        .bold {
+            font-weight: bold;
         }
-        .card-gradient-back-7 {
-            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-        }
-        
-        .progress-fill {
-            transition: width 0 s ease;
-        }
-        
-        @media (max-width: 640px) {
-            .flip-card {
-                height: 320px;
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .buttons {
+                flex-direction: column;
+            }
+            
+            .language-toggle {
+                position: relative;
+                top: 0;
+                right: 0;
+                margin-bottom: 20px;
             }
         }
     </style>
 </head>
-<body class="gradient-bg min-h-screen">
-    <div class="container mx-auto px-4 py-8 max-w-4xl">
-        <!-- Header -->
-        <div class="text-center mb-8">
-            <h1 id="main-title" class="text-3xl md:text-4xl font-bold text-white mb-4">
-                Kuiz Kekurangan Vitamin & Mineral dalam Badan Manusia
-            </h1>
-            
-            <!-- Language Toggle -->
-            <div class="flex justify-center mb-6">
-                <div class="bg-white/20 backdrop-blur-sm rounded-full p-1">
-                    <button id="lang-ms" class="px-4 py-2 rounded-full text-white font-medium transition-all duration-300 bg-white/30">
-                        Bahasa Malaysia
-                    </button>
-                    <button id="lang-en" class="px-4 py-2 rounded-full text-white font-medium transition-all duration-300">
-                        English
-                    </button>
+<body class="bg-gradient-1">
+    <button class="language-toggle" onclick="toggleLanguage()">English</button>
+    
+    <div class="container">
+        <!-- Home Page -->
+        <div id="homePage" class="card">
+            <h1 id="title">Tajuk: Mikroorganisma 🦠</h1>
+            <h2 id="instructionsTitle" class="instructions-title">Arahan Kuiz</h2>
+            <div class="instructions-container">
+                <div class="instruction-item" id="instruction1">
+                    <span class="instruction-icon">📝</span>
+                    <span id="instructionText1">Jawab semua <span class="bold">10</span> soalan</span>
+                </div>
+                <div class="instruction-item" id="instruction2">
+                    <span class="instruction-icon">☝️</span>
+                    <span id="instructionText2">Pilih <span class="bold">satu</span> sahaja jawapan yang betul</span>
+                </div>
+
+                <div class="instruction-item" id="instruction3">
+                    <span class="instruction-icon">🏆</span>
+                    <span id="instructionText3">Setiap satu jawapan betul bernilai <span class="bold">10</span> markah</span>
                 </div>
             </div>
-            
-
-        </div>
-
-        <!-- Instructions Page -->
-        <div id="instructions-page" class="text-center">
-            <div class="bg-white/10 backdrop-blur-sm rounded-xl p-8 mb-8 border-l-4 border-yellow-400">
-                <div class="text-2xl md:text-3xl font-bold mb-6 text-white" id="instructions-title">📚 Arahan Kuiz</div>
-                <div class="space-y-4 text-base md:text-lg text-white text-left max-w-2xl mx-auto">
-                    <p class="flex items-center"><span class="mr-3">🔄</span> <span id="instruction-1">Tekan butang "Balikkan Kad" atau tekan <kbd class="bg-white/20 px-2 py-1 rounded mx-1">Spacebar</kbd> untuk melihat jawapan</span></p>
-                    <p class="flex items-center"><span class="mr-3">⬅️➡️</span> <span id="instruction-2">Gunakan butang atau <kbd class="bg-white/20 px-2 py-1 rounded mx-1">←→</kbd> untuk navigasi</span></p>
-                    <p class="flex items-center"><span class="mr-3">🌐</span> <span id="instruction-3">Tukar bahasa dengan menekan butang di sudut atas</span></p>
-                </div>
-            </div>
-            <button id="start-quiz-btn" class="bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-8 rounded-lg transition-all duration-300 shadow-lg text-lg">
-                <span id="start-text">Mula Kuiz</span> 🚀
-            </button>
+            <button class="btn" onclick="startQuiz()" id="startBtn">Mula Kuiz</button>
         </div>
 
         <!-- Quiz Page -->
-        <div id="quiz-page" class="hidden">
-            <!-- Progress Bar -->
-            <div class="mb-6">
-                <div class="flex justify-between items-center mb-2">
-                    <span id="progress-text" class="text-white font-medium">Soalan 1 daripada 7</span>
-                    <span id="progress-percentage" class="text-white font-medium">14%</span>
-                </div>
-                <div class="w-full bg-white/20 rounded-full h-3">
-                    <div id="progress-bar" class="progress-fill bg-white h-3 rounded-full" style="width: 14.3%"></div>
-                </div>
-            </div>
-
-            <!-- Flash Card -->
-            <div class="flip-card mb-8" id="flashCard">
-                <div class="flip-card-inner">
-                    <!-- Front of Card (Question) -->
-                    <div class="flip-card-front" id="card-front">
-                        <div class="text-center">
-                            <div class="text-xl md:text-2xl font-bold text-black mb-4" id="question-number">Soalan 1</div>
-                            <div class="text-lg md:text-xl text-black leading-relaxed font-medium px-2" id="question-text">
-                                Siti kerap berasa letih, pucat dan mengalami anemia. Ujian darah menunjukkan kekurangan mineral tertentu.
-                            </div>
-                            <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3" id="options">
-                                <div class="bg-white/20 backdrop-blur-sm rounded-lg p-3 text-black font-semibold text-base md:text-lg">Zat besi (Fe)</div>
-                                <div class="bg-white/20 backdrop-blur-sm rounded-lg p-3 text-black font-semibold text-base md:text-lg">Kalsium (Ca)</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Back of Card (Answer) -->
-                    <div class="flip-card-back" id="card-back">
-                        <div class="text-center">
-                            <div class="text-3xl md:text-4xl font-bold text-black mb-4">✓</div>
-                            <div class="text-xl md:text-2xl font-bold text-black mb-4" id="answer-label">Jawapan Betul:</div>
-                            <div class="text-2xl md:text-3xl font-bold text-black px-2" id="answer-text">
-                                Zat besi (Fe)
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Controls -->
-            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <!-- Navigation Buttons -->
-                <div class="flex gap-3">
-                    <button id="prevBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 px-6 rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg">
-                        ← <span id="prev-text">Sebelumnya</span>
-                    </button>
-                    
-                    <button id="flipBtn" class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 shadow-lg">
-                        <span id="flip-text">Balikkan Kad</span>
-                    </button>
-                    
-                    <button id="nextBtn" class="bg-purple-500 hover:bg-purple-600 text-white font-medium py-3 px-6 rounded-lg transition-all duration-300 shadow-lg">
-                        <span id="next-text">Seterusnya</span> →
-                    </button>
-                    
-                    <button id="finishBtn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 shadow-lg hidden">
-                        <span id="finish-text">Tamat Kuiz</span> ✓
-                    </button>
-                </div>
+        <div id="quizPage" class="card hidden">
+            <div class="question-header" id="questionHeader">Soalan 1 daripada 10</div>
+            <div class="question" id="questionText"></div>
+            <div class="options" id="options"></div>
+            <div class="buttons">
+                <button class="btn btn-secondary" onclick="previousQuestion()" id="prevBtn" disabled>Sebelum</button>
+                <button class="btn" onclick="nextQuestion()" id="nextBtn" disabled>Seterusnya</button>
             </div>
         </div>
 
-        <!-- Completion Page -->
-        <div id="completion-page" class="text-center hidden">
-            <div class="bg-white/10 backdrop-blur-sm rounded-xl p-8 mb-8 border-l-4 border-green-400">
-                <div class="text-4xl md:text-5xl mb-6">🎉</div>
-                <div class="text-2xl md:text-3xl font-bold mb-4 text-white" id="congratulations-title">Tahniah!</div>
-                <div class="text-lg md:text-xl text-white mb-6" id="completion-message">
-                    Anda telah berjaya menyelesaikan semua 7 soalan tentang kekurangan vitamin dan mineral dalam badan manusia!
-                </div>
-                <div class="text-base md:text-lg text-white/80" id="completion-subtitle">
-                    Semoga pengetahuan ini membantu anda memahami kepentingan vitamin dan mineral untuk kesihatan.
-                </div>
+        <!-- Results Page -->
+        <div id="resultsPage" class="card hidden">
+            <h1 id="resultsTitle">Keputusan</h1>
+            <div class="results-summary" id="resultsSummary">0 betul ✅ / 0 salah ❌</div>
+            <div class="score" id="scoreDisplay">0/100 markah</div>
+            <div class="motivation" id="motivationText">Tahniah! Teruskan usaha!</div>
+            <div class="buttons">
+                <button class="btn" onclick="restartQuiz()" id="retryBtn">Cuba Lagi</button>
+                <button class="btn btn-secondary" onclick="goHome()" id="homeBtn">Kembali ke Halaman Utama</button>
             </div>
-            <button id="restart-btn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-4 px-8 rounded-lg transition-all duration-300 shadow-lg text-lg">
-                <span id="restart-text">Mula Semula</span> 🔄
-            </button>
         </div>
     </div>
 
     <script>
-        // Quiz data
-        const quizData = {
+        let currentLanguage = 'ms';
+        let currentQuestion = 0;
+        let selectedAnswers = [];
+        let score = 0;
+
+        const translations = {
+            ms: {
+                title: 'Tajuk: Mikroorganisma 🦠',
+                instructionsTitle: 'Arahan Kuiz',
+                instruction1: 'Jawab semua <span class="bold">10</span> soalan',
+                instruction2: 'Pilih <span class="bold">satu</span> sahaja jawapan yang betul',
+                instruction3: 'Setiap satu jawapan betul bernilai <span class="bold">10</span> markah',
+                startBtn: 'Mula Kuiz',
+                questionHeader: 'Soalan {n} daripada 10',
+                prevBtn: 'Sebelum',
+                nextBtn: 'Seterusnya',
+                resultsTitle: 'Keputusan',
+                resultsSummary: '{correct} betul ✅ / {wrong} salah ❌',
+                scoreText: '{score}/100 markah',
+                retryBtn: 'Cuba Lagi',
+                homeBtn: 'Kembali ke Halaman Utama',
+                langToggle: 'English',
+                motivations: {
+                    perfect: 'Sempurna! Anda seorang pakar mikroorganisma! 🏆',
+                    excellent: 'Cemerlang! Pengetahuan anda sangat baik! 🌟',
+                    good: 'Bagus! Teruskan usaha yang baik! 👍',
+                    average: 'Tidak mengapa, cuba lagi untuk hasil yang lebih baik! 💪',
+                    poor: 'Jangan berputus asa! Belajar lagi dan cuba sekali lagi! 📚'
+                }
+            },
+            en: {
+                title: 'Title: Microorganisms 🦠',
+                instructionsTitle: 'Quiz Instructions',
+                instruction1: 'Answer all <span class="bold">10</span> questions',
+                instruction2: 'Choose <span class="bold">one</span> correct answer only',
+                instruction3: 'Each correct answer is worth <span class="bold">10</span> marks',
+                startBtn: 'Start Quiz',
+                questionHeader: 'Question {n} of 10',
+                prevBtn: 'Previous',
+                nextBtn: 'Next',
+                resultsTitle: 'Results',
+                resultsSummary: '{correct} correct ✅ / {wrong} wrong ❌',
+                scoreText: '{score}/100 marks',
+                retryBtn: 'Try Again',
+                homeBtn: 'Back to Home',
+                langToggle: 'Bahasa Melayu',
+                motivations: {
+                    perfect: 'Perfect! You are a microorganism expert! 🏆',
+                    excellent: 'Excellent! Your knowledge is outstanding! 🌟',
+                    good: 'Good job! Keep up the great work! 👍',
+                    average: 'Not bad, try again for better results! 💪',
+                    poor: 'Don\'t give up! Study more and try again! 📚'
+                }
+            }
+        };
+
+        const questions = {
             ms: [
                 {
-                    question: "Siti kerap berasa letih, pucat dan mengalami anemia. Ujian darah menunjukkan kekurangan mineral tertentu.",
-                    options: ["Zat besi (Fe)", "Kalsium (Ca)"],
-                    answer: "Zat besi (Fe)"
+                    question: "Mikroorganisma manakah yang mempunyai klorofil untuk fotosintesis?",
+                    options: ["Alga", "Fungi", "Virus", "Protozoa"],
+                    correct: 0
                 },
                 {
-                    question: "Farid mengalami masalah gigi rapuh dan tulang yang mudah patah. Kekurangan mineral tertentu dikesan dalam badannya.",
-                    options: ["Kalsium (Ca)", "Fosforus (P)"],
-                    answer: "Kalsium (Ca)"
+                    question: "Apakah kaedah pembiakan bagi bakteria?",
+                    options: ["Pertunasan", "Spora", "Konjugasi", "Menjangkiti sel perumah"],
+                    correct: 2
                 },
                 {
-                    question: "Rafiq mengalami masalah darah sukar membeku apabila terluka. Ini disebabkan oleh kekurangan sejenis vitamin.",
-                    options: ["Vitamin K", "Vitamin D"],
-                    answer: "Vitamin K"
+                    question: "Mikroorganisma manakah yang mempunyai saiz paling kecil?",
+                    options: ["Virus", "Protozoa", "Bakteria", "Fungi"],
+                    correct: 0
                 },
                 {
-                    question: "Amir sukar melihat dengan jelas pada waktu malam. Keadaan ini berpunca daripada kekurangan vitamin.",
-                    options: ["Vitamin B₁₂", "Vitamin A"],
-                    answer: "Vitamin A"
+                    question: "Apakah bentuk asas bagi bakteria <span class='italic'>Coccus</span>?",
+                    options: ["Bulat", "Rod", "Pilin", "Segi empat"],
+                    correct: 0
                 },
                 {
-                    question: "Aisyah sering mengalami pendarahan gusi apabila memberus gigi. Doktor mendapati badannya kekurangan sejenis vitamin.",
-                    options: ["Vitamin D", "Vitamin C"],
-                    answer: "Vitamin C"
+                    question: "Mengapakah alga penting dalam ekosistem akuatik?",
+                    options: ["Menyerap nutrien dalam air", "Memberi perlindungan kepada ikan", "Menjadi tempat pembiakan hidupan kecil", "Menjadi sumber makanan dan menghasilkan oksigen"],
+                    correct: 3
                 },
                 {
-                    question: "Azman mempunyai leher yang membengkak akibat pembesaran kelenjar tiroid. Doktor mendapati keadaan ini berpunca daripada kekurangan mineral tertentu.",
-                    options: ["Iodin (I)", "Magnesium (Mg)"],
-                    answer: "Iodin (I)"
+                    question: "Apakah organel yang digunakan oleh protozoa untuk bergerak?",
+                    options: ["Kapsid", "Mitokondria", "Kloroplas", "Flagelum"],
+                    correct: 3
                 },
                 {
-                    question: "Seorang kanak-kanak didapati mengalami masalah kaki bengkok, gigi lambat tumbuh, dan tulangnya rapuh. Doktor mengesahkan dia menghidap penyakit riket. Kekurangan vitamin apakah yang menyebabkan penyakit ini?",
-                    options: ["Vitamin C", "Vitamin D"],
-                    answer: "Vitamin D"
+                    question: "Apakah ciri khas yang dimiliki oleh suatu bakteria untuk membolehkannya bertahan dalam keadaan persekitaran yang ekstrem?",
+                    options: ["Membentuk endospora", "Menghasilkan silia", "Pili yang melekat", "Mempunyai kapsul berlendir"],
+                    correct: 0
+                },
+                {
+                    question: "Mengapakah virus hanya boleh membiak di dalam sel perumah?",
+                    options: ["Virus tidak mempunyai klorofil untuk membuat makanan", "Virus hanya boleh hidup di dalam persekitaran yang gelap", "Virus terlalu kecil untuk hidup sendiri di persekitaran", "Virus tidak mempunyai organel hidup untuk menjalankan proses kehidupan"],
+                    correct: 3
+                },
+                {
+                    question: "Mikroorganisma yang manakah hidup di usus manusia?",
+                    options: ["<span class='italic'>Rhizopus</span>", "<span class='italic'>E. coli</span>", "<span class='italic'>Spirogyra</span>", "<span class='italic'>Chlorella</span>"],
+                    correct: 1
+                },
+                {
+                    question: "Bagaimanakah protozoa seperti <span class='italic'>Amoeba</span> mendapatkan makanan?",
+                    options: ["Fotosintesis", "Fagositosis", "Menghasilkan spora", "Menyerap cahaya matahari"],
+                    correct: 1
                 }
             ],
             en: [
                 {
-                    question: "Siti often feels tired, pale and experiences anemia. Blood tests show a deficiency of certain minerals.",
-                    options: ["Iron (Fe)", "Calcium (Ca)"],
-                    answer: "Iron (Fe)"
+                    question: "Which microorganism has chlorophyll for photosynthesis?",
+                    options: ["Algae", "Fungi", "Virus", "Protozoa"],
+                    correct: 0
                 },
                 {
-                    question: "Farid experiences brittle teeth and bones that break easily. A deficiency of certain minerals is detected in his body.",
-                    options: ["Calcium (Ca)", "Phosphorus (P)"],
-                    answer: "Calcium (Ca)"
+                    question: "What is the method of reproduction for bacteria?",
+                    options: ["Budding", "Spores", "Conjugation", "Infecting host cells"],
+                    correct: 2
                 },
                 {
-                    question: "Rafiq has problems with blood clotting when injured. This is caused by a deficiency of a certain vitamin.",
-                    options: ["Vitamin K", "Vitamin D"],
-                    answer: "Vitamin K"
+                    question: "Which microorganism is the smallest in size?",
+                    options: ["Virus", "Protozoa", "Bacteria", "Fungi"],
+                    correct: 0
                 },
                 {
-                    question: "Amir has difficulty seeing clearly at night. This condition stems from a vitamin deficiency.",
-                    options: ["Vitamin B₁₂", "Vitamin A"],
-                    answer: "Vitamin A"
+                    question: "What is the basic shape of <span class='italic'>coccus</span> bacteria?",
+                    options: ["Round", "Rod", "Spiral", "Square"],
+                    correct: 0
                 },
                 {
-                    question: "Aisyah often experiences bleeding gums when brushing her teeth. The doctor found that her body lacks a certain vitamin.",
-                    options: ["Vitamin D", "Vitamin C"],
-                    answer: "Vitamin C"
+                    question: "Why are algae important in aquatic ecosystems?",
+                    options: ["Absorbing nutrients in water", "Providing protection for fish", "Serving as breeding grounds for small organisms", "Acting as a food source and producing oxygen"],
+                    correct: 3
                 },
                 {
-                    question: "Azman has a swollen neck due to thyroid gland enlargement. The doctor found this condition stems from a deficiency of certain minerals.",
-                    options: ["Iodine (I)", "Magnesium (Mg)"],
-                    answer: "Iodine (I)"
+                    question: "Which organelle is used by protozoa for movement?",
+                    options: ["Capsid", "Mitochondria", "Chloroplast", "Flagellum"],
+                    correct: 3
                 },
                 {
-                    question: "A child is found to have problems with bow legs, delayed tooth growth, and brittle bones. The doctor confirmed he has rickets. What deficiency causes this disease?",
-                    options: ["Vitamin C", "Vitamin D"],
-                    answer: "Vitamin D"
+                    question: "What special feature allows some bacteria to survive in extreme environments?",
+                    options: ["Forming endospores", "Producing cilia", "Possessing pili for attachment", "Having a slime capsule"],
+                    correct: 0
+                },
+                {
+                    question: "Why can viruses only reproduce inside a host cell?",
+                    options: ["Viruses do not have chlorophyll to make food", "Viruses can only live in dark environments", "Viruses are too small to survive on their own", "Viruses lack living organelles to carry out life processes"],
+                    correct: 3
+                },
+                {
+                    question: "Which microorganism lives in the human intestine?",
+                    options: ["<span class='italic'>Rhizopus</span>", "<span class='italic'>E. coli</span>", "<span class='italic'>Spirogyra</span>", "<span class='italic'>Chlorella</span>"],
+                    correct: 1
+                },
+                {
+                    question: "How does protozoa like <span class='italic'>Amoeba</span> obtain food?",
+                    options: ["Photosynthesis", "Phagocytosis", "Producing spores", "Absorbing sunlight"],
+                    correct: 1
                 }
             ]
         };
 
-        // Language translations
-        const translations = {
-            ms: {
-                title: "Kuiz Kekurangan Vitamin & Mineral dalam Badan Manusia",
-                progressText: "Soalan {current} daripada {total}",
-                questionLabel: "Soalan {number}",
-                answerLabel: "Jawapan Betul:",
-                prevText: "Sebelumnya",
-                nextText: "Seterusnya",
-                flipText: "Balikkan Kad",
-                startText: "Mula Kuiz",
-                congratulationsTitle: "Tahniah!",
-                completionMessage: "Anda telah berjaya menyelesaikan kesemua soalan tentang kekurangan vitamin dan mineral dalam badan manusia!",
-                completionSubtitle: "Semoga pengetahuan ini membantu anda memahami kepentingan vitamin dan mineral untuk kesihatan.",
-                restartText: "Mula Semula",
-                finishText: "Tamat Kuiz",
-                instructionsTitle: "📚 Arahan Kuiz",
-                instruction1: 'Tekan butang "Balikkan Kad" atau tekan <kbd class="bg-white/20 px-2 py-1 rounded mx-1">Spacebar</kbd> untuk melihat jawapan',
-                instruction2: 'Gunakan butang atau <kbd class="bg-white/20 px-2 py-1 rounded mx-1">←→</kbd> untuk navigasi',
-                instruction3: 'Tukar bahasa dengan menekan butang di sudut atas'
-            },
-            en: {
-                title: "Quiz on Vitamin & Mineral Deficiencies in Human Body",
-                progressText: "Question {current} of {total}",
-                questionLabel: "Question {number}",
-                answerLabel: "Correct Answer:",
-                prevText: "Previous",
-                nextText: "Next",
-                flipText: "Flip Card",
-                startText: "Start Quiz",
-                congratulationsTitle: "Congratulations!",
-                completionMessage: "You have successfully completed all 7 questions about vitamin and mineral deficiencies in the human body!",
-                completionSubtitle: "Hope this knowledge helps you understand the importance of vitamins and minerals for health.",
-                restartText: "Restart",
-                finishText: "Finish Quiz",
-                instructionsTitle: "📚 Quiz Instructions",
-                instruction1: 'Press "Flip Card" button or press <kbd class="bg-white/20 px-2 py-1 rounded mx-1">Spacebar</kbd> to see answer',
-                instruction2: 'Use buttons or <kbd class="bg-white/20 px-2 py-1 rounded mx-1">←→</kbd> for navigation',
-                instruction3: 'Change language by pressing button at top corner'
-            }
-        };
-
-        // State
-        let currentQuestion = 0;
-        let currentLanguage = 'ms';
-        let isFlipped = false;
-        let currentPage = 'instructions'; // 'instructions', 'quiz', 'completion'
-
-        // DOM elements
-        const flashCard = document.getElementById('flashCard');
-        const prevBtn = document.getElementById('prevBtn');
-        const nextBtn = document.getElementById('nextBtn');
-        const finishBtn = document.getElementById('finishBtn');
-        const flipBtn = document.getElementById('flipBtn');
-        const progressBar = document.getElementById('progress-bar');
-        const progressText = document.getElementById('progress-text');
-        const progressPercentage = document.getElementById('progress-percentage');
-        const langMsBtn = document.getElementById('lang-ms');
-        const langEnBtn = document.getElementById('lang-en');
-        const startQuizBtn = document.getElementById('start-quiz-btn');
-        const restartBtn = document.getElementById('restart-btn');
-        const instructionsPage = document.getElementById('instructions-page');
-        const quizPage = document.getElementById('quiz-page');
-        const completionPage = document.getElementById('completion-page');
-
-        // Initialize
-        function init() {
-            showPage('instructions');
+        function toggleLanguage() {
+            currentLanguage = currentLanguage === 'ms' ? 'en' : 'ms';
             updateLanguage();
         }
 
-        // Show specific page
-        function showPage(page) {
-            currentPage = page;
+        function updateLanguage() {
+            const t = translations[currentLanguage];
             
-            // Hide all pages
-            instructionsPage.classList.add('hidden');
-            quizPage.classList.add('hidden');
-            completionPage.classList.add('hidden');
+            document.getElementById('title').innerHTML = t.title;
+            document.getElementById('instructionsTitle').textContent = t.instructionsTitle;
+            document.getElementById('instructionText1').innerHTML = t.instruction1;
+            document.getElementById('instructionText2').innerHTML = t.instruction2;
+            document.getElementById('instructionText3').innerHTML = t.instruction3;
+            document.getElementById('startBtn').textContent = t.startBtn;
+            document.getElementById('prevBtn').textContent = t.prevBtn;
+            document.getElementById('nextBtn').textContent = t.nextBtn;
+            document.getElementById('resultsTitle').textContent = t.resultsTitle;
+            document.getElementById('retryBtn').textContent = t.retryBtn;
+            document.getElementById('homeBtn').textContent = t.homeBtn;
+            document.querySelector('.language-toggle').textContent = t.langToggle;
             
-            // Show current page
-            switch(page) {
-                case 'instructions':
-                    instructionsPage.classList.remove('hidden');
-                    break;
-                case 'quiz':
-                    quizPage.classList.remove('hidden');
-                    updateCard();
-                    updateProgress();
-                    updateNavigation();
-                    break;
-                case 'completion':
-                    completionPage.classList.remove('hidden');
-                    break;
+            // Update question header if in quiz
+            if (!document.getElementById('quizPage').classList.contains('hidden')) {
+                document.getElementById('questionHeader').textContent = t.questionHeader.replace('{n}', currentQuestion + 1);
+            }
+            
+            // Update results if in results page
+            if (!document.getElementById('resultsPage').classList.contains('hidden')) {
+                const correct = selectedAnswers.filter((answer, index) => answer === questions[currentLanguage][index].correct).length;
+                const wrong = 10 - correct;
+                
+                document.getElementById('resultsSummary').textContent = t.resultsSummary
+                    .replace('{correct}', correct)
+                    .replace('{wrong}', wrong);
+                
+                document.getElementById('scoreDisplay').textContent = t.scoreText.replace('{score}', score);
+                
+                let motivationKey;
+                if (score === 100) motivationKey = 'perfect';
+                else if (score >= 80) motivationKey = 'excellent';
+                else if (score >= 60) motivationKey = 'good';
+                else if (score >= 40) motivationKey = 'average';
+                else motivationKey = 'poor';
+                
+                document.getElementById('motivationText').textContent = t.motivations[motivationKey];
+            }
+            
+            // Update current question if in quiz
+            if (!document.getElementById('quizPage').classList.contains('hidden')) {
+                displayQuestion();
             }
         }
 
-        // Update card content
-        function updateCard() {
-            const data = quizData[currentLanguage][currentQuestion];
-            const trans = translations[currentLanguage];
+        function startQuiz() {
+            currentQuestion = 0;
+            selectedAnswers = new Array(10).fill(-1);
+            score = 0;
             
-            document.getElementById('question-number').textContent = trans.questionLabel.replace('{number}', currentQuestion + 1);
-            document.getElementById('question-text').textContent = data.question;
-            document.getElementById('answer-text').textContent = data.answer;
-            document.getElementById('answer-label').textContent = trans.answerLabel;
+            document.getElementById('homePage').classList.add('hidden');
+            document.getElementById('quizPage').classList.remove('hidden');
             
-            // Update card colors based on question number
-            const cardFront = document.getElementById('card-front');
-            const cardBack = document.getElementById('card-back');
-            const questionNum = currentQuestion + 1;
+            changeBackground();
+            displayQuestion();
+        }
+
+        function displayQuestion() {
+            const question = questions[currentLanguage][currentQuestion];
+            const t = translations[currentLanguage];
             
-            // Remove all existing gradient classes
-            cardFront.className = 'flip-card-front';
-            cardBack.className = 'flip-card-back';
+            document.getElementById('questionHeader').textContent = t.questionHeader.replace('{n}', currentQuestion + 1);
+            document.getElementById('questionText').innerHTML = question.question;
             
-            // Add new gradient classes
-            cardFront.classList.add(`card-gradient-front-${questionNum}`);
-            cardBack.classList.add(`card-gradient-back-${questionNum}`);
-            
-            // Update options
             const optionsContainer = document.getElementById('options');
             optionsContainer.innerHTML = '';
-            data.options.forEach((option, index) => {
+            
+            question.options.forEach((option, index) => {
                 const optionDiv = document.createElement('div');
-                optionDiv.className = 'bg-white/20 backdrop-blur-sm rounded-lg p-3 text-black font-semibold text-base md:text-lg';
-                optionDiv.textContent = option;
+                optionDiv.className = 'option';
+                optionDiv.innerHTML = option;
+                optionDiv.onclick = () => selectOption(index);
+                
+                if (selectedAnswers[currentQuestion] === index) {
+                    optionDiv.classList.add('selected');
+                }
+                
                 optionsContainer.appendChild(optionDiv);
             });
             
-            // Ensure card shows question side (not flipped)
-            flashCard.classList.remove('flipped');
-            isFlipped = false;
+            updateButtons();
+            changeBackground();
         }
 
-        // Update progress
-        function updateProgress() {
-            const progress = ((currentQuestion + 1) / quizData[currentLanguage].length) * 100;
-            const trans = translations[currentLanguage];
+        function selectOption(index) {
+            selectedAnswers[currentQuestion] = index;
             
-            progressBar.style.width = `${progress}%`;
-            progressText.textContent = trans.progressText
-                .replace('{current}', currentQuestion + 1)
-                .replace('{total}', quizData[currentLanguage].length);
-            progressPercentage.textContent = `${Math.round(progress)}%`;
+            // Update visual selection
+            document.querySelectorAll('.option').forEach((option, i) => {
+                option.classList.toggle('selected', i === index);
+            });
+            
+            updateButtons();
         }
 
-        // Update navigation buttons
-        function updateNavigation() {
+        function updateButtons() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            
             prevBtn.disabled = currentQuestion === 0;
+            nextBtn.disabled = selectedAnswers[currentQuestion] === -1;
             
-            // Show/hide buttons based on current question
-            if (currentQuestion === quizData[currentLanguage].length - 1) {
-                nextBtn.style.display = 'none';
-                finishBtn.style.display = 'inline-block';
+            if (currentQuestion === 9) {
+                nextBtn.textContent = currentLanguage === 'ms' ? 'Selesai' : 'Finish';
             } else {
-                nextBtn.style.display = 'inline-block';
-                finishBtn.style.display = 'none';
-                nextBtn.disabled = false;
+                nextBtn.textContent = translations[currentLanguage].nextBtn;
             }
         }
 
-        // Update language
-        function updateLanguage() {
-            const trans = translations[currentLanguage];
-            
-            document.getElementById('main-title').textContent = trans.title;
-            document.getElementById('prev-text').textContent = trans.prevText;
-            document.getElementById('next-text').textContent = trans.nextText;
-            document.getElementById('flip-text').textContent = trans.flipText;
-            document.getElementById('start-text').textContent = trans.startText;
-            document.getElementById('congratulations-title').textContent = trans.congratulationsTitle;
-            document.getElementById('completion-message').textContent = trans.completionMessage;
-            document.getElementById('completion-subtitle').textContent = trans.completionSubtitle;
-            document.getElementById('restart-text').textContent = trans.restartText;
-            document.getElementById('finish-text').textContent = trans.finishText;
-            document.getElementById('instructions-title').textContent = trans.instructionsTitle;
-            document.getElementById('instruction-1').innerHTML = trans.instruction1;
-            document.getElementById('instruction-2').innerHTML = trans.instruction2;
-            document.getElementById('instruction-3').innerHTML = trans.instruction3;
-            
-            // Update language buttons
-            if (currentLanguage === 'ms') {
-                langMsBtn.classList.add('bg-white/30');
-                langEnBtn.classList.remove('bg-white/30');
-            } else {
-                langEnBtn.classList.add('bg-white/30');
-                langMsBtn.classList.remove('bg-white/30');
-            }
-            
-            if (currentPage === 'quiz') {
-                updateCard();
-                updateProgress();
-            }
-        }
-
-        // Flip card
-        function flipCard() {
-            flashCard.classList.toggle('flipped');
-            isFlipped = !isFlipped;
-        }
-
-        // Navigation functions
-        function nextQuestion() {
-            if (currentQuestion < quizData[currentLanguage].length - 1) {
-                currentQuestion++;
-                // Force reset to question side and update immediately
-                isFlipped = false;
-                flashCard.classList.remove('flipped');
-                updateCard();
-                updateProgress();
-                updateNavigation();
-            } else {
-                // Quiz completed, show completion page
-                showPage('completion');
-            }
-        }
-
-        function prevQuestion() {
+        function previousQuestion() {
             if (currentQuestion > 0) {
                 currentQuestion--;
-                // Force reset to question side and update immediately
-                isFlipped = false;
-                flashCard.classList.remove('flipped');
-                updateCard();
-                updateProgress();
-                updateNavigation();
+                displayQuestion();
             }
         }
 
-        // Event listeners
-        flashCard.addEventListener('click', flipCard);
-        flipBtn.addEventListener('click', flipCard);
-        nextBtn.addEventListener('click', nextQuestion);
-        prevBtn.addEventListener('click', prevQuestion);
-        finishBtn.addEventListener('click', () => showPage('completion'));
-
-        // Page navigation
-        startQuizBtn.addEventListener('click', () => {
-            currentQuestion = 0;
-            isFlipped = false;
-            showPage('quiz');
-        });
-
-        restartBtn.addEventListener('click', () => {
-            currentQuestion = 0;
-            isFlipped = false;
-            showPage('instructions');
-        });
-
-        // Language toggle
-        langMsBtn.addEventListener('click', () => {
-            currentLanguage = 'ms';
-            updateLanguage();
-        });
-
-        langEnBtn.addEventListener('click', () => {
-            currentLanguage = 'en';
-            updateLanguage();
-        });
-
-        // Keyboard navigation
-        document.addEventListener('keydown', (e) => {
-            if (currentPage !== 'quiz') return; // Only work in quiz page
-            
-            switch(e.code) {
-                case 'Space':
-                    e.preventDefault();
-                    flipCard();
-                    break;
-                case 'ArrowLeft':
-                    e.preventDefault();
-                    prevQuestion();
-                    break;
-                case 'ArrowRight':
-                    e.preventDefault();
-                    nextQuestion();
-                    break;
+        function nextQuestion() {
+            if (currentQuestion < 9) {
+                currentQuestion++;
+                displayQuestion();
+            } else {
+                showResults();
             }
-        });
+        }
 
-        // Initialize the quiz
-        init();
+        function showResults() {
+            // Calculate score
+            const correct = selectedAnswers.filter((answer, index) => answer === questions[currentLanguage][index].correct).length;
+            const wrong = 10 - correct;
+            score = correct * 10;
+            
+            document.getElementById('quizPage').classList.add('hidden');
+            document.getElementById('resultsPage').classList.remove('hidden');
+            
+            const t = translations[currentLanguage];
+            
+            // Update results summary
+            document.getElementById('resultsSummary').textContent = t.resultsSummary
+                .replace('{correct}', correct)
+                .replace('{wrong}', wrong);
+            
+            // Update score display
+            document.getElementById('scoreDisplay').textContent = t.scoreText.replace('{score}', score);
+            
+            // Update motivation message based on score
+            let motivationKey;
+            if (score === 100) motivationKey = 'perfect';
+            else if (score >= 80) motivationKey = 'excellent';
+            else if (score >= 60) motivationKey = 'good';
+            else if (score >= 40) motivationKey = 'average';
+            else motivationKey = 'poor';
+            
+            document.getElementById('motivationText').textContent = t.motivations[motivationKey];
+            
+            // Change to results background
+            document.body.className = 'bg-gradient-1';
+        }
+
+        function restartQuiz() {
+            startQuiz();
+        }
+
+        function goHome() {
+            document.getElementById('resultsPage').classList.add('hidden');
+            document.getElementById('homePage').classList.remove('hidden');
+            document.body.className = 'bg-gradient-1';
+        }
+
+        function changeBackground() {
+            const gradients = [
+                'bg-gradient-1', 'bg-gradient-2', 'bg-gradient-3', 'bg-gradient-4', 'bg-gradient-5',
+                'bg-gradient-6', 'bg-gradient-7', 'bg-gradient-8', 'bg-gradient-9', 'bg-gradient-10'
+            ];
+            
+            document.body.className = gradients[currentQuestion] || 'bg-gradient-1';
+        }
+
+        // Initialize
+        updateLanguage();
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'981805d3f616d4a9',t:'MTc1ODI3Mzc5MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98474da83170e454',t:'MTc1ODc2OTU2My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
-
-
