@@ -3,717 +3,778 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kuiz Mikroorganisma</title>
+    <title>Permainan Susun Huruf Teknologi Pemprosesan Makanan</title>
     <style>
         body {
             box-sizing: border-box;
-            margin: 0;
-            padding: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            min-height: 100vh;
-            transition: background 0.8s ease;
-        }
-
-        .bg-gradient-1 { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-        .bg-gradient-2 { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
-        .bg-gradient-3 { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
-        .bg-gradient-4 { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
-        .bg-gradient-5 { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
-        .bg-gradient-6 { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); }
-        .bg-gradient-7 { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); }
-        .bg-gradient-8 { background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); }
-        .bg-gradient-9 { background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); }
-        .bg-gradient-10 { background: linear-gradient(135deg, #fad0c4 0%, #ffd1ff 100%); }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
+            margin: 0;
             padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            position: relative;
         }
-
-        .card {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(10px);
-            text-align: center;
-            width: 100%;
-            max-width: 800px;
-            box-sizing: border-box;
-        }
-
-
-
-        .language-toggle {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(255, 255, 255, 0.95);
-            border: none;
-            border-radius: 20px;
-            padding: 8px 16px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background 0.2s ease;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
-            font-size: 0.9rem;
-        }
-
-        .language-toggle:hover {
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
             background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
         }
-
-        h1 {
-            color: #2d3748;
-            margin-bottom: 30px;
-            font-size: 2.5rem;
-            font-weight: bold;
-        }
-
-        .instructions-title {
-            color: #2d3748;
-            margin-bottom: 25px;
-            font-size: 1.8rem;
-            font-weight: 600;
-        }
-
-        .instructions-container {
-            display: grid;
-            gap: 15px;
-            margin-bottom: 40px;
-        }
-
-        .instruction-item {
-            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
-            border: 2px solid #e2e8f0;
+        
+        .instructions {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
             border-radius: 15px;
             padding: 20px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            transition: all 0.3s ease;
-            cursor: default;
-            position: relative;
-            overflow: hidden;
+            margin-bottom: 25px;
+            border-left: 5px solid #2196F3;
         }
-
-        .instruction-item:hover {
-            border-color: #4299e1;
-            background: linear-gradient(135deg, #ebf8ff 0%, #bee3f8 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(66, 153, 225, 0.2);
+        
+        .instructions h3 {
+            color: #1976D2;
+            margin: 0 0 10px 0;
+            font-size: 1.2em;
         }
-
-        .instruction-icon {
-            font-size: 1.5rem;
-            min-width: 30px;
-            text-align: center;
-        }
-
-        .instruction-item span:last-child {
-            font-size: 1.1rem;
-            color: #2d3748;
-            font-weight: 500;
-        }
-
-        .instruction-item::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            transition: left 0.6s;
-        }
-
-        .instruction-item:hover::before {
-            left: 100%;
-        }
-
-        .question-header {
-            font-size: 1.1rem;
-            color: #718096;
-            margin-bottom: 20px;
-            font-weight: 600;
-        }
-
-        .question {
-            font-size: 1.4rem;
-            color: #2d3748;
-            margin-bottom: 30px;
-            font-weight: 600;
+        
+        .instructions p {
+            margin: 5px 0;
+            color: #424242;
             line-height: 1.5;
         }
-
-        .options {
-            display: grid;
-            gap: 15px;
-            margin-bottom: 40px;
+        
+        .fade-transition {
+            transition: all 0.3s ease-in-out;
         }
-
-        .option {
-            background: #f7fafc;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 15px 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: left;
-            font-size: 1.1rem;
-            position: relative;
-            overflow: hidden;
+        
+        .fade-out {
+            opacity: 0;
+            transform: translateY(-10px);
         }
-
-        .option:hover {
-            border-color: #4299e1;
-            background: #ebf8ff;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(66, 153, 225, 0.15);
+        
+        .fade-in {
+            opacity: 1;
+            transform: translateY(0);
         }
-
-        .option.selected {
-            border-color: #3182ce;
-            background: #bee3f8;
-            color: #2c5282;
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
         }
-
-        .option::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-            transition: left 0.5s;
+        
+        .title {
+            font-size: 2.2em;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-weight: bold;
         }
-
-        .option:hover::before {
-            left: 100%;
-        }
-
-        .buttons {
+        
+        .controls {
             display: flex;
-            justify-content: space-between;
-            gap: 20px;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
             flex-wrap: wrap;
         }
-
+        
         .btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            padding: 12px 24px;
             border: none;
-            border-radius: 12px;
-            padding: 15px 30px;
-            font-size: 1.1rem;
-            font-weight: 600;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            min-width: 120px;
         }
-
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        
+        .btn-primary {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
         }
-
-        .btn:active {
-            transform: translateY(-1px);
-        }
-
+        
         .btn-secondary {
-            background: linear-gradient(135deg, #718096 0%, #4a5568 100%);
+            background: linear-gradient(45deg, #2196F3, #1976D2);
+            color: white;
         }
-
-        .btn-secondary:hover {
-            box-shadow: 0 8px 25px rgba(113, 128, 150, 0.4);
+        
+        .btn-warning {
+            background: linear-gradient(45deg, #FF9800, #F57C00);
+            color: white;
         }
-
-        .btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
-
-        .btn:disabled:hover {
-            transform: none;
-            box-shadow: none;
-        }
-
-        .score {
-            font-size: 3rem;
+        
+        .timer {
+            text-align: center;
+            font-size: 1.5em;
             font-weight: bold;
-            color: #2d3748;
+            color: #e74c3c;
+            margin-bottom: 20px;
+        }
+        
+        .question-container {
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-left: 5px solid #4CAF50;
+            transition: background 0.3s ease;
+        }
+        
+        .question-bg-1 { background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%); }
+        .question-bg-2 { background: linear-gradient(135deg, #a8e6cf 0%, #88d8a3 100%); }
+        .question-bg-3 { background: linear-gradient(135deg, #ffd3a5 0%, #fd9853 100%); }
+        .question-bg-4 { background: linear-gradient(135deg, #c7ecee 0%, #65c4f1 100%); }
+        .question-bg-5 { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .question-bg-6 { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .question-bg-7 { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+        .question-bg-8 { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+        
+        .question-text {
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        
+        .answer-boxes {
+            display: flex;
+            gap: 8px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .answer-box {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #3498db;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            background: white;
+            color: #2c3e50;
+        }
+        
+        .answer-box.filled {
+            background: #e8f5e8;
+            border-color: #4CAF50;
+        }
+        
+        .word-gap {
+            width: 20px;
+        }
+        
+        .hint-container {
+            text-align: center;
             margin: 20px 0;
         }
-
-        .results-summary {
-            font-size: 1.5rem;
-            color: #2d3748;
+        
+        .hint-label {
+            font-weight: bold;
+            color: #7f8c8d;
+            margin-bottom: 10px;
+        }
+        
+        .scrambled-letters {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #e74c3c;
+            background: #fff3cd;
+            padding: 10px 20px;
+            border-radius: 25px;
+            display: inline-block;
+            letter-spacing: 3px;
+        }
+        
+        .input-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .answer-input {
+            padding: 12px 20px;
+            font-size: 1.1em;
+            border: 2px solid #ddd;
+            border-radius: 25px;
+            width: 300px;
+            max-width: 100%;
+            text-align: center;
+            text-transform: uppercase;
+        }
+        
+        .feedback {
+            text-align: center;
+            margin: 15px 0;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        
+        .feedback.correct {
+            color: #27ae60;
+        }
+        
+        .feedback.incorrect {
+            color: #e74c3c;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .progress {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 1.1em;
+            color: #7f8c8d;
+        }
+        
+        .completion-screen {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+        
+        .completion-screen h2 {
+            font-size: 2.5em;
             margin-bottom: 20px;
-            font-weight: 600;
         }
-
-        .motivation {
-            font-size: 1.2rem;
-            color: #38a169;
-            margin: 20px 0 30px 0;
-            font-weight: 600;
+        
+        .stats {
+            font-size: 1.3em;
+            margin: 20px 0;
+        }
+        
+        .encouragement {
+            font-size: 1.2em;
             font-style: italic;
+            margin-top: 20px;
         }
-
+        
+        .food-icons {
+            font-size: 2em;
+            margin: 10px 0;
+        }
+        
         .hidden {
             display: none;
         }
-
-        .italic {
-            font-style: italic;
-        }
-
-        .bold {
-            font-weight: bold;
-        }
-
+        
         @media (max-width: 768px) {
             .container {
-                padding: 10px;
-            }
-            
-            .card {
                 padding: 20px;
+                margin: 10px;
             }
             
-            h1 {
-                font-size: 2rem;
+            .title {
+                font-size: 1.8em;
             }
             
-            .buttons {
+            .answer-input {
+                width: 250px;
+            }
+            
+            .controls {
                 flex-direction: column;
+                align-items: center;
             }
-            
-
         }
     </style>
 </head>
-<body class="bg-gradient-1">
-    <button class="language-toggle" onclick="toggleLanguage()">English</button>
-    
+<body>
     <div class="container">
-        <!-- Home Page -->
-        <div id="homePage" class="card">
-            <h1 id="title">Tajuk: Mikroorganisma 🦠</h1>
-            <h2 id="instructionsTitle" class="instructions-title">Arahan Kuiz</h2>
-            <div class="instructions-container">
-                <div class="instruction-item" id="instruction1">
-                    <span class="instruction-icon">📝</span>
-                    <span id="instructionText1">Jawab semua <span class="bold">10</span> soalan</span>
-                </div>
-                <div class="instruction-item" id="instruction2">
-                    <span class="instruction-icon">☝️</span>
-                    <span id="instructionText2">Pilih <span class="bold">satu</span> sahaja jawapan yang betul</span>
-                </div>
-
-                <div class="instruction-item" id="instruction3">
-                    <span class="instruction-icon">🏆</span>
-                    <span id="instructionText3">Setiap satu jawapan betul bernilai <span class="bold">10</span> markah</span>
-                </div>
-            </div>
-            <button class="btn" onclick="startQuiz()" id="startBtn">Mula Kuiz</button>
+        <div class="header">
+            <h1 class="title" id="gameTitle">Permainan Susun Huruf Teknologi Pemprosesan Makanan</h1>
+            <div class="food-icons">🥛🥫🍖🐟🥬</div>
         </div>
-
-        <!-- Quiz Page -->
-        <div id="quizPage" class="card hidden">
-            <div class="question-header" id="questionHeader">Soalan 1 daripada 10</div>
-            <div class="question" id="questionText"></div>
-            <div class="options" id="options"></div>
-            <div class="buttons">
-                <button class="btn btn-secondary" onclick="previousQuestion()" id="prevBtn" disabled>Sebelum</button>
-                <button class="btn" onclick="nextQuestion()" id="nextBtn" disabled>Seterusnya</button>
+        
+        <div class="instructions" id="instructions">
+            <h3 id="instructionsTitle">Arahan Permainan:</h3>
+            <p id="instruction1">🎯 Susun semula huruf yang bercampur untuk membentuk perkataan yang betul</p>
+            <p id="instruction2">⏰ Tekan butang "Mula" untuk memulakan pemasa</p>
+            <p id="instruction3">🔤 Gunakan petunjuk huruf yang bercampur untuk membantu anda</p>
+            <p id="instruction4">🌐 Tukar bahasa dengan menekan butang "English" atau "Bahasa Malaysia"</p>
+        </div>
+        
+        <div class="controls">
+            <button class="btn btn-primary" id="startBtn">Mula</button>
+            <button class="btn btn-secondary" id="langBtn">English</button>
+            <button class="btn btn-warning" id="resetBtn">Set Semula</button>
+        </div>
+        
+        <div class="timer" id="timer">Masa: 00:00</div>
+        
+        <div class="progress" id="progress">Soalan 1 daripada 8</div>
+        
+        <div class="question-container fade-transition" id="gameArea">
+            <div class="question-text fade-transition" id="questionText"></div>
+            
+            <div class="answer-boxes" id="answerBoxes"></div>
+            
+            <div class="hint-container">
+                <div class="hint-label" id="hintLabel">Petunjuk:</div>
+                <div class="scrambled-letters" id="scrambledLetters"></div>
+            </div>
+            
+            <div class="input-container">
+                <input type="text" class="answer-input" id="answerInput" placeholder="Taip jawapan anda di sini...">
+            </div>
+            
+            <div class="feedback" id="feedback"></div>
+            
+            <div class="navigation">
+                <button class="btn btn-warning" id="prevBtn" disabled>Kembali</button>
+                <button class="btn btn-primary" id="checkBtn">Semak Jawapan</button>
+                <button class="btn btn-secondary" id="nextBtn" disabled>Seterusnya</button>
             </div>
         </div>
-
-        <!-- Results Page -->
-        <div id="resultsPage" class="card hidden">
-            <h1 id="resultsTitle">Keputusan</h1>
-            <div class="results-summary" id="resultsSummary">0 betul ✅ / 0 salah ❌</div>
-            <div class="score" id="scoreDisplay">0/100 markah</div>
-            <div class="motivation" id="motivationText">Tahniah! Teruskan usaha!</div>
-            <div class="buttons">
-                <button class="btn" onclick="restartQuiz()" id="retryBtn">Cuba Lagi</button>
-                <button class="btn btn-secondary" onclick="goHome()" id="homeBtn">Kembali ke Halaman Utama</button>
+        
+        <div class="completion-screen hidden" id="completionScreen">
+            <h2>🎉 Tahniah! 🎉</h2>
+            <div class="stats">
+                <div>Soalan Berjaya: <span id="correctAnswers"></span>/8</div>
             </div>
+            <div class="encouragement" id="encouragementText">Kerja yang hebat! Anda telah menguasai teknologi pemprosesan makanan!</div>
+            <button class="btn btn-primary" id="playAgainBtn" style="margin-top: 20px;">Main Lagi</button>
         </div>
     </div>
 
     <script>
         let currentLanguage = 'ms';
         let currentQuestion = 0;
-        let selectedAnswers = [];
-        let score = 0;
-
-        const translations = {
-            ms: {
-                title: 'Tajuk: Mikroorganisma 🦠',
-                instructionsTitle: 'Arahan Kuiz',
-                instruction1: 'Jawab semua <span class="bold">10</span> soalan',
-                instruction2: 'Pilih <span class="bold">satu</span> sahaja jawapan yang betul',
-                instruction3: 'Setiap satu jawapan betul bernilai <span class="bold">10</span> markah',
-                startBtn: 'Mula Kuiz',
-                questionHeader: 'Soalan {n} daripada 10',
-                prevBtn: 'Sebelum',
-                nextBtn: 'Seterusnya',
-                resultsTitle: 'Keputusan',
-                resultsSummary: '{correct} betul ✅ / {wrong} salah ❌',
-                scoreText: '{score}/100 markah',
-                retryBtn: 'Cuba Lagi',
-                homeBtn: 'Kembali ke Halaman Utama',
-                langToggle: 'English',
-                motivations: {
-                    perfect: 'Sempurna! Anda seorang pakar mikroorganisma! 🏆',
-                    excellent: 'Cemerlang! Pengetahuan anda sangat baik! 🌟',
-                    good: 'Bagus! Teruskan usaha yang baik! 👍',
-                    average: 'Tidak mengapa, cuba lagi untuk hasil yang lebih baik! 💪',
-                    poor: 'Jangan berputus asa! Belajar lagi dan cuba sekali lagi! 📚'
-                }
-            },
-            en: {
-                title: 'Title: Microorganisms 🦠',
-                instructionsTitle: 'Quiz Instructions',
-                instruction1: 'Answer all <span class="bold">10</span> questions',
-                instruction2: 'Choose <span class="bold">one</span> correct answer only',
-                instruction3: 'Each correct answer is worth <span class="bold">10</span> marks',
-                startBtn: 'Start Quiz',
-                questionHeader: 'Question {n} of 10',
-                prevBtn: 'Previous',
-                nextBtn: 'Next',
-                resultsTitle: 'Results',
-                resultsSummary: '{correct} correct ✅ / {wrong} wrong ❌',
-                scoreText: '{score}/100 marks',
-                retryBtn: 'Try Again',
-                homeBtn: 'Back to Home',
-                langToggle: 'Bahasa Melayu',
-                motivations: {
-                    perfect: 'Perfect! You are a microorganism expert! 🏆',
-                    excellent: 'Excellent! Your knowledge is outstanding! 🌟',
-                    good: 'Good job! Keep up the great work! 👍',
-                    average: 'Not bad, try again for better results! 💪',
-                    poor: 'Don\'t give up! Study more and try again! 📚'
-                }
-            }
-        };
+        let startTime = null;
+        let timerInterval = null;
+        let gameStarted = false;
+        let correctCount = 0;
+        let userAnswers = new Array(8).fill('');
+        let questionStatus = new Array(8).fill(false);
 
         const questions = {
             ms: [
                 {
-                    question: "Mikroorganisma manakah yang mempunyai klorofil untuk fotosintesis?",
-                    options: ["Alga", "Fungi", "Virus", "Protozoa"],
-                    correct: 0
+                    question: "Makanan ini diproses melalui pempasteuran.",
+                    scrambled: "USSU",
+                    answer: "SUSU",
+                    boxes: 4
                 },
                 {
-                    question: "Apakah kaedah pembiakan bagi bakteria?",
-                    options: ["Pertunasan", "Spora", "Konjugasi", "Menjangkiti sel perumah"],
-                    correct: 2
+                    question: "Kaedah menggunakan sinaran seperti sinaran gamma atau X-ray untuk membunuh mikroorganisma dalam makanan.",
+                    scrambled: "ARPENYNINA",
+                    answer: "PENYINARAN",
+                    boxes: 10
                 },
                 {
-                    question: "Mikroorganisma manakah yang mempunyai saiz paling kecil?",
-                    options: ["Virus", "Protozoa", "Bakteria", "Fungi"],
-                    correct: 0
+                    question: "Kaedah pengetinan melibatkan makanan disimpan di dalam tin yang telah disterilkan dan dipanaskan pada suhu yang tinggi melebihi 115°C di bawah __________ tinggi untuk membunuh mikroorganisma dan sporanya.",
+                    scrambled: "NAKTEAN",
+                    answer: "TEKANAN",
+                    boxes: 7
                 },
                 {
-                    question: "Apakah bentuk asas bagi bakteria <span class='italic'>Coccus</span>?",
-                    options: ["Bulat", "Rod", "Pilin", "Segi empat"],
-                    correct: 0
+                    question: "Kaedah pembungkusan vakum melibatkan penyingkiran ______________ daripada makanan yang dibungkus dengan bekas atau beg plastik sebelum ditutup dengan ketat untuk mencegah pertumbuhan mikroorganisma.",
+                    scrambled: "UADRA",
+                    answer: "UDARA",
+                    boxes: 5
                 },
                 {
-                    question: "Mengapakah alga penting dalam ekosistem akuatik?",
-                    options: ["Menyerap nutrien dalam air", "Memberi perlindungan kepada ikan", "Menjadi tempat pembiakan hidupan kecil", "Menjadi sumber makanan dan menghasilkan oksigen"],
-                    correct: 3
+                    question: "Makanan ini diproses melalui proses penapaian.",
+                    scrambled: "KCIAP",
+                    answer: "KICAP",
+                    boxes: 5
                 },
                 {
-                    question: "Apakah organel yang digunakan oleh protozoa untuk bergerak?",
-                    options: ["Kapsid", "Mitokondria", "Kloroplas", "Flagelum"],
-                    correct: 3
+                    question: "Makanan seperti daging dan ________________ diproses melalui proses pengetinan.",
+                    scrambled: "AILCI",
+                    answer: "LAICI",
+                    boxes: 5
                 },
                 {
-                    question: "Apakah ciri khas yang dimiliki oleh suatu bakteria untuk membolehkannya bertahan dalam keadaan persekitaran yang ekstrem?",
-                    options: ["Membentuk endospora", "Menghasilkan silia", "Pili yang melekat", "Mempunyai kapsul berlendir"],
-                    correct: 0
+                    question: "Makanan laut seperti udang dan sotong boleh diawet melalui penyejukbekuan. Kaedah ini mengekalkan kesegaran kerana suhu rendah menghalang ____________ mikroorganisma.",
+                    scrambled: "HANBUMTUREP",
+                    answer: "PERTUMBUHAN",
+                    boxes: 11
                 },
                 {
-                    question: "Mengapakah virus hanya boleh membiak di dalam sel perumah?",
-                    options: ["Virus tidak mempunyai klorofil untuk membuat makanan", "Virus hanya boleh hidup di dalam persekitaran yang gelap", "Virus terlalu kecil untuk hidup sendiri di persekitaran", "Virus tidak mempunyai organel hidup untuk menjalankan proses kehidupan"],
-                    correct: 3
-                },
-                {
-                    question: "Mikroorganisma yang manakah hidup di usus manusia?",
-                    options: ["<span class='italic'>Rhizopus</span>", "<span class='italic'>E. coli</span>", "<span class='italic'>Spirogyra</span>", "<span class='italic'>Chlorella</span>"],
-                    correct: 1
-                },
-                {
-                    question: "Bagaimanakah protozoa seperti <span class='italic'>Amoeba</span> mendapatkan makanan?",
-                    options: ["Fotosintesis", "Fagositosis", "Menghasilkan spora", "Menyerap cahaya matahari"],
-                    correct: 1
+                    question: "Salah satu manfaat penapaian ialah memanjangkan ____________ makanan.",
+                    scrambled: "KANJAYTHAAGA",
+                    answer: "JANGKA HAYAT",
+                    boxes: [6, 5]
                 }
             ],
             en: [
                 {
-                    question: "Which microorganism has chlorophyll for photosynthesis?",
-                    options: ["Algae", "Fungi", "Virus", "Protozoa"],
-                    correct: 0
+                    question: "This food is processed through pasteurization.",
+                    scrambled: "LIMK",
+                    answer: "MILK",
+                    boxes: 4
                 },
                 {
-                    question: "What is the method of reproduction for bacteria?",
-                    options: ["Budding", "Spores", "Conjugation", "Infecting host cells"],
-                    correct: 2
+                    question: "A method using radiation such as gamma rays or X-rays to kill microorganisms in food.",
+                    scrambled: "IRDIARANTIO",
+                    answer: "IRRADIATION",
+                    boxes: 11
                 },
                 {
-                    question: "Which microorganism is the smallest in size?",
-                    options: ["Virus", "Protozoa", "Bacteria", "Fungi"],
-                    correct: 0
+                    question: "The canning method involves food being stored in sterilized cans and heated at high temperatures exceeding 115°C under high __________ to kill microorganisms and their spores.",
+                    scrambled: "RESUSPRE",
+                    answer: "PRESSURE",
+                    boxes: 8
                 },
                 {
-                    question: "What is the basic shape of <span class='italic'>coccus</span> bacteria?",
-                    options: ["Round", "Rod", "Spiral", "Square"],
-                    correct: 0
+                    question: "The vacuum packaging method involves the removal of ______________ from food packed in containers or plastic bags before being tightly sealed to prevent the growth of microorganisms.",
+                    scrambled: "RIA",
+                    answer: "AIR",
+                    boxes: 3
                 },
                 {
-                    question: "Why are algae important in aquatic ecosystems?",
-                    options: ["Absorbing nutrients in water", "Providing protection for fish", "Serving as breeding grounds for small organisms", "Acting as a food source and producing oxygen"],
-                    correct: 3
+                    question: "This food is processed through fermentation.",
+                    scrambled: "SUCEYOSSA",
+                    answer: "SOY SAUCE",
+                    boxes: [3, 5]
                 },
                 {
-                    question: "Which organelle is used by protozoa for movement?",
-                    options: ["Capsid", "Mitochondria", "Chloroplast", "Flagellum"],
-                    correct: 3
+                    question: "Foods such as meat and ________________ are processed through canning.",
+                    scrambled: "ELYCHE",
+                    answer: "LYCHEE",
+                    boxes: 6
                 },
                 {
-                    question: "What special feature allows some bacteria to survive in extreme environments?",
-                    options: ["Forming endospores", "Producing cilia", "Possessing pili for attachment", "Having a slime capsule"],
-                    correct: 0
+                    question: "Seafood such as shrimp and squid can be preserved by freezing. This method maintains freshness because low temperature prevents the ____________ of microorganisms.",
+                    scrambled: "TWHOGR",
+                    answer: "GROWTH",
+                    boxes: 6
                 },
                 {
-                    question: "Why can viruses only reproduce inside a host cell?",
-                    options: ["Viruses do not have chlorophyll to make food", "Viruses can only live in dark environments", "Viruses are too small to survive on their own", "Viruses lack living organelles to carry out life processes"],
-                    correct: 3
-                },
-                {
-                    question: "Which microorganism lives in the human intestine?",
-                    options: ["<span class='italic'>Rhizopus</span>", "<span class='italic'>E. coli</span>", "<span class='italic'>Spirogyra</span>", "<span class='italic'>Chlorella</span>"],
-                    correct: 1
-                },
-                {
-                    question: "How does protozoa like <span class='italic'>Amoeba</span> obtain food?",
-                    options: ["Photosynthesis", "Phagocytosis", "Producing spores", "Absorbing sunlight"],
-                    correct: 1
+                    question: "One of the benefits of fermentation is prolonging the ____________ of food.",
+                    scrambled: "ELFFILES",
+                    answer: "SHELF LIFE",
+                    boxes: [5, 4]
                 }
             ]
         };
 
-        function toggleLanguage() {
-            currentLanguage = currentLanguage === 'ms' ? 'en' : 'ms';
-            updateLanguage();
-        }
+        const translations = {
+            ms: {
+                title: "Permainan Susun Huruf Teknologi Pemprosesan Makanan",
+                start: "Mula",
+                reset: "Set Semula",
+                hint: "Petunjuk:",
+                placeholder: "Taip jawapan anda di sini...",
+                check: "Semak Jawapan",
+                next: "Seterusnya",
+                prev: "Kembali",
+                time: "Masa:",
+                question: "Soalan",
+                of: "daripada",
+                correct: "Betul! Jawapan yang tepat!",
+                incorrect: "Salah, cuba lagi!",
+                congratulations: "🎉 Tahniah! 🎉",
+                questionsCorrect: "Soalan Berjaya:",
+                encouragement: "Kerja yang hebat! Anda telah menguasai teknologi pemprosesan makanan!",
+                playAgain: "Main Lagi",
+                instructionsTitle: "Arahan Permainan:",
+                instruction1: "🎯 Susun semula huruf yang bercampur untuk membentuk perkataan yang betul",
+                instruction2: "⏰ Tekan butang \"Mula\" untuk memulakan masa",
+                instruction3: "🔤 Gunakan petunjuk huruf yang bercampur untuk membantu anda",
+                instruction4: "🌐 Tukar bahasa dengan menekan butang \"English\" atau \"Bahasa Malaysia\""
+            },
+            en: {
+                title: "Food Processing Technology Word Scramble Game",
+                start: "Start",
+                reset: "Reset",
+                hint: "Hint:",
+                placeholder: "Type your answer here...",
+                check: "Check Answer",
+                next: "Next",
+                prev: "Previous",
+                time: "Time:",
+                question: "Question",
+                of: "of",
+                correct: "Correct! Well done!",
+                incorrect: "Wrong, try again!",
+                congratulations: "🎉 Congratulations! 🎉",
+                questionsCorrect: "Questions Correct:",
+                encouragement: "Great work! You've mastered food processing technology!",
+                playAgain: "Play Again",
+                instructionsTitle: "Game Instructions:",
+                instruction1: "🎯 Unscramble the mixed letters to form the correct word",
+                instruction2: "⏰ Press \"Start\" button to begin the timer",
+                instruction3: "🔤 Use the scrambled letter hints to help you",
+                instruction4: "🌐 Switch language by pressing \"English\" or \"Bahasa Malaysia\" button"
+            }
+        };
 
         function updateLanguage() {
             const t = translations[currentLanguage];
             
-            document.getElementById('title').innerHTML = t.title;
+            // Instant updates - no delays
+            document.getElementById('gameTitle').textContent = t.title;
+            document.getElementById('startBtn').textContent = t.start;
+            document.getElementById('resetBtn').textContent = t.reset;
+            document.getElementById('hintLabel').textContent = t.hint;
+            document.getElementById('answerInput').placeholder = t.placeholder;
+            document.getElementById('checkBtn').textContent = t.check;
+            document.getElementById('nextBtn').textContent = t.next;
+            document.getElementById('prevBtn').textContent = t.prev;
+            document.getElementById('playAgainBtn').textContent = t.playAgain;
+            
+            // Update instructions
             document.getElementById('instructionsTitle').textContent = t.instructionsTitle;
-            document.getElementById('instructionText1').innerHTML = t.instruction1;
-            document.getElementById('instructionText2').innerHTML = t.instruction2;
-            document.getElementById('instructionText3').innerHTML = t.instruction3;
-            document.getElementById('startBtn').textContent = t.startBtn;
-            document.getElementById('prevBtn').textContent = t.prevBtn;
-            document.getElementById('nextBtn').textContent = t.nextBtn;
-            document.getElementById('resultsTitle').textContent = t.resultsTitle;
-            document.getElementById('retryBtn').textContent = t.retryBtn;
-            document.getElementById('homeBtn').textContent = t.homeBtn;
-            document.querySelector('.language-toggle').textContent = t.langToggle;
+            document.getElementById('instruction1').textContent = t.instruction1;
+            document.getElementById('instruction2').textContent = t.instruction2;
+            document.getElementById('instruction3').textContent = t.instruction3;
+            document.getElementById('instruction4').textContent = t.instruction4;
             
-            // Update question header if in quiz
-            if (!document.getElementById('quizPage').classList.contains('hidden')) {
-                document.getElementById('questionHeader').textContent = t.questionHeader.replace('{n}', currentQuestion + 1);
+            // Update timer text
+            const timerElement = document.getElementById('timer');
+            if (timerElement.textContent.includes('Masa:') || timerElement.textContent.includes('Time:')) {
+                const timeValue = timerElement.textContent.split(' ')[1] || '00:00';
+                timerElement.textContent = `${t.time} ${timeValue}`;
             }
             
-            // Update results if in results page
-            if (!document.getElementById('resultsPage').classList.contains('hidden')) {
-                const correct = selectedAnswers.filter((answer, index) => answer === questions[currentLanguage][index].correct).length;
-                const wrong = 10 - correct;
-                
-                document.getElementById('resultsSummary').textContent = t.resultsSummary
-                    .replace('{correct}', correct)
-                    .replace('{wrong}', wrong);
-                
-                document.getElementById('scoreDisplay').textContent = t.scoreText.replace('{score}', score);
-                
-                let motivationKey;
-                if (score === 100) motivationKey = 'perfect';
-                else if (score >= 80) motivationKey = 'excellent';
-                else if (score >= 60) motivationKey = 'good';
-                else if (score >= 40) motivationKey = 'average';
-                else motivationKey = 'poor';
-                
-                document.getElementById('motivationText').textContent = t.motivations[motivationKey];
+            // Update completion screen if visible
+            const completionScreen = document.getElementById('completionScreen');
+            if (!completionScreen.classList.contains('hidden')) {
+                completionScreen.querySelector('h2').textContent = t.congratulations;
+                document.getElementById('encouragementText').textContent = t.encouragement;
+                const correctAnswersLabel = completionScreen.querySelector('.stats div');
+                if (correctAnswersLabel) {
+                    const scoreValue = document.getElementById('correctAnswers').textContent;
+                    correctAnswersLabel.innerHTML = `${t.questionsCorrect} <span id="correctAnswers">${scoreValue}</span>/8`;
+                }
             }
             
-            // Update current question if in quiz
-            if (!document.getElementById('quizPage').classList.contains('hidden')) {
-                displayQuestion();
-            }
+            updateProgress();
+            // Always display question content when language changes, regardless of game state
+            displayQuestion();
         }
 
-        function startQuiz() {
-            currentQuestion = 0;
-            selectedAnswers = new Array(10).fill(-1);
-            score = 0;
+        function updateProgress() {
+            const t = translations[currentLanguage];
+            document.getElementById('progress').textContent = `${t.question} ${currentQuestion + 1} ${t.of} 8`;
+        }
+
+        function createAnswerBoxes(boxConfig) {
+            const container = document.getElementById('answerBoxes');
+            container.innerHTML = '';
             
-            document.getElementById('homePage').classList.add('hidden');
-            document.getElementById('quizPage').classList.remove('hidden');
-            
-            changeBackground();
-            displayQuestion();
+            if (Array.isArray(boxConfig)) {
+                // Multiple words
+                boxConfig.forEach((wordLength, wordIndex) => {
+                    for (let i = 0; i < wordLength; i++) {
+                        const box = document.createElement('div');
+                        box.className = 'answer-box';
+                        box.id = `box-${wordIndex}-${i}`;
+                        container.appendChild(box);
+                    }
+                    if (wordIndex < boxConfig.length - 1) {
+                        const gap = document.createElement('div');
+                        gap.className = 'word-gap';
+                        container.appendChild(gap);
+                    }
+                });
+            } else {
+                // Single word
+                for (let i = 0; i < boxConfig; i++) {
+                    const box = document.createElement('div');
+                    box.className = 'answer-box';
+                    box.id = `box-0-${i}`;
+                    container.appendChild(box);
+                }
+            }
         }
 
         function displayQuestion() {
             const question = questions[currentLanguage][currentQuestion];
-            const t = translations[currentLanguage];
+            document.getElementById('questionText').textContent = question.question;
+            document.getElementById('scrambledLetters').textContent = question.scrambled;
+            document.getElementById('answerInput').value = userAnswers[currentQuestion];
+            document.getElementById('feedback').textContent = '';
             
-            document.getElementById('questionHeader').textContent = t.questionHeader.replace('{n}', currentQuestion + 1);
-            document.getElementById('questionText').innerHTML = question.question;
+            // Update background color for each question
+            const gameArea = document.getElementById('gameArea');
+            gameArea.className = `question-container fade-transition question-bg-${currentQuestion + 1}`;
             
-            const optionsContainer = document.getElementById('options');
-            optionsContainer.innerHTML = '';
+            createAnswerBoxes(question.boxes);
+            updateAnswerBoxes();
+            updateProgress();
             
-            question.options.forEach((option, index) => {
-                const optionDiv = document.createElement('div');
-                optionDiv.className = 'option';
-                optionDiv.innerHTML = option;
-                optionDiv.onclick = () => selectOption(index);
-                
-                if (selectedAnswers[currentQuestion] === index) {
-                    optionDiv.classList.add('selected');
-                }
-                
-                optionsContainer.appendChild(optionDiv);
-            });
-            
-            updateButtons();
-            changeBackground();
+            // Update navigation buttons
+            document.getElementById('prevBtn').disabled = currentQuestion === 0;
+            document.getElementById('nextBtn').disabled = false;
         }
 
-        function selectOption(index) {
-            selectedAnswers[currentQuestion] = index;
+        function updateAnswerBoxes() {
+            const answer = userAnswers[currentQuestion].toUpperCase();
+            const question = questions[currentLanguage][currentQuestion];
             
-            // Update visual selection
-            document.querySelectorAll('.option').forEach((option, i) => {
-                option.classList.toggle('selected', i === index);
-            });
-            
-            updateButtons();
-        }
-
-        function updateButtons() {
-            const prevBtn = document.getElementById('prevBtn');
-            const nextBtn = document.getElementById('nextBtn');
-            
-            prevBtn.disabled = currentQuestion === 0;
-            nextBtn.disabled = selectedAnswers[currentQuestion] === -1;
-            
-            if (currentQuestion === 9) {
-                nextBtn.textContent = currentLanguage === 'ms' ? 'Selesai' : 'Finish';
+            if (Array.isArray(question.boxes)) {
+                // Multiple words
+                let charIndex = 0;
+                question.boxes.forEach((wordLength, wordIndex) => {
+                    for (let i = 0; i < wordLength; i++) {
+                        const box = document.getElementById(`box-${wordIndex}-${i}`);
+                        if (box) {
+                            const char = answer[charIndex] || '';
+                            box.textContent = char;
+                            box.className = char ? 'answer-box filled' : 'answer-box';
+                            charIndex++;
+                        }
+                    }
+                    if (wordIndex < question.boxes.length - 1 && charIndex < answer.length && answer[charIndex] === ' ') {
+                        charIndex++; // Skip space
+                    }
+                });
             } else {
-                nextBtn.textContent = translations[currentLanguage].nextBtn;
+                // Single word
+                for (let i = 0; i < question.boxes; i++) {
+                    const box = document.getElementById(`box-0-${i}`);
+                    if (box) {
+                        const char = answer[i] || '';
+                        box.textContent = char;
+                        box.className = char ? 'answer-box filled' : 'answer-box';
+                    }
+                }
             }
         }
 
-        function previousQuestion() {
+        function checkAnswer() {
+            const userAnswer = document.getElementById('answerInput').value.toUpperCase().trim();
+            const correctAnswer = questions[currentLanguage][currentQuestion].answer;
+            const feedback = document.getElementById('feedback');
+            const t = translations[currentLanguage];
+            
+            userAnswers[currentQuestion] = userAnswer;
+            updateAnswerBoxes();
+            
+            if (userAnswer === correctAnswer) {
+                feedback.textContent = t.correct;
+                feedback.className = 'feedback correct';
+                if (!questionStatus[currentQuestion]) {
+                    questionStatus[currentQuestion] = true;
+                    correctCount++;
+                }
+            } else {
+                feedback.textContent = t.incorrect;
+                feedback.className = 'feedback incorrect';
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < 7) {
+                currentQuestion++;
+                displayQuestion();
+            } else {
+                endGame();
+            }
+        }
+
+        function prevQuestion() {
             if (currentQuestion > 0) {
                 currentQuestion--;
                 displayQuestion();
             }
         }
 
-        function nextQuestion() {
-            if (currentQuestion < 9) {
-                currentQuestion++;
-                displayQuestion();
-            } else {
-                showResults();
-            }
+        function startTimer() {
+            startTime = Date.now();
+            timerInterval = setInterval(updateTimer, 1000);
         }
 
-        function showResults() {
-            // Calculate score
-            const correct = selectedAnswers.filter((answer, index) => answer === questions[currentLanguage][index].correct).length;
-            const wrong = 10 - correct;
-            score = correct * 10;
+        function updateTimer() {
+            if (!startTime) return;
             
-            document.getElementById('quizPage').classList.add('hidden');
-            document.getElementById('resultsPage').classList.remove('hidden');
-            
+            const elapsed = Math.floor((Date.now() - startTime) / 1000);
+            const minutes = Math.floor(elapsed / 60);
+            const seconds = elapsed % 60;
             const t = translations[currentLanguage];
             
-            // Update results summary
-            document.getElementById('resultsSummary').textContent = t.resultsSummary
-                .replace('{correct}', correct)
-                .replace('{wrong}', wrong);
-            
-            // Update score display
-            document.getElementById('scoreDisplay').textContent = t.scoreText.replace('{score}', score);
-            
-            // Update motivation message based on score
-            let motivationKey;
-            if (score === 100) motivationKey = 'perfect';
-            else if (score >= 80) motivationKey = 'excellent';
-            else if (score >= 60) motivationKey = 'good';
-            else if (score >= 40) motivationKey = 'average';
-            else motivationKey = 'poor';
-            
-            document.getElementById('motivationText').textContent = t.motivations[motivationKey];
-            
-            // Change to results background
-            document.body.className = 'bg-gradient-1';
+            document.getElementById('timer').textContent = 
+                `${t.time} ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
         }
 
-        function restartQuiz() {
+        function endGame() {
+            clearInterval(timerInterval);
+            
+            const t = translations[currentLanguage];
+            document.getElementById('correctAnswers').textContent = correctCount;
+            document.getElementById('encouragementText').textContent = t.encouragement;
+            
+            // Update completion screen text
+            document.querySelector('#completionScreen h2').textContent = t.congratulations;
+            const correctAnswersLabel = document.querySelector('#completionScreen .stats div');
+            if (correctAnswersLabel) {
+                correctAnswersLabel.innerHTML = `${t.questionsCorrect} <span id="correctAnswers">${correctCount}</span>/8`;
+            }
+            
+            document.getElementById('gameArea').classList.add('hidden');
+            document.getElementById('completionScreen').classList.remove('hidden');
+        }
+
+        function resetGame() {
+            clearInterval(timerInterval);
             currentQuestion = 0;
-            selectedAnswers = new Array(10).fill(-1);
-            score = 0;
+            startTime = null;
+            gameStarted = false;
+            correctCount = 0;
+            userAnswers = new Array(8).fill('');
+            questionStatus = new Array(8).fill(false);
             
-            document.getElementById('resultsPage').classList.add('hidden');
-            document.getElementById('homePage').classList.remove('hidden');
+            const t = translations[currentLanguage];
+            document.getElementById('timer').textContent = `${t.time} 00:00`;
+            document.getElementById('gameArea').classList.remove('hidden');
+            document.getElementById('completionScreen').classList.add('hidden');
+            document.getElementById('startBtn').disabled = false;
             
-            document.body.className = 'bg-gradient-1';
+            displayQuestion();
         }
 
-        function goHome() {
-            document.getElementById('resultsPage').classList.add('hidden');
-            document.getElementById('homePage').classList.remove('hidden');
-            document.body.className = 'bg-gradient-1';
-        }
+        // Event listeners
+        document.getElementById('startBtn').addEventListener('click', function() {
+            if (!gameStarted) {
+                gameStarted = true;
+                startTimer();
+                this.disabled = true;
+                displayQuestion();
+            }
+        });
 
-        function changeBackground() {
-            const gradients = [
-                'bg-gradient-1', 'bg-gradient-2', 'bg-gradient-3', 'bg-gradient-4', 'bg-gradient-5',
-                'bg-gradient-6', 'bg-gradient-7', 'bg-gradient-8', 'bg-gradient-9', 'bg-gradient-10'
-            ];
-            
-            document.body.className = gradients[currentQuestion] || 'bg-gradient-1';
-        }
+        document.getElementById('langBtn').addEventListener('click', function() {
+            currentLanguage = currentLanguage === 'ms' ? 'en' : 'ms';
+            this.textContent = currentLanguage === 'ms' ? 'English' : 'Bahasa Malaysia';
+            updateLanguage();
+        });
 
-        // Initialize
+        document.getElementById('resetBtn').addEventListener('click', resetGame);
+        document.getElementById('checkBtn').addEventListener('click', checkAnswer);
+        document.getElementById('nextBtn').addEventListener('click', nextQuestion);
+        document.getElementById('prevBtn').addEventListener('click', prevQuestion);
+        document.getElementById('playAgainBtn').addEventListener('click', resetGame);
+
+        document.getElementById('answerInput').addEventListener('input', function() {
+            userAnswers[currentQuestion] = this.value;
+            updateAnswerBoxes();
+        });
+
+        document.getElementById('answerInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+
+        // Initialize game
         updateLanguage();
+        displayQuestion();
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98478975c62086be',t:'MTc1ODc3MjAxMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98502560016d5e2b',t:'MTc1ODg2MjI4NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
-
